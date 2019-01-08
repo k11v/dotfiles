@@ -1,3 +1,7 @@
+# Project-level
+
+.zsh/cache
+
 # General
 
 .DS_Store

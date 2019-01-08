@@ -16,7 +16,7 @@ setopt AUTO_PUSHD
 
 
 # use caching to make completion faster
-ZCOMPDUMP="$ZDOTDIR/cache/.zcompdump"
+ZCOMPDUMP="$ZSH_CACHE_DIR/.zcompdump"
 autoload -Uz compinit
 if [[ -n $ZCOMPDUMP(#qN.mh+24) ]]; then
   compinit -i -d $ZCOMPDUMP
@@ -24,7 +24,7 @@ else
   compinit -C -i -d $ZCOMPDUMP
 fi
 zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "$ZDOTDIR/cache"
+zstyle ':completion::complete:*' cache-path "$ZSH_CACHE_DIR"
 unset ZCOMPDUMP
 
 # use completion menu for completion when available
@@ -56,7 +56,7 @@ setopt NO_LIST_BEEP
 
 
 # where history logs are stored
-export HISTFILE=$ZDOTDIR/cache/.zhistory
+export HISTFILE=$ZSH_CACHE_DIR/.zhistory
 # the maximum number of history events to save in the history file
 export SAVEHIST='32768'
 # the maximum number of events stored in the internal history list
