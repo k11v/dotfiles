@@ -4,7 +4,7 @@ alias sudo="sudo "
 
 
 # ---------------------------------------------------------------------------- #
-# Abbreviations: built-in
+# Built-in
 # ---------------------------------------------------------------------------- #
 
 
@@ -18,7 +18,7 @@ alias cl='clear'
 
 
 # ---------------------------------------------------------------------------- #
-# Abbreviations: external
+# External
 # ---------------------------------------------------------------------------- #
 
 
@@ -38,3 +38,12 @@ alias gd='git diff'
 
 # micro - modern terminal-based editor
 alias mi='micro'
+
+# prettyping - `ping` with pretty output
+alias ping='prettyping'
+
+# diff-so-fancy - the best-lookin' diffs
+alias diff='diff-so-fancy'
+
+# ncdu - a more powerful version of `du`
+alias du='ncdu'
