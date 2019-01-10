@@ -22,7 +22,8 @@ export LESS="\
 --tilde \
 --shift=10 \
 --ignore-case \
---LONG-PROMPT"
+--LONG-PROMPT \
+--tabs=4"
 export LESSOPEN='| bat %s 2> /dev/null' # `bat` is external
 
 # man: colors
