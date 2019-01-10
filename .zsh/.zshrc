@@ -3,10 +3,11 @@
 #
 
 
-source $ZDOTDIR/plugins.zsh
-source $ZDOTDIR/decorators.zsh
-source $ZDOTDIR/aliases.zsh
-source $ZDOTDIR/config.zsh
-source $ZDOTDIR/exports.zsh
-source $ZDOTDIR/functions.zsh
-source $ZDOTDIR/prompt.zsh
+# order matters
+source $ZDOTDIR/exports.zsh # declare constants
+source $ZDOTDIR/plugins.zsh # load plugins
+source $ZDOTDIR/decorators.zsh # decorate commands
+source $ZDOTDIR/aliases.zsh # abbreviate commands
+source $ZDOTDIR/functions.zsh # declare functions
+source $ZDOTDIR/config.zsh # configure Zsh settings
+source $ZDOTDIR/prompt.zsh # configure prompt
