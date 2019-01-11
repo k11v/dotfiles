@@ -3,11 +3,19 @@
 # ---------------------------------------------------------------------------- #
 
 
+# sources file if exists
+include () {
+    [[ -f "$1" ]] && source "$1"
+}
+
 # order matters
-source $ZDOTDIR/exports.zsh # declare constants
-source $ZDOTDIR/plugins.zsh # load plugins
-source $ZDOTDIR/decorators.zsh # decorate commands
-source $ZDOTDIR/aliases.zsh # abbreviate commands
-source $ZDOTDIR/functions.zsh # declare functions
-source $ZDOTDIR/config.zsh # configure Zsh settings
-source $ZDOTDIR/prompt.zsh # configure prompt
+include $ZDOTDIR/exports.zsh # declare constants
+include $ZDOTDIR/plugins.zsh # load plugins
+include $ZDOTDIR/decorators.zsh # decorate commands
+include $ZDOTDIR/aliases.zsh # abbreviate commands
+include $ZDOTDIR/functions.zsh # declare functions
+include $ZDOTDIR/config.zsh # configure Zsh settings
+include $ZDOTDIR/prompt.zsh # configure prompt
+
+# clean up
+unset include
