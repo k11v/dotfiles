@@ -91,6 +91,10 @@ setopt NO_FLOW_CONTROL
 setopt IGNORE_EOF
 # allow comments even in interactive shells
 setopt INTERACTIVE_COMMENTS
+# enable "anything but" globs
+setopt EXTENDED_GLOB
+# run the command removing glob from the argument list if nothing matched
+setopt NULL_GLOB
 
 
 # ---------------------------------------------------------------------------- #
