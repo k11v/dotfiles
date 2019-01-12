@@ -6,9 +6,6 @@
 # `repo` will search this directory for repositories
 export REPOSITORIES="$HOME/Repositories"
 
-# where the dotfiles located
-export DOTFILES="$HOME/.dotfiles"
-
 
 # ---------------------------------------------------------------------------- #
 # Session defaults
