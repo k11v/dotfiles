@@ -16,6 +16,9 @@ alias la='ls -lhA'
 # clear
 alias cl='clear'
 
+# mkdir
+alias md='mkdir'
+
 
 # ---------------------------------------------------------------------------- #
 # External

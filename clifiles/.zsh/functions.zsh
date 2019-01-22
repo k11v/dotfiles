@@ -4,7 +4,7 @@
 
 
 # makes a directory and changes to it
-function mkcd {
+function mcd {
 	[[ -n "$1" ]] && mkdir -p "$1" && cd "$1"
 }
 
