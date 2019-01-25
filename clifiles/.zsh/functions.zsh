@@ -30,6 +30,15 @@ function cleandd {
 	rm -rf ~/Library/Developer/Xcode/DerivedData
 }
 
+# makes Python virtual environment (supports Python 3 only)
+function makevenv {
+	if [[ -n "$1" ]]; then
+		python -m venv "$1"
+	else
+		python -m venv ./venv
+	fi
+}
+
 # activates Python virtual environment
 function actvenv {
 	if [[ -n "$1" ]]; then
