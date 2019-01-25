@@ -14,7 +14,7 @@ include $ZDOTDIR/plugins.zsh # load plugins
 include $ZDOTDIR/decorators.zsh # decorate commands
 include $ZDOTDIR/aliases.zsh # abbreviate commands
 include $ZDOTDIR/functions.zsh # declare functions
-include $ZDOTDIR/config.zsh # configure Zsh settings
+include $ZDOTDIR/config.zsh # configure Zsh settings and PATH
 include $ZDOTDIR/prompt.zsh # configure prompt
 
 # clean up

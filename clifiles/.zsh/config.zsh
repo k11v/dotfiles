@@ -108,3 +108,12 @@ bindkey -e
 bindkey '^B' backward-word
 # previously `esc+F`
 bindkey '^F' forward-word
+
+
+# ---------------------------------------------------------------------------- #
+# External commands initialization
+# ---------------------------------------------------------------------------- #
+
+
+# pyenv (modifies PATH)
+eval "$(pyenv init -)"
