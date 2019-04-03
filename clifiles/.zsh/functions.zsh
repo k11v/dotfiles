@@ -48,6 +48,24 @@ function actvenv {
 	fi
 }
 
+# copies pre-made gitignore (found under $GITIGNORES) to a current directory
+function gitignore {
+	cp "$GITIGNORES/$1" ./.gitignore
+}
+compctl -f -W "$GITIGNORES" gitignore
+
+# copies pre-made readme (found under $READMES) to a current directory
+function readme {
+	cp "$READMES/$1" ./README.md
+}
+compctl -f -W "$READMES" readme
+
+# copies pre-made license (found under $LICENSES) to a current directory
+function license {
+	cp "$LICENSES/$1" ./LICENSE.md
+}
+compctl -f -W "$LICENSES" license
+
 
 # ---------------------------------------------------------------------------- #
 # Utilties

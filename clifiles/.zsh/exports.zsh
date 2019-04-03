@@ -3,8 +3,10 @@
 # ---------------------------------------------------------------------------- #
 
 
-# `repo` will search this directory for repositories
 export REPOSITORIES="$HOME/Repositories"
+export GITIGNORES="$HOME/Repositories/templates/gitignores"
+export READMES="$HOME/Repositories/templates/readmes"
+export LICENSES="$REPOSITORIES/templates/licenses"
 
 
 # ---------------------------------------------------------------------------- #
