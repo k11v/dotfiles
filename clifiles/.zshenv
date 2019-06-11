@@ -1,4 +1,3 @@
-
 # zsh's place
 export ZDOTDIR="$HOME/.zsh"
 
