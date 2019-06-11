@@ -16,6 +16,9 @@ brew "ncdu"
 brew "prettyping"
 brew "tldr"
 brew "fd"
+brew "openssl"
+brew "readline"
+brew "wget"
 
 cask "iterm2"
 cask "alfred"
@@ -32,6 +35,9 @@ cask "discord"
 cask "vlc"
 cask "opera"
 cask "skim"
+cask "chrome-remote-desktop-host"
+cask "google-chrome"
+cask "google-hangouts"
 
 mas "Helium", id: 1054607607
 mas "Amphetamine", id: 937984704
