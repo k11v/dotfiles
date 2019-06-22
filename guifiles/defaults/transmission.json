@@ -1,0 +1,7 @@
+{
+    "CheckQuitDownloading": true,
+    "CheckRemoveDownloading": true,
+    "DeleteOriginalTorrent": true,
+    "DownloadLocationConstant": true,
+    "SleepPrevent": true
+}
