@@ -1,12 +1,15 @@
 {
-    "DVTTextAutoHighlightTokens": true,
-    "DVTTextAutoHighlightTokensDelay": 0.25,
-    "DVTTextAutoSuggestCompletions": true,
-    "DVTTextEditorTrimWhitespaceOnlyLines": false,
-    "DVTTextEnableTypeOverCompletions": true,
-    "DVTTextOverscrollAmount": 0.5,
-    "DVTTextPageGuideLocation": 80,
-    "DVTTextShowFoldingSidebar": false,
-    "DVTTextShowLineNumbers": true,
-    "DVTTextShowPageGuide": true
+    "domain": "com.apple.dt.Xcode",
+    "defaults": {
+        "DVTTextAutoHighlightTokens": true,
+        "DVTTextAutoHighlightTokensDelay": 0.25,
+        "DVTTextAutoSuggestCompletions": true,
+        "DVTTextEditorTrimWhitespaceOnlyLines": false,
+        "DVTTextEnableTypeOverCompletions": true,
+        "DVTTextOverscrollAmount": 0.5,
+        "DVTTextPageGuideLocation": 80,
+        "DVTTextShowFoldingSidebar": false,
+        "DVTTextShowLineNumbers": true,
+        "DVTTextShowPageGuide": true
+    }
 }

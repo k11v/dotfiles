@@ -1,3 +1,6 @@
 {
-    "ProtectOpenedApps": 0
+    "domain": "net.freemacsoft.AppCleaner",
+    "defaults": {
+        "ProtectOpenedApps": 0
+    }
 }

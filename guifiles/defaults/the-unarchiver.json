@@ -1,4 +1,7 @@
 {
-    "createFolder": 1,
-    "openExtractedFolder": false,
+    "domain": "com.macpaw.site.theunarchiver",
+    "defaults": {
+        "createFolder": 1,
+        "openExtractedFolder": false,
+    }
 }

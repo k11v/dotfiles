@@ -1,7 +1,10 @@
 {
-    "CheckQuitDownloading": true,
-    "CheckRemoveDownloading": true,
-    "DeleteOriginalTorrent": true,
-    "DownloadLocationConstant": true,
-    "SleepPrevent": true
+    "domain": "org.m0k.transmission",
+    "defaults": {
+        "CheckQuitDownloading": true,
+        "CheckRemoveDownloading": true,
+        "DeleteOriginalTorrent": true,
+        "DownloadLocationConstant": true,
+        "SleepPrevent": true
+    }
 }
