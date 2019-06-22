@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+\begin{equation} \label{${1:}}
+  ${2:expression}
+\end{equation}
+]]></content>
+	<tabTrigger>equation</tabTrigger>
+	<source>source.latex</source>
+</snippet>
