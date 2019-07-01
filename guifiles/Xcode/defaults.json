@@ -1,5 +1,7 @@
 {
     "domain": "com.apple.dt.Xcode",
+    "ignores": [
+    ],
     "defaults": {
         "DVTTextAutoHighlightTokens": true,
         "DVTTextAutoHighlightTokensDelay": 0.25,

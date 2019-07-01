@@ -1,5 +1,7 @@
 {
     "domain": "net.freemacsoft.AppCleaner",
+    "ignores": [
+    ],
     "defaults": {
         "ProtectOpenedApps": 0
     }

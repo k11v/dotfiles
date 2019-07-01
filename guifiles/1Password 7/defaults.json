@@ -1,5 +1,7 @@
 {
     "domain": "com.agilebits.onepassword7",
+    "ignores": [
+    ],
     "defaults": {
         "KeepHelperRunning": true,
         "ShowStatusItem": true

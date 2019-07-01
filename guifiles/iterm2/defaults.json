@@ -1,5 +1,7 @@
 {
     "domain": "com.googlecode.iterm2",
+    "ignores": [
+    ],
     "defaults": {
         "AdjustWindowForFontSizeChange": false,
         "AlternateMouseScroll": true,

@@ -1,5 +1,7 @@
 {
     "domain": "com.macpaw.site.theunarchiver",
+    "ignores": [
+    ],
     "defaults": {
         "createFolder": 1,
         "openExtractedFolder": false,
