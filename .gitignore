@@ -1,2 +1,5 @@
 # Ignore cache.
 clifiles/.zsh/cache/
+
+# Ignore macOS cache.
+.DS_Store
