@@ -2,6 +2,6 @@
     "ignore": [
     ],
     "items": {
-        "Shortcuts.json": "~/Library/Application\\ Support/Spectacle/Shortcuts.json"
+        "Shortcuts.json": "~/Library/Application Support/Spectacle/Shortcuts.json"
     }
 }

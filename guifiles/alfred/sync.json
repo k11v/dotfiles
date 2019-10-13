@@ -2,8 +2,8 @@
     "ignore": [
     ],
     "items": {
-        "preferences/advanced": "~/Library/Application\\ Support/Alfred\\ 3/Alfred.alfredpreferences/preferences/advanced",
-        "preferences/appearance": "~/Library/Application\\ Support/Alfred\\ 3/Alfred.alfredpreferences/preferences/appearance",
-        "preferences/features": "~/Library/Application\\ Support/Alfred\\ 3/Alfred.alfredpreferences/preferences/features"
+        "preferences/advanced": "~/Library/Application Support/Alfred 3/Alfred.alfredpreferences/preferences/advanced",
+        "preferences/appearance": "~/Library/Application Support/Alfred 3/Alfred.alfredpreferences/preferences/appearance",
+        "preferences/features": "~/Library/Application Support/Alfred 3/Alfred.alfredpreferences/preferences/features"
     }
 }
