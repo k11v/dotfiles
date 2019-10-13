@@ -1,6 +1,6 @@
 {
     "domain": "com.if.Amphetamine",
-    "ignores": [
+    "ignore": [
     ],
     "defaults": {
         "Allow Display Sleep": 0,

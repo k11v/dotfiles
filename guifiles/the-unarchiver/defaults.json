@@ -1,6 +1,6 @@
 {
     "domain": "com.macpaw.site.theunarchiver",
-    "ignores": [
+    "ignore": [
     ],
     "defaults": {
         "createFolder": 1,

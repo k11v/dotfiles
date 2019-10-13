@@ -1,6 +1,6 @@
 {
     "domain": "com.apple.dt.Xcode",
-    "ignores": [
+    "ignore": [
     ],
     "defaults": {
         "DVTTextAutoHighlightTokens": true,

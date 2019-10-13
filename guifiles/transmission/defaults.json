@@ -1,6 +1,6 @@
 {
     "domain": "org.m0k.transmission",
-    "ignores": [
+    "ignore": [
     ],
     "defaults": {
         "CheckQuitDownloading": true,

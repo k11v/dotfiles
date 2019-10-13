@@ -1,6 +1,6 @@
 {
     "domain": "com.agilebits.onepassword7",
-    "ignores": [
+    "ignore": [
     ],
     "defaults": {
         "KeepHelperRunning": true,

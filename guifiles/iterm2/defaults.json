@@ -1,6 +1,6 @@
 {
     "domain": "com.googlecode.iterm2",
-    "ignores": [
+    "ignore": [
     ],
     "defaults": {
         "AdjustWindowForFontSizeChange": false,
