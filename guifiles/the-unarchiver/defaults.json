@@ -4,6 +4,6 @@
     ],
     "defaults": {
         "createFolder": 1,
-        "openExtractedFolder": false,
+        "openExtractedFolder": false
     }
 }
