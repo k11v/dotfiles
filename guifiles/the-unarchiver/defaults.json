@@ -1,6 +1,19 @@
 {
     "domain": "com.macpaw.site.theunarchiver",
     "ignore": [
+        "DM_SID",
+        "DevMateLaunchCount",
+        "FirstLaunchDate",
+        "LaunchCount",
+        "NSWindow Frame mainWindow",
+        "NSWindow Frame prefsWindow",
+        "SUEnableAutomaticChecks",
+        "SUHasLaunchedBefore",
+        "SULastCheckTime",
+        "isFreshInstall",
+        "oldHandler.public.zip-archive",
+        "orphanedTempDirectories",
+        "userAgreedToNewTOSAndPrivacy"
     ],
     "defaults": {
         "createFolder": 1,
