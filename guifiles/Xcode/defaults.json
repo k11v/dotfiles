@@ -1,6 +1,10 @@
 {
     "domain": "com.apple.dt.Xcode",
     "ignore": [
+        "IDELibrary.lastSelectedLibraryExtensionIDByEditorID",
+        "IDELibraryWindowController-With-Details.height",
+        "IDELibraryWindowController-With-Details.location",
+        "IDELibraryWindowController-With-Details.width",
         "DVTDeveloperAccountManagerAppleIDLists",
         "DVTDeviceTokens",
         "DVTDevicesWindowControllerSelectedDeviceIdentifier",
