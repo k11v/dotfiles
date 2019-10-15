@@ -1,0 +1,18 @@
+{
+	"default_extension": "cpp",
+	"extensions":
+	[
+		"c",
+		"h",
+		"cc",
+		"cxx",
+		"c++",
+		"h",
+		"hpp",
+		"hxx",
+		"h++",
+		"inl",
+		"ipp",
+		"cpp"
+	]
+}

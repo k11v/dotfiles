@@ -1,0 +1,30 @@
+{
+    "shell_cmd": "g++ -std=c++11 \"${file}\" -o \"${file_path}/${file_base_name}\"",
+    "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+    "working_dir": "${file_path}",
+    "selector": "source.c++",
+
+    "variants":
+    [
+        {
+            "name": "Run",
+            "shell_cmd": "g++ -std=c++11 \"${file}\" -o \"${file_path}/${file_base_name}\" && \"${file_path}/${file_base_name}\""
+        },
+        {
+            "name": "Run with input.txt",
+            "shell_cmd": "g++ -std=c++11 \"${file}\" -o \"${file_path}/${file_base_name}\" && \"${file_path}/${file_base_name}\" < ${file_path}/input.txt"
+        },
+        {
+            "name": "Optimized Timed Run",
+            "shell_cmd": "g++ -O2 -x c++ -std=c++11 \"${file}\" -o \"${file_path}/${file_base_name}\" && time \"${file_path}/${file_base_name}\""
+        },
+        {
+            "name": "Optimized Timed Numerous Run",
+            "shell_cmd": "g++ -O2 -x c++ -std=c++11 \"${file}\" -o \"${file_path}/${file_base_name}\" && time for i in {1..10}; do echo \"<<< next run >>>\"; \"${file_path}/${file_base_name}\"; done && echo \"--- don't forget to divide by 10 ---\""
+        },
+        {
+            "name": "Optimized Assembly Build",
+            "shell_cmd": "g++ -O2 -S -x c++ -std=c++11 \"${file}\" -o \"${file_path}/${file_base_name}\""
+        }
+    ]
+}
