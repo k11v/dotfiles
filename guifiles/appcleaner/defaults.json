@@ -1,8 +1,11 @@
 {
     "domain": "net.freemacsoft.AppCleaner",
     "ignore": [
+        "NSWindow Frame MainWindow",
+        "SUEnableAutomaticChecks",
+        "SUHasLaunchedBefore",
+        "SULastCheckTime"
     ],
     "defaults": {
-        "ProtectOpenedApps": 0
     }
 }
