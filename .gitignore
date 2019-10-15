@@ -1,5 +1,12 @@
 # Ignore cache.
 clifiles/home/sync/.zsh/cache/
 
-# Ignore macOS cache.
-.DS_Store
+# Ignore system files.
+.*
+*~
+
+# Keep git files.
+!.gitignore
+!.gitattributes
+!.gitmodules
+!.gitkeep
