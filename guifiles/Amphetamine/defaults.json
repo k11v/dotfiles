@@ -1,6 +1,14 @@
 {
     "domain": "com.if.Amphetamine",
     "ignore": [
+        "Drive Alive Data",
+        "NSStatusItem Preferred Position Item-0",
+        "Screen Saver Exceptions",
+        "Session Durations",
+        "Session End Time Calcuation",
+        "Session Is Trigger Session",
+        "Total Session Run Time",
+        "Trigger Data"
     ],
     "defaults": {
         "Allow Display Sleep": 0,
@@ -39,6 +47,13 @@
         "Status Bar Session Time Format": 0,
         "Status Item Click": 0,
         "Use 24 Hour Clock": 0,
-        "Use Color For Quick Prefs Status": 1
+        "Use Color For Quick Prefs Status": 1,
+        "Drive Wake Interval": "10",
+        "Enable Drive Alive": 0,
+        "Enable Triggers": 0,
+        "Enable Triggers On Launch": 0,
+        "Session Notification Interval": "60",
+        "Show Woke Drives In Menu": 0,
+        "Screen Saver Delay": 5
     }
 }
