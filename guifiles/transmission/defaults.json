@@ -1,12 +1,34 @@
 {
     "domain": "org.m0k.transmission",
     "ignore": [
+        "CollapsedGroups",
+        "DonateAskDate",
+        "Filter",
+        "FilterBar",
+        "FilterGroup",
+        "FilterSearchType",
+        "GroupDicts",
+        "InfoVisible",
+        "InspectorSelected",
+        "NSNavLastRootDirectory",
+        "NSNavPanelExpandedSizeForOpenMode",
+        "NSToolbar Configuration TRMainToolbar",
+        "NSWindow Frame AddMagnetWindow",
+        "NSWindow Frame AddWindow",
+        "NSWindow Frame InspectorWindow",
+        "NSWindow Frame StatsWindow",
+        "NSWindow Frame TransmissionWindow",
+        "SUHasLaunchedBefore",
+        "SULastCheckTime",
+        "SelectedPrefView",
+        "WarningDonate",
+        "WarningLegal"
     ],
     "defaults": {
         "CheckQuitDownloading": true,
         "CheckRemoveDownloading": true,
         "DeleteOriginalTorrent": true,
         "DownloadLocationConstant": true,
-        "SleepPrevent": true
+        "SleepPrevent": false
     }
 }
