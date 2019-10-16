@@ -1,9 +1,16 @@
 # Ignore cache.
-clifiles/home/sync/.zsh/cache/
+clifiles/home/sync/home/.zsh/cache
 
 # Ignore system files.
 .*
 *~
+
+# Keep the dotfiles
+!.gitconfig
+!.hushlogin
+!.zsh/
+!.zshrc
+!.zshenv
 
 # Keep git files.
 !.gitignore
