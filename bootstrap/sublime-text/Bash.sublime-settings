@@ -1,0 +1,18 @@
+{
+	"extensions":
+	[
+		".aliases",
+		".exports",
+		".functions",
+		".prompt",
+		".inputrc",
+		".hushlogin",
+		".zshrc",
+		".antigenrc",
+		".gitconfig",
+		".macos",
+		".curlrc",
+		".wgetrc",
+		".zshenv"
+	]
+}

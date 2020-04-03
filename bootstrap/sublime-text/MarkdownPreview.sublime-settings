@@ -1,0 +1,7 @@
+{
+    "enable_mathjax": true,
+    "js": [
+    	"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
+    	"res://MarkdownPreview/js/math_config.js",
+    ]
+}

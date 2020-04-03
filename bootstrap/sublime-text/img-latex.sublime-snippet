@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+\centeredgraphics
+{img/${1:name}}
+{${2:caption}}
+{fig:${1:label}}
+]]></content>
+	<tabTrigger>img</tabTrigger>
+	<source>source.latex</source>
+</snippet>
