@@ -1,9 +1,0 @@
-<snippet>
-	<content><![CDATA[
-\wordhangindent{где }\noindent
-где \\\\
-  ${1:item} --- ${2:description}; \\\\
-]]></content>
-	<tabTrigger>where</tabTrigger>
-	<source>source.latex</source>
-</snippet>
