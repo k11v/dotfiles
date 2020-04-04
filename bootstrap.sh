@@ -78,6 +78,7 @@ setup_dotfiles() {
         [ "$src_name" = "." ] && continue
         [ "$src_name" = ".." ] && continue
         [ "$src_name" = ".git" ] && continue
+        [ "$src_name" = ".gitignore" ] && continue
         dst="$HOME/$src_name"
         link_file "$src" "$dst"
     done
