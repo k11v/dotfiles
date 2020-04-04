@@ -5,7 +5,7 @@ clifiles/home/sync/home/.zsh/cache
 .*
 *~
 
-# Keep the dotfiles
+# Keep the dotfiles.
 !.gitconfig
 !.hushlogin
 !.zsh/
