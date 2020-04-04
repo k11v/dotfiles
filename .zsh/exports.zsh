@@ -3,10 +3,9 @@
 # ---------------------------------------------------------------------------- #
 
 
-export REPOSITORIES="$HOME/Repositories"
-export GITIGNORES="$HOME/Repositories/templates/gitignores"
-export READMES="$HOME/Repositories/templates/readmes"
-export LICENSES="$REPOSITORIES/templates/licenses"
+export LOCAL_EDU="$HOME/edu"
+export LOCAL_DEV="$HOME/dev"
+export LOCAL_WORK="$HOME/work"
 
 
 # ---------------------------------------------------------------------------- #
