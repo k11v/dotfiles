@@ -76,6 +76,8 @@ setup_dotfiles() {
     for src in $DOTFILES/.*; do
         src_name="$(basename "$src")"
         [ "$src_name" = ".DS_Store" ] && continue
+        [ "$src_name" = "." ] && continue
+        [ "$src_name" = ".." ] && continue
         dst="$HOME/$src_name"
         link_file "$src" "$dst"
     done
