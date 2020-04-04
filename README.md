@@ -212,3 +212,4 @@ Distributed under the MIT License. See the [LICENSE.md](LICENSE.md) for details.
 - [ptb's dotfiles](https://github.com/ptb/mac-setup)
 - [kevinSuttle's dotfiles](https://github.com/kevinSuttle/dotfiles)
 - [mathiasbynens's dotfiles](https://github.com/mathiasbynens/dotfiles)
+- [caarlos0's dotfiles](https://github.com/caarlos0/dotfiles)
