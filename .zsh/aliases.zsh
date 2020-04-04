@@ -43,9 +43,3 @@ alias mi='micro'
 
 # prettyping - `ping` with pretty output
 alias ping='prettyping'
-
-# diff-so-fancy - the best-lookin' diffs
-alias diff='diff-so-fancy'
-
-# ncdu - a more powerful version of `du`
-alias du='ncdu'
