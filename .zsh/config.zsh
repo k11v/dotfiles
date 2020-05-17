@@ -87,8 +87,6 @@ setopt SHARE_HISTORY
 setopt NO_CLOBBER
 # disable flow control characters `^S` and `^Q`
 setopt NO_FLOW_CONTROL
-# disable ^D to logout and exit on end-of-file
-setopt IGNORE_EOF
 # allow comments even in interactive shells
 setopt INTERACTIVE_COMMENTS
 # enable "anything but" globs
