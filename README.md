@@ -1,4 +1,4 @@
-# dotfiles
+# Dotfiles
 
 Files that start with a dot.
 
