@@ -1,4 +1,4 @@
-tap "caskroom/fonts"
+tap "homebrew/cask-fonts"
 tap "getantibody/tap"
 tap "homebrew/bundle"
 tap "homebrew/cask"
