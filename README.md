@@ -58,6 +58,8 @@ zsh
   defaults write com.apple.dock autohide-time-modifier -float 0.7
   # Speed up the dock's autohide delay (delete this key to revert)
   defaults write com.apple.dock autohide-delay -float 0.2
+  # Make dock bigger (delete this key to revert)
+  defaults write com.apple.dock tilesize -int 128
   # Apply changes
   killall Dock
   ```
