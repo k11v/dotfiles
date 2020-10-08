@@ -14,7 +14,7 @@ export LOCAL_WORK="$HOME/work"
 #
 
 
-# golang
+# Go
 export GOPATH="$HOME/.go"
 export PATH="$PATH:$GOPATH/bin"
 
@@ -24,16 +24,16 @@ export PATH="$PATH:$GOPATH/bin"
 #
 
 
-# terminal
+# Terminal
 export TERM='xterm-256color'
 
-# programs
-export EDITOR='micro'
+# Programs
+export EDITOR='vim'
 export PAGER='less'
-export VISUAL='micro'
+export VISUAL='vim'
 export BROWSER='open'
 
-# locale
+# Locale
 export LANG='en_US.UTF-8'
 export LANGUAGE='en_US:en_GB:en'
 export LC_TIME='en_GB.UTF-8'

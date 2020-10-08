@@ -3,9 +3,8 @@
 	email = 'gashkov.k.e@gmail.com'
 
 [core]
-	editor = "micro"
+	editor = "vim"
 	pager = "diff-so-fancy | less"
-	excludesFile = ~/.gitignore
 
 [push]
     default = simple

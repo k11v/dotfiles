@@ -24,7 +24,6 @@ export LESS="\
 --ignore-case \
 --LONG-PROMPT \
 --tabs=4"
-export LESSOPEN='| bat %s 2> /dev/null' # `bat` is external
 
 # man: colors
 export LESS_TERMCAP_mb=$'\e[1;38;5;179m' # begin bold
@@ -40,17 +39,6 @@ export LESS_TERMCAP_ue=$'\e[0m' # reset underline
 # External
 #
 
-
-# bat: default options
-export BAT_OPTS="\
---style=plain,changes,numbers \
---color=always \
---wrap=never \
---paging=never \
---tabs=4"
-
-# prettyping: default options
-alias prettyping='prettyping --nolegend'
 
 # ncdu: default options
 alias ncdu='ncdu --color dark -rr -x'

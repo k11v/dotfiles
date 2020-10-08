@@ -1,4 +1,4 @@
-# enable aliases to be sudo'ed
+# Enable aliases to be sudo'ed
 alias sudo="sudo "
 
 
@@ -24,7 +24,7 @@ alias md='mkdir'
 #
 
 
-# git - version contol system
+# git
 alias ga='git add'
 alias gr='git reset HEAD'
 alias gc='git commit'
@@ -37,9 +37,3 @@ alias gb='git branch'
 alias gl='git log --graph'
 alias gs='git status -sb'
 alias gd='git diff'
-
-# micro - modern terminal-based editor
-alias mi='micro'
-
-# prettyping - `ping` with pretty output
-alias ping='prettyping'
