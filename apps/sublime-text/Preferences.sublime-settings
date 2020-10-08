@@ -1,0 +1,15 @@
+{
+	"mini_diff": false,
+	"dictionary": "Packages/User/russian-english.dic",
+	"font_size": 12,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"rulers":
+	[
+		80
+	],
+	"theme": "Adaptive.sublime-theme",
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.sublime-color-scheme"
+}
