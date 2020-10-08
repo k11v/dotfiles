@@ -5,6 +5,9 @@
 .*
 *~
 
+# Ignore Homebrew cache.
+Brewfile.lock.json
+
 # Keep the dotfiles.
 !.gitconfig
 !.hushlogin
