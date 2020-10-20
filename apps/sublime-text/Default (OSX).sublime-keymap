@@ -1,5 +1,4 @@
 [
 	{ "keys": ["super+f"], "command": "show_panel", "args": {"panel": "replace", "reverse": false} },
 	{ "keys": ["super+n"], "command": "sugary_new_file" },
-	{ "keys": ["super+p"], "command": "markdown_preview", "args": {"target": "browser", "parser": "markdown"} }
 ]
