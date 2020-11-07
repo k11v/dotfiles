@@ -87,8 +87,6 @@ zsh
   - Copy settings to `User`
   - Install package control
   - Install packages:
-    - LaTeXTools
-    - MarkdownPreview
     - PlistBinary
   - Copy to `User` [Russian-English Bilingual](https://github.com/titoBouzout/Dictionaries) dictionary (`.aff` and `.dic`).
 </details>
