@@ -34,3 +34,4 @@ cask "vlc"
 
 mas "Amphetamine", id: 937984704
 mas "Telegram", id: 747648890
+mas "Things", id: 904280696
