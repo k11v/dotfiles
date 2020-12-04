@@ -32,7 +32,5 @@ cask "sublime-text"
 cask "transmission"
 cask "vlc"
 
-mas "1Password 7", id: 1333542190
 mas "Amphetamine", id: 937984704
 mas "Telegram", id: 747648890
-mas "Xcode", id: 497799835
