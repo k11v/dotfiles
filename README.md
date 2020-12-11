@@ -84,10 +84,8 @@ zsh
 <details>
   <summary><i>Sublime Text</i></summary>
 
-  - Copy settings to `User`
+  - Copy settings to `User/Packages`
   - Install package control
-  - Install packages:
-    - PlistBinary
   - Copy to `User` [Russian-English Bilingual](https://github.com/titoBouzout/Dictionaries) dictionary (`.aff` and `.dic`).
 </details>
 
