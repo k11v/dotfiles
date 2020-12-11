@@ -1,15 +1,16 @@
 {
-	"mini_diff": false,
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.sublime-color-scheme",
 	"dictionary": "Packages/User/russian-english.dic",
 	"font_size": 12,
 	"ignored_packages":
 	[
 		"Vintage"
 	],
+	"mini_diff": false,
 	"rulers":
 	[
 		80
 	],
 	"theme": "Adaptive.sublime-theme",
-	"color_scheme": "Packages/Color Scheme - Default/Monokai.sublime-color-scheme"
+	"word_wrap": false
 }
