@@ -1,0 +1,4 @@
+{
+	"shell_cmd": "mkdir -p \"$packages/.cache\" && pandoc --standalone --output \"$packages/.cache/markdown-preview.html\" --mathjax --css \"$packages/User/Markdown Preview.css\" --from markdown --to html --metadata pagetitle=\"$file_base_name\" \"$file\" && open -a \"Google Chrome\" \"$packages/.cache/markdown-preview.html\"",
+	"selector": "text.html.markdown"
+}
