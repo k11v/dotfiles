@@ -1,7 +1,8 @@
 {
 	"color_scheme": "Packages/Color Scheme - Default/Monokai.sublime-color-scheme",
-	"dictionary": "Packages/User/russian-english.dic",
-	"font_size": 12,
+	"dictionary": "Packages/User/Russian-English Bilingual.dic",
+	"font_face": "JetBrains Mono",
+	"font_size": 13,
 	"ignored_packages":
 	[
 		"Vintage"
