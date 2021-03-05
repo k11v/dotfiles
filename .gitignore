@@ -9,6 +9,7 @@
 Brewfile.lock.json
 
 # Keep the dotfiles.
+!.omnisharp/
 !.gitconfig
 !.hushlogin
 !.zsh/
