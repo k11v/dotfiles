@@ -111,3 +111,6 @@ bindkey -e
 
 # pyenv (modifies PATH)
 eval "$(pyenv init -)"
+
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
