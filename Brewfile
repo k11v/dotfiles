@@ -36,7 +36,7 @@ cask "spotify"
 cask "transmission"
 cask "visual-studio-code"
 cask "vlc"
-cask "zoomus"
+cask "zoom"
 
 mas "Amphetamine", id: 937984704
 mas "Telegram", id: 747648890
