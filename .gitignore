@@ -1,0 +1,9 @@
+# Ignore system files
+.*
+*~
+
+# Keep git files
+!.gitignore
+!.gitattributes
+!.gitmodules
+!.gitkeep
