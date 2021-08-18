@@ -2,6 +2,9 @@
 .*
 *~
 
+# Keep dotfiles
+!.zshrc
+
 # Keep git files
 !.gitignore
 !.gitattributes
