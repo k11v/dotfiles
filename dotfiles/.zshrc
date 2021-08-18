@@ -48,3 +48,18 @@ unsetopt LIST_AMBIGUOUS
 
 # Make unmatched globs resolve to an empty string instead of reporting an error
 setopt NULL_GLOB
+
+# --- History
+
+# Save each command's timestamp in history
+setopt EXTENDED_HISTORY
+# Expire duplicate entries first when trimming history
+setopt HIST_EXPIRE_DUPS_FIRST
+# Don't record an entry that was just recorded again
+setopt HIST_IGNORE_DUPS
+# Don't record an entry starting with space
+setopt HIST_IGNORE_SPACE
+# Don't write duplicate entries in the history file
+setopt HIST_SAVE_NO_DUPS
+# Immediately update history and share it between all sessions
+setopt SHARE_HISTORY
