@@ -43,3 +43,8 @@ setopt ALWAYS_TO_END
 setopt COMPLETE_IN_WORD
 # Show completions with unambiguous prefix insertion
 unsetopt LIST_AMBIGUOUS
+
+# --- Expansion and globbing
+
+# Make unmatched globs resolve to an empty string instead of reporting an error
+setopt NULL_GLOB
