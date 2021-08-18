@@ -28,3 +28,18 @@ alias gp='git push'
 alias gr='git reset HEAD'
 alias gs='git status -sb'
 alias gu='git pull'
+
+
+#
+# Zsh configuration
+#
+
+
+# --- Completions
+
+# Always move cursor to the end of completed word
+setopt ALWAYS_TO_END
+# Enable completions like "Mafile" -> "Makefile"
+setopt COMPLETE_IN_WORD
+# Show completions with unambiguous prefix insertion
+unsetopt LIST_AMBIGUOUS
