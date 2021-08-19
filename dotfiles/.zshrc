@@ -76,3 +76,8 @@ unsetopt CLOBBER
 unsetopt FLOW_CONTROL
 # Allow comments in interactive shells
 setopt INTERACTIVE_COMMENTS
+
+# --- Shell emulation
+
+# Allow '>>' redirection to create new files
+setopt APPEND_CREATE
