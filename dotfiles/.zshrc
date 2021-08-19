@@ -31,7 +31,7 @@ alias gu='git pull'
 
 
 #
-# Zsh configuration
+# Zsh options
 #
 
 
@@ -39,7 +39,7 @@ alias gu='git pull'
 
 # Always move cursor to the end of completed word
 setopt ALWAYS_TO_END
-# Enable completions like 'Mafile' -> 'Makefile'
+# Enable completions like 'Mafile' into 'Makefile'
 setopt COMPLETE_IN_WORD
 # Show completions with unambiguous prefix insertion
 unsetopt LIST_AMBIGUOUS
