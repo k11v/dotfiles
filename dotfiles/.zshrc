@@ -67,3 +67,12 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_SAVE_NO_DUPS
 # Immediately update history and share it between all sessions
 setopt SHARE_HISTORY
+
+# --- Input/output
+
+# Don't allow '>' redirection to override existing files, use '>!' instead
+unsetopt CLOBBER
+# Disable flow control characters to make available '^S' and '^Q' key bindings
+unsetopt FLOW_CONTROL
+# Allow comments in interactive shells
+setopt INTERACTIVE_COMMENTS
