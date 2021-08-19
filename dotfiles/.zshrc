@@ -43,6 +43,8 @@ setopt ALWAYS_TO_END
 setopt COMPLETE_IN_WORD
 # Show completions with unambiguous prefix insertion
 unsetopt LIST_AMBIGUOUS
+# Don't beep on ambiguous completion
+unsetopt LIST_BEEP
 
 # --- Expansion and globbing
 
@@ -53,6 +55,8 @@ setopt NULL_GLOB
 
 # Save each command's timestamp in history
 setopt EXTENDED_HISTORY
+# Don't beep when trying to access a history entry which isn't there
+unsetopt HIST_BEEP
 # Expire duplicate entries first when trimming history
 setopt HIST_EXPIRE_DUPS_FIRST
 # Don't record an entry that was just recorded again
