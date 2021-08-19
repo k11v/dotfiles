@@ -46,11 +46,6 @@ unsetopt LIST_AMBIGUOUS
 # Don't beep on ambiguous completion
 unsetopt LIST_BEEP
 
-# --- Expansion and globbing
-
-# Make unmatched globs resolve to an empty string instead of reporting an error
-setopt NULL_GLOB
-
 # --- History
 
 # Save each command's timestamp in history
@@ -70,14 +65,13 @@ setopt SHARE_HISTORY
 
 # --- Input/output
 
+# Make unmatched globs resolve to an empty string instead of reporting an error
+setopt NULL_GLOB
 # Don't allow '>' redirection to override existing files, use '>!' instead
 unsetopt CLOBBER
+# Allow '>>' redirection to create new files
+setopt APPEND_CREATE
 # Disable flow control characters to make available '^S' and '^Q' key bindings
 unsetopt FLOW_CONTROL
 # Allow comments in interactive shells
 setopt INTERACTIVE_COMMENTS
-
-# --- Shell emulation
-
-# Allow '>>' redirection to create new files
-setopt APPEND_CREATE
