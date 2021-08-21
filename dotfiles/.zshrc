@@ -84,7 +84,7 @@ setopt INTERACTIVE_COMMENTS
 #
 
 
-# -- Compinit
+# --- Compinit
 
 # Initialize completion from cache and update it once a day
 ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
