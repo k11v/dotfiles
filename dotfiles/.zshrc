@@ -77,3 +77,36 @@ setopt APPEND_CREATE
 unsetopt FLOW_CONTROL
 # Allow comments in interactive shells
 setopt INTERACTIVE_COMMENTS
+
+
+#
+# Zsh completion
+#
+
+
+# -- Compinit
+
+# Initialize completion from cache and update it once a day
+ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
+autoload -Uz compinit
+if [[ -n $ZCOMPDUMP(#qN.mh+24) ]]; then
+    compinit -d $ZCOMPDUMP
+else
+    compinit -C -d $ZCOMPDUMP
+fi
+unset ZCOMPDUMP
+
+# --- Styles
+
+# Enable arrow controls for completion and highlight selection
+zstyle ':completion:*' menu select
+# Colorize file completion
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# Make completion match case-insensitive for lowercase
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'
+# Prevent pasting with tabs from performing completion
+zstyle ':completion:*' insert-tab pending
+# Speed up completion for some programs by enabling cache for them
+zstyle ':completion:*' use-cache on
+# Specify completion cache directory for programs to use
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
