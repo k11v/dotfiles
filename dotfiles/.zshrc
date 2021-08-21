@@ -65,6 +65,8 @@ setopt SHARE_HISTORY
 
 # --- Input/output
 
+# Make globs case-insensitive (cuz it makes Git's completions case-insensitive)
+unsetopt CASE_GLOB
 # Make unmatched globs resolve to an empty string instead of reporting an error
 setopt NULL_GLOB
 # Don't allow '>' redirection to override existing files, use '>!' instead
