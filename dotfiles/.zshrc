@@ -101,12 +101,16 @@ zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 
 # --- Compinit
 
-# Initialize completion from cache and update it once a day
+# Initialize completion from cache and regenerate it once a day if needed
 ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 autoload -Uz compinit
-if [[ -n $ZCOMPDUMP(#qN.mh+24) ]]; then
-    compinit -d $ZCOMPDUMP
+if [ "$ZCOMPDUMP"(N.mh-24) ]; then
+    # Cache is still fresh therefore don't regenerate it
+    compinit -C -d "$ZCOMPDUMP"
 else
-    compinit -C -d $ZCOMPDUMP
-fi
+    # Cache is older than 24 hours, regenerate it if needed
+    compinit -d "$ZCOMPDUMP"
+    # Update cache's timestamp if it didn't need regeneration
+    touch "$ZCOMPDUMP"
+fi;
 unset ZCOMPDUMP
