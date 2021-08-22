@@ -84,18 +84,6 @@ setopt INTERACTIVE_COMMENTS
 #
 
 
-# --- Compinit
-
-# Initialize completion from cache and update it once a day
-ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
-autoload -Uz compinit
-if [[ -n $ZCOMPDUMP(#qN.mh+24) ]]; then
-    compinit -d $ZCOMPDUMP
-else
-    compinit -C -d $ZCOMPDUMP
-fi
-unset ZCOMPDUMP
-
 # --- Styles
 
 # Enable arrow controls for completion and highlight selection
@@ -110,3 +98,15 @@ zstyle ':completion:*' insert-tab pending
 zstyle ':completion:*' use-cache on
 # Specify completion cache directory for programs to use
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+
+# --- Compinit
+
+# Initialize completion from cache and update it once a day
+ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
+autoload -Uz compinit
+if [[ -n $ZCOMPDUMP(#qN.mh+24) ]]; then
+    compinit -d $ZCOMPDUMP
+else
+    compinit -C -d $ZCOMPDUMP
+fi
+unset ZCOMPDUMP
