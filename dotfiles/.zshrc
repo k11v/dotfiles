@@ -84,6 +84,9 @@ setopt INTERACTIVE_COMMENTS
 #
 
 
+# Zsh cache directory must exist before being referenced or caching won't work
+mkdir -p "$XDG_CACHE_HOME/zsh"
+
 # --- Styles
 
 # Enable arrow controls for completion and highlight selection
