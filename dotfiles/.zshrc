@@ -4,30 +4,29 @@
 
 
 #
-# Aliases
+# Variables
 #
 
 
-# Enable aliases to be sudo'ed
-alias sudo="sudo "
+# --- History
 
-alias l='ls -1A'
-alias ll='ls -lFA'
+# Path to history file
+HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
+# Maximum number of events to save in internal history
+HISTSIZE=10000
+# Maximum number of events to save in history file
+SAVEHIST=10000
 
-alias c='clear'
 
-alias ga='git add'
-alias gb='git branch'
-alias gc='git commit'
-alias gca='git commit --amend'
-alias gco='git checkout'
-alias gd='git diff --staged'
-alias gf='git fetch'
-alias gl='git log --graph --oneline -n 20'
-alias gp='git push'
-alias gr='git reset HEAD'
-alias gs='git status -sb'
-alias gu='git pull'
+#
+# Mkdirs
+#
+
+
+# Needed for completions
+mkdir -p "$XDG_CACHE_HOME/zsh"
+# Needed for history
+mkdir -p "$XDG_DATA_HOME/zsh"
 
 
 #
@@ -80,14 +79,11 @@ setopt INTERACTIVE_COMMENTS
 
 
 #
-# Zsh completion
+# Zsh styles
 #
 
 
-# Zsh cache directory must exist before being referenced or caching won't work
-mkdir -p "$XDG_CACHE_HOME/zsh"
-
-# --- Styles
+# --- Completions
 
 # Enable arrow controls for completion and highlight selection
 zstyle ':completion:*' menu select
@@ -102,7 +98,22 @@ zstyle ':completion:*' use-cache on
 # Specify completion cache directory for programs to use
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 
-# --- Compinit
+
+#
+# Zsh key bindings
+#
+
+
+# Set emacs key bindings
+bindkey -e
+
+
+#
+# Inits
+#
+
+
+# --- Completions
 
 # Initialize completion from cache and regenerate it once a day if needed
 ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
@@ -120,27 +131,27 @@ unset ZCOMPDUMP
 
 
 #
-# Zsh history
+# Aliases
 #
 
 
-# Zsh data directory must exist before being referenced or history won't work
-mkdir -p "$XDG_DATA_HOME/zsh"
+# Enable aliases to be sudo'ed
+alias sudo="sudo "
 
-# --- Variables
+alias l='ls -1A'
+alias ll='ls -lFA'
 
-# Path to history file
-HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
-# Maximum number of events to save in internal history
-HISTSIZE=10000
-# Maximum number of events to save in history file
-SAVEHIST=10000
+alias c='clear'
 
-
-#
-# Zsh key bindings
-#
-
-
-# Set Emacs mode
-bindkey -e
+alias ga='git add'
+alias gb='git branch'
+alias gc='git commit'
+alias gca='git commit --amend'
+alias gco='git checkout'
+alias gd='git diff --staged'
+alias gf='git fetch'
+alias gl='git log --graph --oneline -n 20'
+alias gp='git push'
+alias gr='git reset HEAD'
+alias gs='git status -sb'
+alias gu='git pull'
