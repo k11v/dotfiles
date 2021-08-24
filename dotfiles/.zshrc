@@ -117,3 +117,21 @@ else
     touch "$ZCOMPDUMP"
 fi;
 unset ZCOMPDUMP
+
+
+#
+# Zsh history
+#
+
+
+# Zsh data directory must exist before being referenced or history won't work
+mkdir -p "$XDG_DATA_HOME/zsh"
+
+# --- Variables
+
+# Path to history file
+HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
+# Maximum number of events to save in internal history
+HISTSIZE=10000
+# Maximum number of events to save in history file
+SAVEHIST=10000
