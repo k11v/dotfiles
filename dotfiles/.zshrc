@@ -135,3 +135,12 @@ HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
 HISTSIZE=10000
 # Maximum number of events to save in history file
 SAVEHIST=10000
+
+
+#
+# Zsh key bindings
+#
+
+
+# Set Emacs mode
+bindkey -e
