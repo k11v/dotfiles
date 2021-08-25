@@ -24,7 +24,6 @@ export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;32m'
 export LESS_TERMCAP_ue=$'\e[0m'
 
-
 # --- Default options
 
 # Options for less command:
@@ -44,6 +43,19 @@ HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
 HISTSIZE=10000
 # Maximum number of events to save in history file
 SAVEHIST=10000
+
+# --- Session
+
+# Tell programs that our terminal supports colors
+export TERM='xterm-256color'
+
+# Use vim as editor and less as pager
+export EDITOR='vim'
+export PAGER='less'
+
+# Prefer US English and use UTF-8
+export LANG='en_US.UTF-8';
+export LC_ALL='en_US.UTF-8';
 
 
 #
