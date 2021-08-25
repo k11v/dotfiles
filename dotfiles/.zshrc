@@ -8,6 +8,17 @@
 #
 
 
+# --- Default options
+
+# Options for less command:
+# - Make search highlight only current match (-g)
+# - Make search match case-insensitive for lowercase (-i)
+# - Show viewport's line numbers in the prompt (-M)
+# - Render escaped ANSI colors (-R)
+# - Chop long lines instead of folding them (-S)
+# - Set tab size to 4 (-x4)
+export LESS='-g -i -M -R -S -x4'
+
 # --- History
 
 # Path to history file
