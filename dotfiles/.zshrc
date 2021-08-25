@@ -138,6 +138,13 @@ unset ZCOMPDUMP
 # Enable aliases to be sudo'ed
 alias sudo="sudo "
 
+# --- Default options
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# --- Abbreviations
+
 alias l='ls -1A'
 alias ll='ls -lFA'
 
