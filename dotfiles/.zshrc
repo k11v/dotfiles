@@ -202,3 +202,19 @@ alias gp='git push'
 alias gr='git reset HEAD'
 alias gs='git status -sb'
 alias gu='git pull'
+
+
+#
+# Functions
+#
+
+
+# Change working directory to the top-most Finder window location
+cdf() {
+    cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
+}
+
+# Reload the shell (i.e. invoke as a login shell)
+reload() {
+    exec "$SHELL" -l
+}
