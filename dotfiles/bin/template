@@ -1,0 +1,72 @@
+#!/bin/sh
+
+
+# Config directory precedence
+# 1. $TEMPLATE_CONFIG_DIR
+# 2. $XDG_CONFIG_HOME/template
+# 3. $HOME/.config/template
+if [ -n "$TEMPLATE_CONFIG_DIR" ]; then
+    config_dir="$TEMPLATE_CONFIG_DIR"
+elif [ -n "$XDG_CONFIG_HOME" ]; then
+    config_dir="$XDG_CONFIG_HOME/template"
+else
+    config_dir="$HOME/.config/template"
+fi
+
+library_dir="$config_dir/library"
+file_name="$(basename "$(dirname "$library_dir/$1")")"
+
+
+#
+# Template file checks
+#
+
+
+if [ -z "$1" ]; then
+    echo "$0: template file is not specified"
+    exit 1
+fi
+
+if [ ! -e "$library_dir/$1" ]; then
+    echo "$0: template file does not exist in the library"
+    exit 1
+fi
+
+if [ ! -f "$library_dir/$1" ]; then
+    echo "$0: template file is not a regular file"
+    exit 1
+fi
+
+
+#
+# Destination directory checks
+#
+
+
+if [ -z "$2" ]; then
+    echo "$0: destination directory is not specified"
+    exit 1
+fi
+
+if [ ! -e "$2" ]; then
+    echo "$0: destination directory does not exist"
+    exit 1
+fi
+
+if [ ! -d "$2" ]; then
+    echo "$0: destination directory is not a directory"
+    exit 1
+fi
+
+if [ -e "$2/$file_name" ]; then
+    echo "$0: destination directory already has a file named '$file_name'"
+    exit 1
+fi
+
+
+#
+# Main
+#
+
+
+cp "$library_dir/$1" "$2/$file_name"
