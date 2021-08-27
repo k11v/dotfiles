@@ -16,7 +16,7 @@ fatal() {
 
 
 library="${XDG_CONFIG_HOME:-$HOME/.config}/template/library"
-file_name="$(basename "$(dirname "$library/$1")")"
+filename="$(basename "$(dirname "$library/$1")")"
 
 
 if [ -z "$1" ]; then
@@ -24,17 +24,21 @@ if [ -z "$1" ]; then
 fi
 
 if [ ! -e "$library/$1" ]; then
-    fatal "template file does not exist in the library"
+    fatal "template file '$1' does not exist in the library"
 fi
 
 if [ ! -f "$library/$1" ]; then
-    fatal "template file is not a regular file"
+    fatal "template file '$1' is not a regular file"
 fi
 
-[ -n "$2" ] && did_cd=0 && mkdir "$2" && cd "$2" && did_cd=1
+[ -n "$2" ] && did_cd=0 && mkdir -p "$2" && cd "$2" && did_cd=1
 
 if [ "$did_cd" = 0 ]; then
-    fatal "destination directory cannot be reached"
+    fatal "destination directory '$2' cannot be reached"
+fi
+
+if [ -e "$PWD/$filename" ]; then
+    fatal "destination directory already contains a file named '$filename'"
 fi
 
 
