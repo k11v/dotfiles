@@ -1,4 +1,13 @@
 #!/bin/sh
+#
+# Usage: template <template-file> [<destination-directory>]
+#
+# Copies the specified template file to the current working directory or to
+# the optionally specified destination directory.
+#
+# The copied file will have the name of its template file's parent directory,
+# so put your templates inside directories like '.gitignore' and 'LICENSE.md'
+# for them to have these names after they have been copied.
 
 fatal() {
     echo "$(basename $0): $@"
