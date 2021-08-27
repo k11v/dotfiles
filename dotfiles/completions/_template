@@ -1,19 +1,9 @@
 #compdef template
+#
+# Usage: template <template-file> [<destination-directory>]
 
-# Config directory precedence
-# 1. $TEMPLATE_CONFIG_DIR
-# 2. $XDG_CONFIG_HOME/template
-# 3. $HOME/.config/template
-if [ -n "$TEMPLATE_CONFIG_DIR" ]; then
-    local config_dir="$TEMPLATE_CONFIG_DIR"
-elif [ -n "$XDG_CONFIG_HOME" ]; then
-    local config_dir="$XDG_CONFIG_HOME/template"
-else
-    local config_dir="$HOME/.config/template"
-fi
-
-local library_dir="$config_dir/library"
+local library="${XDG_CONFIG_HOME:-$HOME/.config}/template/library"
 
 _arguments -s \
-    "1:template name:_files -W \"$library_dir\"" \
-    '2:destination directory:_files'
+    "1:template file:_files -W \"$library\"" \
+    '2:destination directory:_files -/'
