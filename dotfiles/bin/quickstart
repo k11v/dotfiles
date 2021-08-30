@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Usage: quickstart <quickstart-file> [<working-directory>]
+#
+# Executes the specified quickstart file in the current working directory or
+# in the another optionally specified working directory.
+
+fatal() {
+    echo "$(basename $0): $@" >&2
+    exit 1
+}
+
+warning() {
+    echo "$@" >&2
+}
+
+confirm() {
+    read -p "$@" -n 1 yn
+    [[ "$yn" == [yY] ]]
+    return "$?"
+}
+
+
+library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart/library"
+
+
+if [ -z "$1" ]; then
+    fatal "quickstart file was not specified"
+fi
+
+if [ ! -e "$library/$1" ]; then
+    fatal "quickstart file '$1' does not exist in the library"
+fi
+
+if [ ! -x "$library/$1" ]; then
+    fatal "quickstart file '$1' is not executable"
+fi
+
+[ -n "$2" ] && did_cd=0 && mkdir -p "$2" && cd "$2" && did_cd=1
+
+if [ "$did_cd" = 0 ]; then
+    fatal "specified working directory '$2' cannot be reached"
+fi
+
+if [ -n "$(ls -A \"$PWD\")" ]; then
+    warning "Working directory '$2' is not empty."
+    confirm "Do you want to continue? [Y/n] " || { warning "Abort."; exit 2 }
+fi
+
+
+"$library/$1"
