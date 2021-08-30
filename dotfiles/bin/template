@@ -10,7 +10,7 @@
 # for them to have these names after they have been copied.
 
 fatal() {
-    echo "$(basename $0): $@"
+    echo "$(basename $0): $@" >&2
     exit 1
 }
 
