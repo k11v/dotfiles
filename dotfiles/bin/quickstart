@@ -3,7 +3,7 @@
 # Usage: quickstart <quickstart-file> [<working-directory>]
 #
 # Executes the specified quickstart file in the current working directory or
-# in the another optionally specified working directory.
+# in the optionally specified working directory.
 
 fatal() {
     echo "$(basename "$0"): $1" >&2
@@ -48,7 +48,7 @@ if [ "$did_cd" = 0 ]; then
 fi
 
 if [ -n "$(ls -A "$PWD")" ]; then
-    warning "Working directory '$2' is not empty."
+    warning "Working directory '$PWD' is not empty."
     confirm "Do you want to continue? [Y/n] " || { warning "Abort."; exit 2; }
 fi
 
