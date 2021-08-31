@@ -15,9 +15,14 @@ warning() {
 }
 
 confirm() {
-    read -p "$@" -n 1 yn
-    [[ "$yn" == [yY] ]]
-    return "$?"
+    printf "$1" >&2
+    read answer
+
+    case "$answer" in
+        [Yy]*) return 0;;
+    esac
+
+    return 1
 }
 
 
