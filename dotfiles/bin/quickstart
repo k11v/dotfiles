@@ -6,17 +6,17 @@
 # in the another optionally specified working directory.
 
 fatal() {
-    echo "$(basename $0): $@" >&2
+    echo "$(basename "$0"): $1" >&2
     exit 1
 }
 
 warning() {
-    echo "$@" >&2
+    echo "$1" >&2
 }
 
 confirm() {
-    printf "$1" >&2
-    read answer
+    printf '%s' "$1" >&2
+    read -r answer
 
     case "$answer" in
         [Yy]*) return 0;;
@@ -47,9 +47,9 @@ if [ "$did_cd" = 0 ]; then
     fatal "specified working directory '$2' cannot be reached"
 fi
 
-if [ -n "$(ls -A \"$PWD\")" ]; then
+if [ -n "$(ls -A "$PWD")" ]; then
     warning "Working directory '$2' is not empty."
-    confirm "Do you want to continue? [Y/n] " || { warning "Abort."; exit 2 }
+    confirm "Do you want to continue? [Y/n] " || { warning "Abort."; exit 2; }
 fi
 
 
