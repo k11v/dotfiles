@@ -69,6 +69,11 @@ export PAGER='less'
 export LANG='en_US.UTF-8';
 export LC_ALL='en_US.UTF-8';
 
+# --- Prompt
+
+# Prevent percent sign from showing up if output doesn't end with a newline
+PROMPT_EOL_MARK=''
+
 
 #
 # Mkdirs
