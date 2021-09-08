@@ -224,3 +224,8 @@ reload() {
 diff() {
     git diff --no-index "$@"
 }
+
+# Get external IP
+myip() {
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
