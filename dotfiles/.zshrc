@@ -217,7 +217,7 @@ cdf() {
 
 # Reload the shell (i.e. invoke as a login shell)
 reload() {
-    exec "$SHELL" -l
+    clear && exec "$SHELL" -l
 }
 
 # Compare files using Git's colored diff
