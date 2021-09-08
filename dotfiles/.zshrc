@@ -218,3 +218,8 @@ cdf() {
 reload() {
     exec "$SHELL" -l
 }
+
+# Compare files using Git's colored diff
+diff() {
+    git diff --no-index "$@"
+}
