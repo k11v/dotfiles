@@ -15,6 +15,11 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
+# --- Path
+
+export PATH="$HOME/bin:$PATH"
+fpath+=( "$XDG_CONFIG_HOME/zsh/completions" )
+
 # --- Colors
 
 # Colors for list command and completions
