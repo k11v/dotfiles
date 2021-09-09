@@ -4,6 +4,7 @@
 
 # Keep dotfiles
 !.zshrc
+!.gitconfig
 
 # Keep git files
 !.gitignore
