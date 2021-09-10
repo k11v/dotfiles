@@ -17,7 +17,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 # --- Path
 
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 fpath+=( "$XDG_CONFIG_HOME/zsh/completions" )
 
 # --- Colors
