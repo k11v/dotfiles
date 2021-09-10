@@ -8,12 +8,16 @@
 #
 
 
-# --- XDG base directory
+# --- Directories
 
+# XDG directories
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+
+# A directory for repositories
+export REPOSITORIES="$HOME/Repositories"
 
 # --- Path
 
@@ -245,4 +249,9 @@ diff() {
 # Get external IP
 myip() {
     dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+# Quickly jump into a repository
+repo() {
+    cd "$REPOSITORIES/$1"
 }
