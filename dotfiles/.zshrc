@@ -247,6 +247,11 @@ _prompt_precmd() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _prompt_precmd
 
+# --- Programs
+
+# fzf
+source "$XDG_CONFIG_HOME/fzf/fzf.zsh"
+
 
 #
 # Aliases
