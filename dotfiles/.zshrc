@@ -19,9 +19,16 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # The directory for repositories
 export REPOSITORIES="$HOME/Repositories"
 
+# The directory for pyenv to place Python versions and shims in
+export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
+
 # --- Path
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Pyenv shims should be before Python executables
+export PATH="$PYENV_ROOT/shims:$PATH"
+
 fpath+=( "$XDG_CONFIG_HOME/zsh/completions" )
 
 # --- Colors
@@ -249,8 +256,38 @@ add-zsh-hook precmd _prompt_precmd
 
 # --- Programs
 
-# fzf
+# Enable fzf features configured during setup
 source "$XDG_CONFIG_HOME/fzf/fzf.zsh"
+
+# Lazy init pyenv either through the command or through the completion
+_dotfiles_pyenv_init() {
+    # The second run of this function will be harmful to the environment
+    unfunction _dotfiles_pyenv_init
+
+    # Remove lazy functions and completers in favor of whatever the init brings
+    unfunction pyenv
+    unfunction _pyenv
+    compdef -d pyenv
+
+    # Initialize pyenv to get new 'pyenv' function and completions
+    eval "$(pyenv init -)"
+}
+pyenv() {
+    # Intercept pyenv call to perform initialization
+    _dotfiles_pyenv_init
+
+    # Perform the real pyenv call after initialization
+    pyenv "$@"
+
+}
+_pyenv() {
+    # Intercept pyenv completion to perform initialization
+    _dotfiles_pyenv_init
+
+    # Perform the real pyenv completion after initialization
+    _main_complete
+}
+compdef _pyenv pyenv
 
 
 #
