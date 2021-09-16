@@ -1,7 +1,5 @@
 #!/bin/sh
 #
-# Usage: template <template-file> [<destination-directory>]
-#
 # Copies the specified template file to the current working directory or to
 # the optionally specified destination directory.
 #
@@ -13,6 +11,16 @@ fatal() {
     echo "$(basename "$0"): $1" >&2
     exit 1
 }
+
+warning() {
+    echo "$1" >&2
+}
+
+
+if [ "$#" -eq 0 ]; then
+    warning "usage: $(basename "$0") <template-file> [<destination-directory>]"
+    exit 1
+fi
 
 
 library="${XDG_CONFIG_HOME:-$HOME/.config}/template/library"

@@ -1,7 +1,5 @@
 #!/bin/sh
 #
-# Usage: quickstart <quickstart-file> [<working-directory>]
-#
 # Executes the specified quickstart file in the current working directory or
 # in the optionally specified working directory.
 
@@ -24,6 +22,12 @@ confirm() {
 
     return 1
 }
+
+
+if [ "$#" -eq 0 ]; then
+    warning "usage: $(basename "$0") <quickstart-file> [<working-directory>]"
+    exit 1
+fi
 
 
 library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart/library"
