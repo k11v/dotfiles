@@ -6,6 +6,9 @@
     editor = vim
     pager = diff-so-fancy | less
 
+[pager]
+    branch = false
+
 [push]
     default = simple
 
