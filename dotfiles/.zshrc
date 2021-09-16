@@ -203,7 +203,7 @@ unset ZCOMPDUMP
 
 # --- Prompt
 
-_prompt_precmd() {
+_dotfiles_prompt_precmd() {
     local exit_status="$?"
 
     local username=''
@@ -252,7 +252,7 @@ _prompt_precmd() {
 }
 
 autoload -Uz add-zsh-hook
-add-zsh-hook precmd _prompt_precmd
+add-zsh-hook precmd _dotfiles_prompt_precmd
 
 # --- Programs
 
