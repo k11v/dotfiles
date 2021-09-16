@@ -181,7 +181,7 @@ bindkey -e
 
 
 #
-# Inits
+# Zsh inits
 #
 
 
