@@ -89,6 +89,11 @@ PROMPT_EOL_MARK=''
 # Use ellipsis as the continuation prompt
 PS2='%B…%b '
 
+# --- Completions
+
+# Zsh completion cache
+ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
+
 
 #
 # Mkdirs
@@ -188,7 +193,6 @@ bindkey -e
 # --- Completions
 
 # Initialize completion from cache and regenerate it once a day if needed
-ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 autoload -Uz compinit
 if [ "$ZCOMPDUMP"(N.mh-24) ]; then
     # Cache is still fresh therefore don't regenerate it
@@ -199,7 +203,6 @@ else
     # Update cache's timestamp if it didn't need regeneration
     touch "$ZCOMPDUMP"
 fi;
-unset ZCOMPDUMP
 
 # --- Prompt
 
@@ -338,6 +341,12 @@ cdf() {
 # Reload the shell (i.e. invoke as a login shell)
 reload() {
     clear && exec "$SHELL" -l
+}
+
+# Compile completion cache from scratch
+recompinit() {
+    rm "$ZCOMPDUMP"
+    compinit -d "$ZCOMPDUMP"
 }
 
 # Compare files using Git's colored diff
