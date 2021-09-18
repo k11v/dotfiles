@@ -10,9 +10,11 @@ sudo -v
 # Keep-alive: update existing 'sudo' time stamp until this script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 
-###############################################################################
-# General UI/UX                                                               #
-###############################################################################
+
+#
+# General UI/UX
+#
+
 
 # Disable the "Are you sure you want to open this application?" dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
@@ -32,9 +34,11 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-###############################################################################
-# Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
-###############################################################################
+
+#
+# Trackpad, mouse, keyboard, Bluetooth accessories, and input
+#
+
 
 # Set language and region settings
 defaults write NSGlobalDomain AppleLocale -string 'en_RU'
@@ -49,9 +53,11 @@ defaults write NSGlobalDomain AppleMeasurementUnits -string 'Centimeters'
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 defaults write NSGlobalDomain AppleTemperatureUnit -string 'Celsius'
 
-###############################################################################
-# Finder                                                                      #
-###############################################################################
+
+#
+# Finder
+#
+
 
 # Set home as the default location for new Finder windows
 defaults write com.apple.finder NewWindowTarget -string 'PfHm'
@@ -93,9 +99,11 @@ chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library
 # Show the /Volumes folder
 sudo chflags nohidden '/Volumes'
 
-###############################################################################
-# Dock, Dashboard, and hot corners                                            #
-###############################################################################
+
+#
+# Dock, Dashboard, and hot corners
+#
+
 
 # Minimize windows into their application's icon
 defaults write com.apple.dock minimize-to-application -bool true
@@ -121,23 +129,29 @@ defaults write com.apple.dock autohide -bool true
 # Don't show recent applications in Dock
 defaults write com.apple.dock show-recents -bool false
 
-###############################################################################
-# Safari & WebKit                                                             #
-###############################################################################
+
+#
+# Safari & WebKit
+#
+
 
 # Enable the Develop menu in Safari
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 
-###############################################################################
-# Time Machine                                                                #
-###############################################################################
+
+#
+# Time Machine
+#
+
 
 # Prevent Time Machine from prompting to use new hard drives as backup volume
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
-###############################################################################
-# Mac App Store                                                               #
-###############################################################################
+
+#
+# Mac App Store
+#
+
 
 # Enable the automatic update check
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
@@ -148,16 +162,20 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
 # Turn on app auto-update
 defaults write com.apple.commerce AutoUpdate -bool true
 
-###############################################################################
-# Photos                                                                      #
-###############################################################################
+
+#
+# Photos
+#
+
 
 # Prevent Photos from opening automatically when devices are plugged in
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 
-###############################################################################
-# Transmission.app                                                            #
-###############################################################################
+
+#
+# Transmission.app
+#
+
 
 # Use the downloads folder to store downloads
 defaults write org.m0k.transmission DownloadLocationConstant -bool true
@@ -181,9 +199,11 @@ defaults write org.m0k.transmission WarningLegal -bool false
 # Randomize port on launch
 defaults write org.m0k.transmission RandomPort -bool true
 
-###############################################################################
-# Kill affected applications                                                  #
-###############################################################################
+
+#
+# Kill affected applications
+#
+
 
 for app in \
     "Activity Monitor" \
