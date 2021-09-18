@@ -12,7 +12,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 
 
 #
-# General UI/UX
+# General
 #
 
 
@@ -33,12 +33,6 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-
-#
-# Trackpad, mouse, keyboard, Bluetooth accessories, and input
-#
-
 
 # Set language and region settings
 defaults write NSGlobalDomain AppleLocale -string 'en_RU'
@@ -69,10 +63,10 @@ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
 
-# Finder: show hidden files by default
+# Show hidden files by default
 defaults write com.apple.finder AppleShowAllFiles -bool true
 
-# Finder: show all filename extensions
+# Show all filename extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # When performing a search, search the current folder by default
@@ -101,11 +95,11 @@ sudo chflags nohidden '/Volumes'
 
 
 #
-# Dock, Dashboard, and hot corners
+# Mission Control
 #
 
 
-# Minimize windows into their application's icon
+# Minimize windows into their application's icon in the Dock
 defaults write com.apple.dock minimize-to-application -bool true
 
 # Show indicator lights for open applications in the Dock
@@ -113,9 +107,6 @@ defaults write com.apple.dock show-process-indicators -bool true
 
 # Wipe all (default) app icons from the Dock
 defaults write com.apple.dock persistent-apps -array
-
-# Don't automatically rearrange Spaces based on most recent use
-defaults write com.apple.dock mru-spaces -bool false
 
 # Remove the auto-hiding Dock delay
 defaults write com.apple.dock autohide-delay -float 0.2
@@ -129,9 +120,12 @@ defaults write com.apple.dock autohide -bool true
 # Don't show recent applications in Dock
 defaults write com.apple.dock show-recents -bool false
 
+# Don't automatically rearrange Spaces
+defaults write com.apple.dock mru-spaces -bool false
+
 
 #
-# Safari & WebKit
+# Safari
 #
 
 
@@ -149,7 +143,7 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 
 #
-# Mac App Store
+# App Store
 #
 
 
@@ -173,7 +167,7 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 
 
 #
-# Transmission.app
+# Transmission
 #
 
 
@@ -201,26 +195,27 @@ defaults write org.m0k.transmission RandomPort -bool true
 
 
 #
-# Kill affected applications
+# Cleanup
 #
 
 
+# Kill affected applications
 for app in \
-    "Activity Monitor" \
-    "Address Book" \
-    "Calendar" \
-    "cfprefsd" \
-    "Contacts" \
-    "Dock" \
-    "Finder" \
-    "Mail" \
-    "Messages" \
-    "Photos" \
-    "Safari" \
-    "SystemUIServer" \
-    "Terminal" \
-    "Transmission" \
-    "iCal"; do
+    'Activity Monitor' \
+    'Address Book' \
+    'Calendar' \
+    'cfprefsd' \
+    'Contacts' \
+    'Dock' \
+    'Finder' \
+    'Mail' \
+    'Messages' \
+    'Photos' \
+    'Safari' \
+    'SystemUIServer' \
+    'Terminal' \
+    'Transmission' \
+    'iCal'; do
     killall "$app" &> /dev/null
 done
 echo "Done. Note that some of these changes require a restart to take effect."
