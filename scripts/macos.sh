@@ -47,6 +47,9 @@ defaults write NSGlobalDomain AppleMeasurementUnits -string 'Centimeters'
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 defaults write NSGlobalDomain AppleTemperatureUnit -string 'Celsius'
 
+# Use a 12-hour clock in menu bar
+defaults write com.apple.menuextra.clock DateFormat -string 'EEE MMM d  h:mm a'
+
 
 #
 # Finder
