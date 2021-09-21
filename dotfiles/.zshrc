@@ -355,11 +355,6 @@ cdf() {
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
-# Reload the shell (i.e. invoke as a login shell)
-reload() {
-    clear && exec "$SHELL" -l
-}
-
 # Compile completion cache from scratch
 recompinit() {
     rm "$ZCOMPDUMP"
