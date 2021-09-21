@@ -24,6 +24,7 @@ export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 
 # --- Path
 
+# XDG executables
 export PATH="$HOME/.local/bin:$PATH"
 
 # Pyenv shims should be before Python executables
