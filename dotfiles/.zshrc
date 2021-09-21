@@ -73,8 +73,9 @@ SAVEHIST=10000
 # Tell programs that our terminal supports colors
 export TERM='xterm-256color'
 
-# Use vim as editor and less as pager
+# Set editors to vim and pager to less
 export EDITOR='vim'
+export VISUAL='vim'
 export PAGER='less'
 
 # Prefer US English and use UTF-8
