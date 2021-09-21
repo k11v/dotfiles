@@ -84,8 +84,8 @@ export LC_ALL='en_US.UTF-8';
 
 # --- Prompt
 
-# Disable prompt mangling in venv's bin/activate
-export VIRTUAL_ENV_DISABLE_PROMPT=1
+# Disable prompt mangling caused by activating Python virtualenvs
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # Prevent percent sign from showing up if output doesn't end with a newline
 PROMPT_EOL_MARK=''
 # Use ellipsis as the continuation prompt
