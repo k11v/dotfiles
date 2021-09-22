@@ -30,7 +30,7 @@ export PATH="$HOME/.local/bin:$PATH"
 # Pyenv shims should be before Python executables
 export PATH="$PYENV_ROOT/shims:$PATH"
 
-fpath+=( "$XDG_CONFIG_HOME/zsh/completions" )
+export FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
 
 # --- Colors
 
