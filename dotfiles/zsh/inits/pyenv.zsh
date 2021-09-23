@@ -1,7 +1,7 @@
 # Lazy init pyenv either through the command or through the completion
-_dotfiles_pyenv_init() {
+_pyenv_init() {
     # The second run of this function will be harmful to the environment
-    unfunction _dotfiles_pyenv_init
+    unfunction _pyenv_init
 
     # Remove lazy functions and completers in favor of whatever the init brings
     unfunction pyenv
@@ -13,7 +13,7 @@ _dotfiles_pyenv_init() {
 }
 pyenv() {
     # Intercept pyenv call to perform initialization
-    _dotfiles_pyenv_init
+    _pyenv_init
 
     # Perform the real pyenv call after initialization
     pyenv "$@"
@@ -21,7 +21,7 @@ pyenv() {
 }
 _pyenv() {
     # Intercept pyenv completion to perform initialization
-    _dotfiles_pyenv_init
+    _pyenv_init
 
     # Perform the real pyenv completion after initialization
     _main_complete

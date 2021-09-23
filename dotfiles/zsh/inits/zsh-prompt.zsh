@@ -1,4 +1,4 @@
-_dotfiles_prompt_precmd() {
+_prompt_precmd() {
     local exit_status="$?"
 
     local username=''
@@ -47,4 +47,4 @@ _dotfiles_prompt_precmd() {
 }
 
 autoload -Uz add-zsh-hook
-add-zsh-hook precmd _dotfiles_prompt_precmd
+add-zsh-hook precmd _prompt_precmd
