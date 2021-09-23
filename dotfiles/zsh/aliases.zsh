@@ -1,11 +1,6 @@
 # Enable aliases to be sudo'ed
 alias sudo="sudo "
 
-# Normalize 'open' across Linux and macOS
-if [ ! "$(uname -s)" = 'Darwin' ]; then
-    alias open='xdg-open';
-fi
-
 # Default options
 
 alias ls='ls --color=auto'
