@@ -1,22 +1,22 @@
 _prompt_precmd() {
     local exit_status="$?"
 
-    local username=''
-    local hostname=''
-    local workdir='%B%F{cyan}%~%f%b'
-    local branch=''
-    local venv=''
-    local symbol='%B%F{green}❯%f%b'
+    local username=""
+    local hostname=""
+    local workdir="%B%F{cyan}%~%f%b"
+    local branch=""
+    local venv=""
+    local symbol="%B%F{green}❯%f%b"
 
     # Show username and hostname when connected via SSH
     if [[ -n "${SSH_CONNECTION-}${SSH_CLIENT-}${SSH_TTY-}" ]]; then
-        username='%B%F{yellow}%n%f%b in '
-        hostname='%B%F{green}%m%f%b in '
+        username="%B%F{yellow}%n%f%b in "
+        hostname="%B%F{green}%m%f%b in "
     fi
 
     # Show red username for superuser
     if [[ "${EUID-}" -eq 0 ]]; then
-        username='%B%F{red}%n%f%b in '
+        username="%B%F{red}%n%f%b in "
     fi
 
     # Show branch when in a Git repository
@@ -40,7 +40,7 @@ _prompt_precmd() {
 
     # Color symbol red if previous command failed
     if [[ "$exit_status" -ne 0 ]]; then
-        symbol='%B%F{red}❯%f%b'
+        symbol="%B%F{red}❯%f%b"
     fi
 
     PROMPT=$'\n'"$username$hostname$workdir$branch$venv"$'\n'"$symbol "
