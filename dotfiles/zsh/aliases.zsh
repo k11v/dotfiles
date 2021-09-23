@@ -1,17 +1,20 @@
-# Enable aliases to be sudo'ed
-alias sudo="sudo "
+# Global
 
-# Default options
+alias sudo="sudo "  # Enable aliases to be sudo'ed
+
+# Terminal utils
+
+alias c="clear"
+
+# GNU utils
 
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
 
-# Abbreviations
-
 alias l="ls -1A"
 alias ll="ls -lFA"
 
-alias c="clear"
+# Git
 
 alias ga="git add"
 alias gb="git branch"
