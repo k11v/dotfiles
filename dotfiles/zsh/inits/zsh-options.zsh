@@ -4,8 +4,6 @@
 setopt ALWAYS_TO_END
 # Enable completions like 'Mafile' into 'Makefile'
 setopt COMPLETE_IN_WORD
-# Show completions with unambiguous prefix insertion
-unsetopt LIST_AMBIGUOUS
 # Don't beep on ambiguous completion
 unsetopt LIST_BEEP
 
