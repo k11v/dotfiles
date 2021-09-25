@@ -1,2 +1,1 @@
-# Use Emacs key bindings
-bindkey -e
+bindkey -e  # Emacs key bindings
