@@ -1,40 +1,24 @@
 # Completion
 
-# Always move cursor to the end of completed word
-setopt ALWAYS_TO_END
-# Enable completions like 'Mafile' into 'Makefile'
-setopt COMPLETE_IN_WORD
-# Don't beep on ambiguous completion
-unsetopt LIST_BEEP
+setopt ALWAYS_TO_END           # Move cursor to the end of a completed word
+setopt COMPLETE_IN_WORD        # Allow completion from inside a word
+unsetopt LIST_BEEP             # Suppress beep on an ambiguous completion
 
 # History
 
-# Save each command's timestamp in history
-setopt EXTENDED_HISTORY
-# Don't beep when trying to access a history entry which isn't there
-unsetopt HIST_BEEP
-# Expire duplicate entries first when trimming history
-setopt HIST_EXPIRE_DUPS_FIRST
-# Don't record an entry that was just recorded again
-setopt HIST_IGNORE_DUPS
-# Don't record an entry starting with space
-setopt HIST_IGNORE_SPACE
-# Don't write duplicate entries in the history file
-setopt HIST_SAVE_NO_DUPS
-# Immediately update history and share it between all sessions
-setopt SHARE_HISTORY
+setopt EXTENDED_HISTORY        # Save each command's timestamp in history
+unsetopt HIST_BEEP             # Suppress beep on non-existent history access
+setopt HIST_EXPIRE_DUPS_FIRST  # Expire duplicate events from history first
+setopt HIST_IGNORE_DUPS        # Do not record a just recorded event again
+setopt HIST_IGNORE_SPACE       # Do not record an event starting with a space
+setopt HIST_SAVE_NO_DUPS       # Do not save duplicate events in history
+setopt SHARE_HISTORY           # Share history between all sessions
 
 # Input/output
 
-# Make globs case-insensitive (cuz it makes Git's completions case-insensitive)
-unsetopt CASE_GLOB
-# Make unmatched globs resolve to an empty string instead of reporting an error
-setopt NULL_GLOB
-# Don't allow '>' redirection to override existing files, use '>!' instead
-unsetopt CLOBBER
-# Allow '>>' redirection to create new files
-setopt APPEND_CREATE
-# Disable flow control characters to make available '^S' and '^Q' key bindings
-unsetopt FLOW_CONTROL
-# Allow comments in interactive shells
-setopt INTERACTIVE_COMMENTS
+unsetopt CASE_GLOB             # Make globs case-insensitive
+setopt NULL_GLOB               # Resolve unmatched globs to an empty string
+unsetopt CLOBBER               # Do not allow '>' redirection to override files
+setopt APPEND_CREATE           # Allow '>>' redirection to create new files
+unsetopt FLOW_CONTROL          # Make '^S' and '^Q' key bindings available
+setopt INTERACTIVE_COMMENTS    # Allow comments in interactive shells
