@@ -11,6 +11,9 @@
 [push]
     default = simple
 
+[commit]
+    template = ~/.config/git/message
+
 [alias]
     untrack = update-index --assume-unchanged
     track = update-index --no-assume-unchanged
