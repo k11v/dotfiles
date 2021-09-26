@@ -201,6 +201,21 @@ defaults write org.m0k.transmission RandomPort -bool true
 
 
 #
+# Amphetamine
+#
+
+
+# Do not show welcome window
+defaults write com.if.Amphetamine "Show Welcome Window" -bool false
+
+# Do not play sound when any session starts or ends
+defaults write com.if.Amphetamine "Enable Session State Sound" -bool false
+
+# Set menu bar icon to a coffee cup
+defaults write com.if.Amphetamine "Icon Style" -int 5
+
+
+#
 # Cleanup
 #
 
@@ -221,6 +236,7 @@ for app in \
     'SystemUIServer' \
     'Terminal' \
     'Transmission' \
+    'Amphetamine' \
     'iCal'; do
     killall "$app" &> /dev/null
 done
