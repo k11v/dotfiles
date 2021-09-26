@@ -11,8 +11,8 @@ alias c="clear"
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
 
-alias l="ls -1A"
-alias ll="ls -lFA"
+alias l="ls -1A --group-directories-first"
+alias ll="ls -lFA --group-directories-first"
 
 # Git
 
