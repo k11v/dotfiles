@@ -235,6 +235,15 @@ defaults write com.knollsoft.Rectangle windowSnapping -int 2
 
 
 #
+# Flow
+#
+
+
+# Do not show welcome window
+defaults write design.yugen.Flow showWelcomeWindow -bool false
+
+
+#
 # Cleanup
 #
 
@@ -257,6 +266,7 @@ for app in \
     'Transmission' \
     'Amphetamine' \
     'Rectangle' \
+    'Flow' \
     'iCal'; do
     killall "$app" &> /dev/null
 done
