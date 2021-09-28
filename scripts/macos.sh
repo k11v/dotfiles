@@ -244,6 +244,15 @@ defaults write design.yugen.Flow showWelcomeWindow -bool false
 
 
 #
+# Telegram
+#
+
+
+# Hide archived chats from all chats
+defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true
+
+
+#
 # Cleanup
 #
 
@@ -267,6 +276,7 @@ for app in \
     'Amphetamine' \
     'Rectangle' \
     'Flow' \
+    'Telegram' \
     'iCal'; do
     killall "$app" &> /dev/null
 done
