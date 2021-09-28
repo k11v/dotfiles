@@ -215,6 +215,25 @@ defaults write com.if.Amphetamine "Enable Session State Sound" -bool false
 defaults write com.if.Amphetamine "Icon Style" -int 5
 
 
+
+#
+# Rectangle
+#
+
+
+# Set shortcuts to Rectangle defaults
+defaults write com.knollsoft.Rectangle alternateDefaultShortcuts -int 1
+
+# Do not launch Rectangle on login
+defaults write com.knollsoft.Rectangle launchOnLogin -bool false
+
+# Move to adjacent display on repeated left or right commands
+defaults write com.knollsoft.Rectangle subsequentExecutionMode -int 1
+
+# Turn off window snapping
+defaults write com.knollsoft.Rectangle windowSnapping -int 2
+
+
 #
 # Cleanup
 #
@@ -237,6 +256,7 @@ for app in \
     'Terminal' \
     'Transmission' \
     'Amphetamine' \
+    'Rectangle' \
     'iCal'; do
     killall "$app" &> /dev/null
 done
