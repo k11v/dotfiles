@@ -3,8 +3,9 @@
 *~
 
 # Keep dotfiles
-!.zshrc
 !.gitconfig
+!.hushlogin
+!.zshrc
 
 # Keep git files
 !.gitignore
