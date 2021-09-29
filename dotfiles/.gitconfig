@@ -12,7 +12,7 @@
     default = simple
 
 [commit]
-    template = ~/.config/git/message
+    template = ~/.config/git/commit-template.txt
 
 [alias]
     untrack = update-index --assume-unchanged
