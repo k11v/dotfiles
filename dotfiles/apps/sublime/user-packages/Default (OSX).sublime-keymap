@@ -1,0 +1,3 @@
+[
+    { "keys": ["super+n"], "command": "adaptive_new_file" },
+]
