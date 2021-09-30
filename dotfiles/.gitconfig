@@ -17,6 +17,7 @@
 [alias]
     untrack = update-index --assume-unchanged
     track = update-index --no-assume-unchanged
+    download = clone --depth=1
 
 [color]
     ui = auto
