@@ -2,6 +2,10 @@
 
 alias sudo="sudo "  # Enable aliases to be sudo'ed
 
+# macOS utils
+
+alias o="open"
+
 # Terminal utils
 
 alias c="clear"
