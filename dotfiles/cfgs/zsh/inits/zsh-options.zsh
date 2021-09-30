@@ -2,6 +2,7 @@
 
 setopt ALWAYS_TO_END           # Move cursor to the end of a completed word
 setopt COMPLETE_IN_WORD        # Allow completion from inside a word
+setopt GLOB_COMPLETE           # Generate completions with globs
 unsetopt LIST_BEEP             # Suppress beep on an ambiguous completion
 
 # History
