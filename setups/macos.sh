@@ -129,6 +129,9 @@ defaults write com.apple.dock show-recents -bool false
 # Don't automatically rearrange Spaces
 defaults write com.apple.dock mru-spaces -bool false
 
+# Don't change Spaces after quiting an app
+defaults write NSGlobalDomain AppleSpacesSwitchOnActivate -bool false
+
 
 #
 # Safari
