@@ -1,6 +1,6 @@
 source "$HOME/.config/zsh/variables.zsh"
-source "$HOME/.config/zsh/aliases.zsh"
 source "$HOME/.config/zsh/functions.zsh"
+source "$HOME/.config/zsh/aliases.zsh"
 
 mkdir -p "$XDG_CACHE_HOME/zsh"
 mkdir -p "$XDG_DATA_HOME/zsh"
