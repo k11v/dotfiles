@@ -35,20 +35,20 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Set language and region settings
-defaults write NSGlobalDomain AppleLocale -string 'en_RU'
-defaults write NSGlobalDomain AppleLanguages -array 'en-US' 'ru-RU'
+defaults write NSGlobalDomain AppleLocale -string "en_RU"
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "ru-RU"
 defaults write NSGlobalDomain AppleICUForce12HourTime -bool true
 defaults write NSGlobalDomain AppleICUNumberSymbols -dict \
-    0 -string '.' \
-    1 -string ',' \
-    10 -string '.' \
-    17 -string ','
-defaults write NSGlobalDomain AppleMeasurementUnits -string 'Centimeters'
+    0 -string "." \
+    1 -string "," \
+    10 -string "." \
+    17 -string ","
+defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
-defaults write NSGlobalDomain AppleTemperatureUnit -string 'Celsius'
+defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"
 
 # Use a 12-hour clock in menu bar
-defaults write com.apple.menuextra.clock DateFormat -string 'EEE MMM d  h:mm a'
+defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"
 
 
 #
@@ -57,7 +57,7 @@ defaults write com.apple.menuextra.clock DateFormat -string 'EEE MMM d  h:mm a'
 
 
 # Set home as the default location for new Finder windows
-defaults write com.apple.finder NewWindowTarget -string 'PfHm'
+defaults write com.apple.finder NewWindowTarget -string "PfHm"
 defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME/"
 
 # Show only external devices on the desktop
@@ -76,7 +76,7 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
 # When performing a search, search the current folder by default
-defaults write com.apple.finder FXDefaultSearchScope -string 'SCcf'
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Disable the warning when changing a file extension
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
@@ -86,18 +86,18 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Enable snap-to-grid for icons on the desktop and in other icon views
-/usr/libexec/PlistBuddy -c 'Set :DesktopViewSettings:IconViewSettings:arrangeBy grid' "$HOME/Library/Preferences/com.apple.finder.plist"
-/usr/libexec/PlistBuddy -c 'Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid' "$HOME/Library/Preferences/com.apple.finder.plist"
-/usr/libexec/PlistBuddy -c 'Set :StandardViewSettings:IconViewSettings:arrangeBy grid' "$HOME/Library/Preferences/com.apple.finder.plist"
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"
+/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"
 
 # Use list view in all Finder windows by default
-defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv'
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
 # Show the ~/Library folder
 chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library"
 
 # Show the /Volumes folder
-sudo chflags nohidden '/Volumes'
+sudo chflags nohidden "/Volumes"
 
 
 #
@@ -262,25 +262,25 @@ defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true
 
 # Kill affected applications
 for app in \
-    'Activity Monitor' \
-    'Address Book' \
-    'Calendar' \
-    'cfprefsd' \
-    'Contacts' \
-    'Dock' \
-    'Finder' \
-    'Mail' \
-    'Messages' \
-    'Photos' \
-    'Safari' \
-    'SystemUIServer' \
-    'Terminal' \
-    'Transmission' \
-    'Amphetamine' \
-    'Rectangle' \
-    'Flow' \
-    'Telegram' \
-    'iCal'; do
+    "Activity Monitor" \
+    "Address Book" \
+    "Calendar" \
+    "cfprefsd" \
+    "Contacts" \
+    "Dock" \
+    "Finder" \
+    "Mail" \
+    "Messages" \
+    "Photos" \
+    "Safari" \
+    "SystemUIServer" \
+    "Terminal" \
+    "Transmission" \
+    "Amphetamine" \
+    "Rectangle" \
+    "Flow" \
+    "Telegram" \
+    "iCal"; do
     killall "$app" &> /dev/null
 done
 echo "Done. Note that some of these changes require a restart to take effect."
