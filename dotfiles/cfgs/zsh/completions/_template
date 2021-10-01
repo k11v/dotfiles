@@ -6,4 +6,4 @@ local library="${XDG_CONFIG_HOME:-$HOME/.config}/template/library"
 
 _arguments -s \
     "1:template file:_files -W '$library'" \
-    '2:destination directory:_files -/'
+    "2:destination directory:_files -/"
