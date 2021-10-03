@@ -2,6 +2,9 @@
 .*
 *~
 
+# Ignore Brewfile lock
+Brewfile.lock.json
+
 # Keep dotfiles
 !.gitconfig
 !.hushlogin
