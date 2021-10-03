@@ -18,5 +18,5 @@ mkdir -p "$local_bins"
 for bin in "$dotfiles_bins/"*; do
     filename="$(basename "$bin")"
     echo "Symlinking $filename"
-    ln -s "$dotfiles_bins/$filename" "$local_bins/$filename"
+    ln -s "$dotfiles_bins/$filename" "$local_bins"
 done
