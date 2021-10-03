@@ -1,12 +1,12 @@
 #!/bin/sh
 
 if [ -z "$1" ]; then
-    echo >&2 "$0: 'bins' directory was not provided"
+    echo >&2 "$(basename "$0"): 'bins' directory was not provided"
     exit 1
 fi
 
 if [ ! -d "$1" ]; then
-    echo >&2 "$0: provided 'bins' directory is not a directory"
+    echo >&2 "$(basename "$0"): provided 'bins' directory is not a directory"
     exit 1
 fi
 
