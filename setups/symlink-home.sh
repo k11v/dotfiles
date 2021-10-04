@@ -27,6 +27,10 @@ fi
 
 for file in "$@"; do
     filename="$(basename "$file")"
-    echo "Symlinking $filename"
+    echo "$(tput setaf 3)Symlinking $filename$(tput sgr0)"
     ln -s "$file" "$local_home"
+
+    if [ "$?" -ne 0 ]; then
+        echo "$(tput setaf 1)Symlinking $filename has failed$(tput sgr0)"
+    fi
 done

@@ -27,6 +27,10 @@ fi
 
 for bin in "$dotfiles_bins/"*; do
     filename="$(basename "$bin")"
-    echo "Symlinking $filename"
+    echo "$(tput setaf 3)Symlinking $filename$(tput sgr0)"
     ln -s "$dotfiles_bins/$filename" "$local_bins"
+
+    if [ "$?" -ne 0 ]; then
+        echo "$(tput setaf 1)Symlinking $filename has failed$(tput sgr0)"
+    fi
 done

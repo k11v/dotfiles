@@ -27,6 +27,10 @@ fi
 
 for cfg in "$dotfiles_cfgs/"*; do
     filename="$(basename "$cfg")"
-    echo "Symlinking $filename"
+    echo "$(tput setaf 3)Symlinking $filename$(tput sgr0)"
     ln -s "$dotfiles_cfgs/$filename" "$local_cfgs"
+
+    if [ "$?" -ne 0 ]; then
+        echo "$(tput setaf 1)Symlinking $filename has failed$(tput sgr0)"
+    fi
 done
