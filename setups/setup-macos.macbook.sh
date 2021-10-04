@@ -21,7 +21,7 @@ sudo scutil --set ComputerName "Cyril's MacBook"
 sudo scutil --set LocalHostName "cyrils-macbook"
 
 # macOS Mojave: stop iTunes from opening when an iPhone is connected
-defaults read com.apple.iTunes dontAutomaticallySyncIPods -bool true
+defaults write com.apple.iTunes dontAutomaticallySyncIPods -bool true
 
 
 #
