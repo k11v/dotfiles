@@ -20,6 +20,10 @@ fi
 local_bins="$HOME/.local/bin"
 
 mkdir -p "$local_bins"
+if [ ! -d "$local_bins" ]; then
+    echo >&2 "$(basename "$0"): failed to provide local bin directory for symlinks"
+    exit 1
+fi
 
 for bin in "$dotfiles_bins/"*; do
     filename="$(basename "$bin")"
