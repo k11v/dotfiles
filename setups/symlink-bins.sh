@@ -10,6 +10,11 @@ if [ ! -d "$1" ]; then
     exit 1
 fi
 
+if [ "$(printf '%s' "$1" | cut -c1)" != "/" ]; then
+    echo >&2 "$(basename "$0"): 'bins' directory must be provided via an absolute path"
+    exit 1
+fi
+
 dotfiles_bins="$1"
 local_bins="$HOME/.local/bin"
 
