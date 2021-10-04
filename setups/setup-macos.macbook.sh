@@ -17,8 +17,8 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 
 
 # Set computer name
-scutil --set ComputerName "Cyril's MacBook"
-scutil --set LocalHostName "cyrils-macbook"
+sudo scutil --set ComputerName "Cyril's MacBook"
+sudo scutil --set LocalHostName "cyrils-macbook"
 
 # macOS Mojave: stop iTunes from opening when an iPhone is connected
 defaults read com.apple.iTunes dontAutomaticallySyncIPods -bool true
