@@ -7,13 +7,13 @@ fi
 
 dotfiles_cfgs="$1"
 
-if [ ! -d "$dotfiles_cfgs" ]; then
-    echo >&2 "$(basename "$0"): provided 'cfgs' directory is not a directory"
+if [ "$(printf '%s' "$dotfiles_cfgs" | cut -c1)" != "/" ]; then
+    echo >&2 "$(basename "$0"): 'cfgs' directory must be provided via an absolute path"
     exit 1
 fi
 
-if [ "$(printf '%s' "$dotfiles_cfgs" | cut -c1)" != "/" ]; then
-    echo >&2 "$(basename "$0"): 'cfgs' directory must be provided via an absolute path"
+if [ ! -d "$dotfiles_cfgs" ]; then
+    echo >&2 "$(basename "$0"): provided 'cfgs' directory is not a directory"
     exit 1
 fi
 

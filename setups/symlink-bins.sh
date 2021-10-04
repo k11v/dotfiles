@@ -7,13 +7,13 @@ fi
 
 dotfiles_bins="$1"
 
-if [ ! -d "$dotfiles_bins" ]; then
-    echo >&2 "$(basename "$0"): provided 'bins' directory is not a directory"
+if [ "$(printf '%s' "$dotfiles_bins" | cut -c1)" != "/" ]; then
+    echo >&2 "$(basename "$0"): 'bins' directory must be provided via an absolute path"
     exit 1
 fi
 
-if [ "$(printf '%s' "$dotfiles_bins" | cut -c1)" != "/" ]; then
-    echo >&2 "$(basename "$0"): 'bins' directory must be provided via an absolute path"
+if [ ! -d "$dotfiles_bins" ]; then
+    echo >&2 "$(basename "$0"): provided 'bins' directory is not a directory"
     exit 1
 fi
 
