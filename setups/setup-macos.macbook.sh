@@ -1,35 +1,25 @@
 #!/bin/sh
 
-# Ask for the administrator password upfront
-sudo -v
+# Give password to sudo upfront and prevent sudo session timeout
 
-# Keep-alive: update existing 'sudo' timestamp until this script has finished
+sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 
-# Close any open System Preferences panes, to prevent them from overriding
-# settings we're about to change
+# Prevent preferences below from being overridden by System Preferences
+
 osascript -e 'tell application "System Preferences" to quit'
 
+# Set sharing preferences
 
-#
-# Preferences
-#
+sudo scutil --set ComputerName "Cyril's MacBook"                       # Set computer name
+sudo scutil --set LocalHostName "cyrils-macbook"                       # Set local hostname
 
+# Set iTunes preferences (macOS Mojave)
 
-# Set computer name
-sudo scutil --set ComputerName "Cyril's MacBook"
-sudo scutil --set LocalHostName "cyrils-macbook"
+defaults write com.apple.iTunes dontAutomaticallySyncIPods -bool true  # Don't automatically open iTunes when devices are plugged in
 
-# macOS Mojave: stop iTunes from opening when an iPhone is connected
-defaults write com.apple.iTunes dontAutomaticallySyncIPods -bool true
+# Kill affected programs
 
-
-#
-# Cleanup
-#
-
-
-# Kill affected applications
 for app in "iTunes"; do
     killall "$app" &> /dev/null
 done
