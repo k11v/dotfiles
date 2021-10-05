@@ -23,10 +23,23 @@ for app in "$dotfiles_apps/"*; do
     filename="$(basename "$app")"
     setup_file="$dotfiles_apps/$filename/setup.sh"
 
-    if [ -e "$setup_file" ]; then
-        echo "$(tput setaf 3)Setting up $filename$(tput sgr0)"
-        "$setup_file"
+    if [ ! -f "$setup_file" ]; then
+        echo >&2 "$(basename "$0"): app doesn't have a regular file setup script: $setup_file"
+        exit 1
     fi
+
+    if [ ! -x "$setup_file" ]; then
+        echo >&2 "$(basename "$0"): app's setup script is not executable: $setup_file"
+        exit 1
+    fi
+done
+
+for app in "$dotfiles_apps/"*; do
+    filename="$(basename "$app")"
+    setup_file="$dotfiles_apps/$filename/setup.sh"
+
+    echo "$(tput setaf 3)Setting up $filename$(tput sgr0)"
+    "$setup_file"
 done
 
 # Set Transmission preferences
