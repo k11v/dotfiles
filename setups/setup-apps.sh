@@ -52,18 +52,13 @@ defaults write design.yugen.Flow showWelcomeWindow -bool false              # Do
 
 defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true            # Hide archived chats from All Chats
 
+# Kill affected programs
 
-#
-# Cleanup
-#
-
-
-# Kill affected applications
-for app in \
+for program in \
     "Transmission" \
     "Amphetamine" \
     "Rectangle" \
     "Flow" \
     "Telegram"; do
-    killall "$app" &> /dev/null
+    killall "$program" &> /dev/null
 done

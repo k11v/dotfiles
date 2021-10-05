@@ -20,6 +20,6 @@ defaults write com.apple.iTunes dontAutomaticallySyncIPods -bool true  # Don't a
 
 # Kill affected programs
 
-for app in "iTunes"; do
-    killall "$app" &> /dev/null
+for program in "iTunes"; do
+    killall "$program" &> /dev/null
 done
