@@ -93,4 +93,3 @@ for app in \
     "Telegram"; do
     killall "$app" &> /dev/null
 done
-echo "Done. Note that some of these changes require a restart to take effect."
