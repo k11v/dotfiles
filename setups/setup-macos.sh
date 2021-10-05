@@ -1,187 +1,96 @@
 #!/bin/sh
 
-# Ask for the administrator password upfront
-sudo -v
+# Give password to sudo upfront and prevent sudo session timeout
 
-# Keep-alive: update existing 'sudo' timestamp until this script has finished
+sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 
-# Close any open System Preferences panes, to prevent them from overriding
-# settings we're about to change
+# Prevent preferences below from being overridden by System Preferences
+
 osascript -e 'tell application "System Preferences" to quit'
 
+# Set general preferences
 
-#
-# General
-#
+defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"    # 12-hour clock in the menu bar
 
+# Set Mission Control preferences
 
-# Disable the "Are you sure you want to open this application?" dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
+defaults write com.apple.dock mru-spaces -bool false                               # Don't automatically rearrange Spaces
+defaults write com.apple.dock minimize-to-application -bool true                   # Minimize windows into application icon in Dock
+defaults write com.apple.dock autohide -bool true                                  # Automatically hide and show the Dock
+defaults write com.apple.dock show-process-indicators -bool true                   # Show indicators for open applications in Dock
+defaults write com.apple.dock show-recents -bool false                             # Don't show recent applications in Dock
+defaults write com.apple.dock persistent-apps -array                               # Remove all (default) icons from Dock
+defaults write com.apple.dock autohide-delay -float 0.2                            # Speed up the Dock's auto-hiding
+defaults write com.apple.dock autohide-time-modifier -float 0.7                    # Speed up the Dock's hiding/showing animation
 
-# Disable automatic capitalization as it's annoying when typing code
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+# Set language and region preferences
 
-# Disable smart dashes as they're annoying when typing code
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-
-# Disable automatic period substitution as it's annoying when typing code
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
-
-# Disable smart quotes as they're annoying when typing code
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-
-# Disable auto-correct
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-# Set language and region settings
-defaults write NSGlobalDomain AppleLocale -string "en_RU"
-defaults write NSGlobalDomain AppleLanguages -array "en-US" "ru-RU"
-defaults write NSGlobalDomain AppleICUForce12HourTime -bool true
-defaults write NSGlobalDomain AppleICUNumberSymbols -dict \
+defaults write NSGlobalDomain AppleLocale -string "en_RU"                          # Region: Russia
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "ru-RU"                # Preferred languages: English (US), Russian
+defaults write NSGlobalDomain AppleICUForce12HourTime -bool true                   # 12-hour time
+defaults write NSGlobalDomain AppleICUNumberSymbols -dict \                        # US number separators
     0 -string "." \
     1 -string "," \
     10 -string "." \
     17 -string ","
-defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
-defaults write NSGlobalDomain AppleMetricUnits -bool true
-defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"
+defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"          # Metric measurement units
+defaults write NSGlobalDomain AppleMetricUnits -bool true                          # Metric measurement units
+defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"               # Temperature: Celsius
 
-# Use a 12-hour clock in menu bar
-defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"
+# Set keyboard preferences
 
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false         # Disable automatic capitalization
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false       # Disable smart dashes
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false     # Disable automatic period substitution
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false      # Disable smart quotes
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false     # Disable auto-correct
 
-#
-# Finder
-#
+# Set software update preferences
 
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true           # Automatically check for updates
+defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true               # Automatically download new updates
+defaults write com.apple.commerce AutoUpdate -bool true                            # Automatically install app updates
 
-# Set home as the default location for new Finder windows
-defaults write com.apple.finder NewWindowTarget -string "PfHm"
-defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME/"
+# Set Time Machine preferences
 
-# Show only external devices on the desktop
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
-defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true        # Don't prompt to use new external disks for backups
 
-# Show hidden files by default (in open/save dialogs as well)
-defaults write NSGlobalDomain AppleShowAllFiles -bool true
+# Set Finder preferences
 
-# Show all filename extensions
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+sudo chflags nohidden "/Volumes"                                                   # Show the /Volumes folder
+chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library"  # Show the ~/Library folder
 
-# Keep folders on top when sorting by name
-defaults write com.apple.finder _FXSortFoldersFirst -bool true
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"      # Snap-to-grid for icons on the desktop
+/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"  # Snap-to-grid for icons in other icon views
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"     # Snap-to-grid for icons in other icon views
 
-# When performing a search, search the current folder by default
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write NSGlobalDomain AppleShowAllFiles -bool true                         # Show hidden files (in open/save dialogs too)
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true                    # Show all filename extensions (in open/save dialogs too)
+defaults write com.apple.finder NewWindowTarget -string "PfHm"                     # Show home for new Finder windows
+defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME/"        # Show home for new Finder windows
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true         # Show external disks on the desktop
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true             # Show removable media on the desktop
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false                # Don't show hard drives on the desktop
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool false            # Don't show connected servers on the desktop
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false         # Don't show warning before changing an extension
+defaults write com.apple.finder _FXSortFoldersFirst -bool true                     # Keep folders on top when sorting by name
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"                # Search the current folder when performing a search
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"                # Use list view in all Finder windows
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true       # Don't create .DS_Store files on network stores
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true           # Don't create .DS_Store files on USB stores
 
-# Disable the warning when changing a file extension
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+# Set Safari preferences
 
-# Avoid creating .DS_Store files on network or USB volumes
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write com.apple.Safari IncludeDevelopMenu -bool true                      # Show the Develop menu in Safari
 
-# Enable snap-to-grid for icons on the desktop and in other icon views
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"
+# Set Photos preferences
 
-# Use list view in all Finder windows by default
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true       # Don't automatically open Photos when devices are plugged in
 
-# Show the ~/Library folder
-chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library"
+# Kill affected programs
 
-# Show the /Volumes folder
-sudo chflags nohidden "/Volumes"
-
-
-#
-# Mission Control
-#
-
-
-# Minimize windows into their application's icon in the Dock
-defaults write com.apple.dock minimize-to-application -bool true
-
-# Show indicator lights for open applications in the Dock
-defaults write com.apple.dock show-process-indicators -bool true
-
-# Wipe all (default) app icons from the Dock
-defaults write com.apple.dock persistent-apps -array
-
-# Remove the auto-hiding Dock delay
-defaults write com.apple.dock autohide-delay -float 0.2
-
-# Remove the animation when hiding/showing the Dock
-defaults write com.apple.dock autohide-time-modifier -float 0.7
-
-# Automatically hide and show the Dock
-defaults write com.apple.dock autohide -bool true
-
-# Don't show recent applications in Dock
-defaults write com.apple.dock show-recents -bool false
-
-# Don't automatically rearrange Spaces
-defaults write com.apple.dock mru-spaces -bool false
-
-# Don't change Spaces after quiting an app
-defaults write NSGlobalDomain AppleSpacesSwitchOnActivate -bool false
-
-
-#
-# Safari
-#
-
-
-# Enable the Develop menu in Safari
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-
-
-#
-# Time Machine
-#
-
-
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-
-
-#
-# App Store
-#
-
-
-# Enable the automatic update check
-defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-
-# Download newly available updates in background
-defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
-
-# Turn on app auto-update
-defaults write com.apple.commerce AutoUpdate -bool true
-
-
-#
-# Photos
-#
-
-
-# Prevent Photos from opening automatically when devices are plugged in
-defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
-
-
-#
-# Cleanup
-#
-
-
-# Kill affected applications
-for app in \
+for program in \
     "Activity Monitor" \
     "Address Book" \
     "Calendar" \
@@ -196,6 +105,5 @@ for app in \
     "SystemUIServer" \
     "Terminal" \
     "iCal"; do
-    killall "$app" &> /dev/null
+    killall "$program" &> /dev/null
 done
-echo "Done. Note that some of these changes require a restart to take effect."
