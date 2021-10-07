@@ -1,18 +1,18 @@
 #!/bin/sh
 
-dotfiles_app="$(cd -- "$(dirname -- "$0")" > /dev/null && pwd)"
+dotfiles_app_dir="$(cd -- "$(dirname -- "$0")" > /dev/null && pwd)"
 
-local_app_config="$HOME/.config/karabiner"
+local_app_config_dir="$HOME/.config/karabiner"
 
-mkdir -p "$local_app_config"
-if [ ! -d "$local_app_config" ]; then
-    echo >&2 "$(basename "$0"): failed to provide app's local config directory for symlinks"
+mkdir -p "$local_app_config_dir"
+if [ ! -d "$local_app_config_dir" ]; then
+    echo >&2 "$(basename "$0"): failed to provide local app config directory for symlinks"
     exit 1
 fi
 
 for filename in "assets" "karabiner.json"; do
     echo "$(tput setaf 3)Symlinking $filename$(tput sgr0)"
-    ln -s "$dotfiles_app/$filename" "$local_app_config"
+    ln -s "$dotfiles_app_dir/$filename" "$local_app_config_dir"
 
     if [ "$?" -ne 0 ]; then
         echo "$(tput setaf 1)Symlinking $filename has failed$(tput sgr0)"
