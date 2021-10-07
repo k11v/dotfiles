@@ -10,7 +10,8 @@ if [ ! -d "$local_packages" ]; then
     exit 1
 fi
 
-for filename in "User" "User Markdown"; do
+for package in "$dotfiles_app/Packages/"*; do
+    filename="$(basename "$package")"
     echo "$(tput setaf 3)Symlinking $filename$(tput sgr0)"
     ln -s "$dotfiles_app/Packages/$filename" "$local_packages"
 
