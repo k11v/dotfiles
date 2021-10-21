@@ -110,7 +110,6 @@ for program in \
     "Photos" \
     "Safari" \
     "SystemUIServer" \
-    "Terminal" \
     "iCal"; do
     killall "$program" &> /dev/null
 done
