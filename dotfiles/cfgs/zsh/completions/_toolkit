@@ -1,0 +1,5 @@
+#compdef toolkit
+#
+# Usage: toolkit <toolkit>
+
+_files -/ -W "$TOOLKITS"
