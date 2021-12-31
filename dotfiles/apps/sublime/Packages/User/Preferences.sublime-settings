@@ -7,4 +7,8 @@
     "auto_match_enabled": true,
     "scroll_past_end": 0.3,
     "show_full_path": true,
+    "ignored_packages":
+    [
+		"Vintage",
+    ],
 }
