@@ -29,6 +29,10 @@ highlight() {
     echo "$(tput setaf 3)$1$(tput sgr0)"
 }
 
+signal() {
+    for i in {1.."$1"}; do tput bel; sleep 0.3; done
+}
+
 
 macbook=""
 
@@ -80,9 +84,11 @@ fi
 
 section "Installing Homebrew"
 "$setups/install-homebrew.sh"
+signal 1
 
 section "Installing Brewfile"
 "$setups/install-brewfile.sh" "$dotfiles/Brewfile"
+signal 1
 
 section "Symlinking binaries from bins/"
 "$setups/symlink-bins.sh" "$dotfiles/bins"
@@ -113,3 +119,4 @@ section "Setting up pyenv"
 
 section "$(highlight 'Dotfiles setup complete!')"
 highlight "Now do a restart to make some of these changes take effect."
+signal 3
