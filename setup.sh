@@ -116,6 +116,9 @@ section "Setting up fzf"
 section "Setting up pyenv"
 "$setups/setup-pyenv.sh"
 
+section "Setting up tldr"
+"$setups/setup-tldr.sh"
+
 
 section "$(highlight 'Dotfiles setup complete!')"
 highlight "Now do a restart to make some of these changes take effect."
