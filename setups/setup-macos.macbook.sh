@@ -13,13 +13,3 @@ osascript -e 'tell application "System Preferences" to quit'
 
 sudo scutil --set ComputerName "Cyril's MacBook"                       # Set computer name
 sudo scutil --set LocalHostName "cyrils-macbook"                       # Set local hostname
-
-# Set iTunes preferences (macOS Mojave)
-
-defaults write com.apple.iTunes dontAutomaticallySyncIPods -bool true  # Don't automatically open iTunes when devices are plugged in
-
-# Kill affected programs
-
-for program in "iTunes"; do
-    killall "$program" &> /dev/null
-done
