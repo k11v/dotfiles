@@ -68,6 +68,16 @@ root="$(cd -- "$(dirname -- "$0")" > /dev/null && pwd)"
 setups="$root/setups"
 dotfiles="$root/dotfiles"
 
+
+environment="$dotfiles/cfgs/zsh/variables.zsh"
+source "$environment"
+
+if [ "$?" -ne 0 ]; then
+    echo >&2 "Couldn't load environment: $environment"
+    eixt 1
+fi
+
+
 section "Installing Homebrew"
 "$setups/install-homebrew.sh"
 
