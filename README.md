@@ -1,3 +1,5 @@
 # Dotfiles
 
-It started with a dot.
+```sh
+$ caffeinate -i ./setup.sh
+```
