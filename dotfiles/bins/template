@@ -23,7 +23,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 
-library="${XDG_CONFIG_HOME:-$HOME/.config}/template/library"
+library="${XDG_CONFIG_HOME:-$HOME/.config}/template"
 filename="$(basename "$(dirname "$library/$1")")"
 
 

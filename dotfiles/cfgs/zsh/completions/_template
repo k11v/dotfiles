@@ -2,7 +2,7 @@
 #
 # Usage: template <template-file> [<destination-directory>]
 
-local library="${XDG_CONFIG_HOME:-$HOME/.config}/template/library"
+local library="${XDG_CONFIG_HOME:-$HOME/.config}/template"
 
 _arguments -s \
     "1:template file:_files -W '$library'" \

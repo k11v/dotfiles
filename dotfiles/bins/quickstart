@@ -30,7 +30,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 
-library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart/library"
+library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart"
 
 
 if [ -z "$1" ]; then

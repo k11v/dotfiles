@@ -2,7 +2,7 @@
 #
 # Usage: quickstart <quickstart-file> [<working-directory>]
 
-local library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart/library"
+local library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart"
 
 _arguments -s \
     "1:quickstart file:_files -W '$library'" \
