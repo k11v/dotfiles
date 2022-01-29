@@ -1,0 +1,11 @@
+# Ignore system files
+.*
+*~
+
+# Ignore C++ files
+cmake-build-debug/
+
+# Keep Git files
+!.gitignore
+!.gitattributes
+!.gitmodules

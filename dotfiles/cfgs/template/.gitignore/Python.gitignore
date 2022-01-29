@@ -1,0 +1,12 @@
+# Ignore system files
+.*
+*~
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Keep Git files
+!.gitignore
+!.gitattributes
+!.gitmodules
