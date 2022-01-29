@@ -34,9 +34,9 @@ repo() {
     cd "$REPOSITORIES/$1"
 }
 
-# Quickly jump into a toolkit directory
-toolkit() {
-    cd "$TOOLKITS/$1"
+# Quickly jump into a suite directory
+suite() {
+    cd "$SUITES/$1"
 }
 
 # Get Internet speed

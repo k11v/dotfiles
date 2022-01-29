@@ -12,4 +12,4 @@ source "$HOME/.config/zsh/inits/zsh-prompt.zsh"
 
 source "$HOME/.config/zsh/inits/fzf.zsh"
 source "$HOME/.config/zsh/inits/pyenv.zsh"
-source "$HOME/.config/zsh/inits/toolkit.zsh"
+source "$HOME/.config/zsh/inits/suite.zsh"

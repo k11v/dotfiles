@@ -49,4 +49,4 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # My utils
 
 export REPOSITORIES="$HOME/Repositories"
-export TOOLKITS="$HOME/.config/toolkit/kits"
+export SUITES="$HOME/.config/suite"
