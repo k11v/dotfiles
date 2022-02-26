@@ -24,8 +24,13 @@ diff() {
     git diff --no-index "$@"
 }
 
-# Get external IP
+# Get local IP
 myip() {
+    ipconfig getifaddr en0
+}
+
+# Get external IP
+myexternalip() {
     dig +short myip.opendns.com @resolver1.opendns.com
 }
 
