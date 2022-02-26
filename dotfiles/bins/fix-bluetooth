@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Usage: fix-bluetooth
+#
+# Restarts the bluetooth macOS daemon which often fixes audio issues (especially
+# with AirPods).
+
+sudo killall bluetoothd
