@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Usage: telegram-get-updates <bot-token>
+#
+# Gets the list of updates for your Telegram Bot.
+
+fatal() {
+    echo "$(basename "$0"): $1" >&2
+    exit 1
+}
+
+warning() {
+    echo "$1" >&2
+}
+
+
+if [ "$#" -eq 0 ]; then
+    warning "usage: $(basename "$0") <bot-token>"
+    exit 1
+fi
+
+if [ -z "$1" ]; then
+    fatal "bot token was not specified"
+fi
+
+
+curl "https://api.telegram.org/bot$1getUpdates"
