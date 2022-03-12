@@ -2,6 +2,6 @@
 #
 # Usage: docker-open
 #
-# Open the Docker application on macOS from the command line.
+# Opens the Docker application on macOS from the command line.
 
 open -a Docker
