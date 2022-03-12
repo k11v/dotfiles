@@ -24,4 +24,4 @@ if [ -z "$1" ]; then
 fi
 
 
-curl "https://api.telegram.org/bot$1getUpdates"
+curl "https://api.telegram.org/bot$1/getUpdates"
