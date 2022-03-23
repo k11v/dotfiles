@@ -8,6 +8,10 @@ _prompt_precmd() {
     git_ref="$(git symbolic-ref --quiet HEAD 2> /dev/null)"
     [[ "$?" -eq 1 ]] && git_commit="$(git rev-parse --short HEAD 2> /dev/null)"
 
+    if [[ -d ".git" ]]; then
+        workdir="%B%F{cyan}${PWD:t}%f%b"
+    fi
+
     if [[ -n "$git_ref" ]]; then
         branch=" on %B%F{magenta}${git_ref#refs/heads/}%f%b"
     elif [[ -n "$git_commit" ]]; then
@@ -31,7 +35,7 @@ _prompt_precmd() {
         symbol="%B%F{red}❯%f%b"
     fi
 
-    PROMPT=$'\n'"$username$hostname$workdir$branch$venv"$'\n'"$symbol "
+    PROMPT="$username$hostname$workdir$branch$venv $symbol "
 }
 
 autoload -Uz add-zsh-hook
