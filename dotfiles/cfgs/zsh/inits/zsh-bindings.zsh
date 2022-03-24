@@ -1,1 +1,1 @@
-bindkey -e  # Emacs key bindings
+bindkey -v  # Vim key bindings
