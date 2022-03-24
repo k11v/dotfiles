@@ -6,15 +6,15 @@ bindkey -v
 
 zle-keymap-select() {
     if [[ "$KEYMAP" == "vicmd" || "$1" == "block" ]]; then
-        echo -ne "\e[2 q"
+        printf "\e[2 q"
     elif [[ -z "$KEYMAP" || "$KEYMAP" == "main" || "$KEYMAP" == "viins" || "$1" == "beam" ]]; then
-        echo -ne "\e[6 q"
+        printf "\e[6 q"
     fi
 }
 zle -N zle-keymap-select
 
 _cursor_precmd() {
-   echo -ne "\e[6 q"
+   printf "\e[6 q"
 }
 
 autoload -Uz add-zsh-hook
