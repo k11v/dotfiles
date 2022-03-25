@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Usage: telegram-get-updates <bot-token>
+# Usage: telegram-bot-get-updates <bot-token>
 #
 # Gets the list of updates for your Telegram Bot.
 
