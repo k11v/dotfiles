@@ -9,10 +9,6 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 
 osascript -e 'tell application "System Preferences" to quit'
 
-# Set general preferences
-
-defaults write com.apple.menuextra.clock DateFormat -string "EEE MMM d  h:mm a"    # 12-hour clock in the menu bar
-
 # Set Mission Control preferences
 
 defaults write com.apple.dock mru-spaces -bool false                               # Don't automatically rearrange Spaces
@@ -27,7 +23,7 @@ defaults write com.apple.dock wvous-br-corner -int 1                            
 
 # Set language and region preferences
 
-defaults write NSGlobalDomain AppleLocale -string "en_RU"                          # Region: Russia
+defaults write NSGlobalDomain AppleLocale -string "en_US"                          # Region: US
 defaults write NSGlobalDomain AppleLanguages -array "en-US" "ru-RU"                # Preferred languages: English (US), Russian
 defaults write NSGlobalDomain AppleICUForce12HourTime -bool true                   # 12-hour time
 defaults write NSGlobalDomain AppleICUNumberSymbols -dict \                        # US number separators
