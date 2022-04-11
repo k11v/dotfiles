@@ -37,15 +37,15 @@ defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"            
 
 # Set keyboard preferences
 
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false         # Disable automatic capitalization
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false       # Disable smart dashes
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false     # Disable automatic period substitution
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false      # Disable smart quotes
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false     # Disable auto-correct
-
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false                 # Disable press-and-hold for keys in favor of key repeat
 defaults write NSGlobalDomain KeyRepeat -int 2                                     # Make key repeat faster
 defaults write NSGlobalDomain InitialKeyRepeat -int 15                             # Make delay until key repeat shorter
+
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false     # Disable auto-correct
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false         # Disable automatic capitalization
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false     # Disable automatic period substitution
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false      # Disable smart quotes
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false       # Disable smart dashes
 
 # Set trackpad preferences
 
