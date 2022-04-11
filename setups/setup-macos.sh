@@ -47,6 +47,8 @@ defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false  
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false      # Disable smart quotes
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false       # Disable smart dashes
 
+defaults write com.apple.HIToolbox AppleDictationAutoEnable -bool false            # Disable "Enable dictation" prompt when Fn key is pressed multiple times
+
 # Set keyboard shortcuts
 
 /usr/libexec/PlistBuddy \
