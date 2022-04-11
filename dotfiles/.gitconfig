@@ -1,6 +1,6 @@
 [user]
     name = Kirill Gashkov
-    email = gashkov.k.e@gmail.com
+    email = kirill@gashkov.com
 
 [core]
     pager = diff-so-fancy | less
