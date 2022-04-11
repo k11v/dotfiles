@@ -1,5 +1,15 @@
 # Dotfiles
 
+```
+xcode-select --install
+```
+
+```
+mkdir -p "$HOME/Repositories/dotfiles"
+git clone git@github.com:kirillgashkov/dotfiles.git "$HOME/Repositories/dotfiles"
+```
+
 ```sh
-$ ./setup.sh
+cd "$HOME/Repositories/dotfiles"
+./setup.sh
 ```
