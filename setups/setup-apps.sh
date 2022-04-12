@@ -1,47 +1,5 @@
 #!/bin/sh
 
-# Run custom app setups
-
-if [ -z "$1" ]; then
-    echo >&2 "$(basename "$0"): 'apps' directory was not provided"
-    exit 1
-fi
-
-dotfiles_apps="$1"
-
-if [ "$(printf '%s' "$dotfiles_apps" | cut -c1)" != "/" ]; then
-    echo >&2 "$(basename "$0"): 'apps' directory must be provided via an absolute path"
-    exit 1
-fi
-
-if [ ! -d "$dotfiles_apps" ]; then
-    echo >&2 "$(basename "$0"): provided 'apps' directory is not a directory"
-    exit 1
-fi
-
-for app in "$dotfiles_apps/"*; do
-    filename="$(basename "$app")"
-    setup_file="$dotfiles_apps/$filename/setup.sh"
-
-    if [ ! -f "$setup_file" ]; then
-        echo >&2 "$(basename "$0"): app doesn't have a regular file setup script: $setup_file"
-        exit 1
-    fi
-
-    if [ ! -x "$setup_file" ]; then
-        echo >&2 "$(basename "$0"): app's setup script is not executable: $setup_file"
-        exit 1
-    fi
-done
-
-for app in "$dotfiles_apps/"*; do
-    filename="$(basename "$app")"
-    setup_file="$dotfiles_apps/$filename/setup.sh"
-
-    echo "$(tput setaf 3)Setting up $filename$(tput sgr0)"
-    "$setup_file"
-done
-
 # Set Transmission preferences
 
 echo "$(tput setaf 3)Setting Transmission preferences$(tput sgr0)"

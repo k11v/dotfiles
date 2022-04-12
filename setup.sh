@@ -90,14 +90,14 @@ section "Installing Brewfile"
 "$setups/install-brewfile.sh" "$dotfiles/Brewfile"
 signal 1
 
-section "Symlinking binaries from bins/"
-"$setups/symlink-bins.sh" "$dotfiles/bins"
+section "Symlinking binaries from bin/"
+"$setups/symlink-bin.sh" "$dotfiles/bin"
 
-section "Symlinking configs from cfgs/"
-"$setups/symlink-cfgs.sh" "$dotfiles/cfgs"
+section "Symlinking configs from config/"
+"$setups/symlink-config.sh" "$dotfiles/config"
 
-section "Symlinking home files"
-"$setups/symlink-home.sh" "$dotfiles/.gitconfig" "$dotfiles/.hushlogin" "$dotfiles/.zshrc"
+section "Symlinking home files from home/"
+"$setups/symlink-home.sh" "$dotfiles/home"
 
 section "Setting up macOS"
 "$setups/setup-macos.sh"
@@ -108,7 +108,7 @@ if [ "$macbook" -eq 1 ]; then
 fi
 
 section "Setting up apps"
-"$setups/setup-apps.sh" "$dotfiles/apps"
+"$setups/setup-apps.sh"
 
 section "Setting up fzf"
 "$setups/setup-fzf.sh"
@@ -118,6 +118,12 @@ section "Setting up pyenv"
 
 section "Setting up tldr"
 "$setups/setup-tldr.sh"
+
+section "Setting up iterm2"
+"$setups/setup-iterm2.sh" "$dotfiles/config/iterm2"
+
+section "Setting up sublime-text"
+"$setups/setup-sublime-text.sh" "$dotfiles/config/sublime-text"
 
 
 section "$(highlight 'Dotfiles setup complete!')"
