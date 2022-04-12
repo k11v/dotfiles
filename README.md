@@ -1,5 +1,11 @@
 # Dotfiles
 
+> **Note:** although it is possible to avoid cloning the repository by just
+> downloading it from GitHub, it is not currently advised because some of the
+> setups are not decoupled enough from the environment they are run in. It can
+> cause problems later when you try replacing the "downloaded" repository with
+> a "cloned" repository.
+
 1. Show hidden files and extensions (to make this bootstrap easier).
 
     ```sh
