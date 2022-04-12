@@ -98,9 +98,9 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true     
 sudo chflags nohidden "/Volumes"                                                   # Show the /Volumes folder
 chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library"  # Show the ~/Library folder
 
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"      # Snap-to-grid for icons on the desktop
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"  # Snap-to-grid for icons in other icon views
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"     # Snap-to-grid for icons in other icon views
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"        # Snap-to-grid for icons on the desktop
+/usr/libexec/PlistBuddy -c "Set :ICloudViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"         # Snap-to-grid for icons in iCloud Drive
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"       # Snap-to-grid for icons in other icon views
 
 defaults write NSGlobalDomain AppleShowAllFiles -bool true                         # Show hidden files (in open/save dialogs too)
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true                    # Show all filename extensions (in open/save dialogs too)
