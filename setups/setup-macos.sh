@@ -89,6 +89,10 @@ defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true        
 defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true               # Automatically download new updates
 defaults write com.apple.commerce AutoUpdate -bool true                            # Automatically install app updates
 
+# Set iCloud preferences
+
+defaults write com.apple.bird optimize-storage -bool false                         # Keep iCloud files downloaded
+
 # Set Time Machine preferences
 
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true        # Don't prompt to use new external disks for backups
