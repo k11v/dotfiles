@@ -11,6 +11,7 @@
     ```sh
     defaults write NSGlobalDomain AppleShowAllFiles -bool true
     defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+    killall Finder
     ```
 
 2. Install Xcode Command Line Tools (to get Git).
