@@ -1,5 +1,20 @@
 #!/bin/sh
 
+if [ "$DOTFILES_ENVIRONMENT_LOADED" -ne 1 ]; then
+    echo >&2 "$(basename "$0"): Environment doesn't seem to be loaded"
+    exit 1
+fi
+if [ -z "$DOTFILES_SETUP_MIXINS" ]; then
+    echo >&2 "$(basename "$0"): DOTFILES_SETUP_MIXINS wasn't passed to the setup"
+    exit 1
+fi
+source "$DOTFILES_SETUP_MIXINS/require.sh"
+source "$DOTFILES_SETUP_MIXINS/exit.sh"
+
+
+require_macos
+
+
 # Give password to sudo upfront and prevent sudo session timeout
 
 sudo -v
@@ -99,12 +114,12 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true     
 
 # Set Finder preferences
 
-sudo chflags nohidden "/Volumes"                                                   # Show the /Volumes folder
-chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library"  # Show the ~/Library folder
+sudo chflags nohidden "/Volumes"                                                                # Show the /Volumes folder
+chflags nohidden "$HOME/Library" && xattr -d com.apple.FinderInfo "$HOME/Library" 2> /dev/null  # Show the ~/Library folder
 
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"        # Snap-to-grid for icons on the desktop
-/usr/libexec/PlistBuddy -c "Set :ICloudViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"         # Snap-to-grid for icons in iCloud Drive
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"       # Snap-to-grid for icons in other icon views
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"   # Snap-to-grid for icons on the desktop
+/usr/libexec/PlistBuddy -c "Set :ICloudViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"    # Snap-to-grid for icons in iCloud Drive
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"  # Snap-to-grid for icons in other icon views
 
 defaults write NSGlobalDomain AppleShowAllFiles -bool true                         # Show hidden files (in open/save dialogs too)
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true                    # Show all filename extensions (in open/save dialogs too)
@@ -131,7 +146,7 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true    
 
 # Make Visual Studio Code the default app for code files
 
-echo "$(tput setaf 3)Making Visual Studio Code the default app for code files$(tput sgr0)"
+echo "$(tput bold)Making Visual Studio Code the default app for code files$(tput sgr0)"
 for domain in com.apple.applescript.script com.apple.applescript.text com.apple.property-list com.microsoft.word.wordml com.netscape.javascript-source com.sun.java-source .md public.ada-source public.assembly-source public.bash-script public.c-header public.c-plus-plus-header public.c-plus-plus-inline-header public.c-plus-plus-source public.c-plus-plus-source.preprocessed public.c-source public.c-source.preprocessed public.comma-separated-values-text public.csh-script public.css public.data public.dylan-source public.fortran-77-source public.fortran-90-source public.fortran-95-source public.fortran-source public.html public.json public.ksh-script public.lex-source public.make-source public.mig-source public.module-map public.nasm-assembly-source public.objective-c-plus-plus-source public.objective-c-plus-plus-source.preprocessed public.objective-c-source public.objective-c-source.preprocessed public.opencl-source public.pascal-source public.perl-script public.php-script public.plain-text public.precompiled-c-header public.precompiled-c-plus-plus-header public.protobuf-source public.python-script public.ruby-script public.script public.shell-script public.source-code public.source-code.preprocessed public.swift-source public.tab-separated-values-text public.tcsh-script public.unix-executable public.xhtml public.xml public.yacc-source public.yaml public.zsh-script; do
     duti -s com.microsoft.VSCode "$domain" all
 done
@@ -154,3 +169,6 @@ for program in \
     "iCal"; do
     killall "$program" &> /dev/null
 done
+
+
+exit_with_success

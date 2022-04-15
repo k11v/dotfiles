@@ -9,20 +9,14 @@ if [ -z "$DOTFILES_SETUP_MIXINS" ]; then
     exit 1
 fi
 source "$DOTFILES_SETUP_MIXINS/require.sh"
-source "$DOTFILES_SETUP_MIXINS/assert.sh"
 source "$DOTFILES_SETUP_MIXINS/exit.sh"
 
 
 require_macos
-require_macos_application "iTerm"
+require_macos_application "Flow"
 
 
-assert_non_empty_string "$1" "First argument (dotfiles-iterm2-directory) is missing"
-assert_absolute_path "$1"
-assert_directory "$1"
+defaults write design.yugen.Flow showWelcomeWindow -bool false  # Don't show welcome window
 
-
-defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$1"
-defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-
+killall "Flow" &> /dev/null
 exit_with_success

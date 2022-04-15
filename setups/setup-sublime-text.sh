@@ -1,37 +1,45 @@
 #!/bin/sh
 
-if [ -z "$1" ]; then
-    echo >&2 "$(basename "$0"): 'sublime-text.dotfiles' directory was not provided"
+if [ "$DOTFILES_ENVIRONMENT_LOADED" -ne 1 ]; then
+    echo >&2 "$(basename "$0"): Environment doesn't seem to be loaded"
+    exit 1
+fi
+if [ -z "$DOTFILES_SETUP_MIXINS" ]; then
+    echo >&2 "$(basename "$0"): DOTFILES_SETUP_MIXINS wasn't passed to the setup"
+    exit 1
+fi
+source "$DOTFILES_SETUP_MIXINS/require.sh"
+source "$DOTFILES_SETUP_MIXINS/assert.sh"
+source "$DOTFILES_SETUP_MIXINS/link.sh"
+source "$DOTFILES_SETUP_MIXINS/exit.sh"
+
+
+require_macos
+require_macos_application "Sublime Text"
+
+
+assert_non_empty_string "$1" "First argument (dotfiles-sublime-text-directory) is missing"
+assert_absolute_path "$1"
+assert_directory "$1"
+
+
+src_packages="$1/Packages"
+dst_packages="$HOME/Library/Application Support/Sublime Text/Packages"
+
+mkdir -p "$dst_packages"
+if [ ! -d "$dst_packages" ]; then
+    echo >&2 "$(basename "$0"): $dst_packages: Failed to provide a directory for symlinks"
     exit 1
 fi
 
-dotfiles_sublime_dir="$1"
-
-if [ "$(printf '%s' "$dotfiles_sublime_dir" | cut -c1)" != "/" ]; then
-    echo >&2 "$(basename "$0"): 'sublime-text.dotfiles' directory must be provided via an absolute path"
-    exit 1
-fi
-
-if [ ! -d "$dotfiles_sublime_dir" ]; then
-    echo >&2 "$(basename "$0"): provided 'sublime-text.dotfiles' directory is not a directory"
-    exit 1
-fi
-
-
-local_sublime_packages_dir="$HOME/Library/Application Support/Sublime Text/Packages"
-
-mkdir -p "$local_sublime_packages_dir"
-if [ ! -d "$local_sublime_packages_dir" ]; then
-    echo >&2 "$(basename "$0"): failed to provide Sublime Text's local packages directory for symlinks"
-    exit 1
-fi
-
-for package in "$dotfiles_sublime_dir/Packages/"*; do
-    filename="$(basename "$package")"
-    echo "$(tput setaf 3)Symlinking $filename$(tput sgr0)"
-    ln -s "$dotfiles_sublime_dir/Packages/$filename" "$local_sublime_packages_dir"
-
-    if [ "$?" -ne 0 ]; then
-        echo "$(tput setaf 1)Symlinking $filename has failed$(tput sgr0)"
-    fi
+any_success=0
+any_failure=0
+for file in "$src_packages/"*; do
+    filename="$(basename "$file")"
+    link "$src_packages/$filename" "$dst_packages/$filename"
+    [ "$?" -eq 0 ] && any_success=1 || any_failure=1
 done
+
+[ "$any_failure" -eq 0 ] && exit_with_success
+[ "$any_success" -eq 1 ] && exit_with_partial_success
+exit_with_failure

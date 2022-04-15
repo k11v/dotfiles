@@ -55,3 +55,4 @@ export BAT_PAGER=""
 
 export REPOSITORIES="$HOME/Repositories"
 export SUITES="$HOME/.config/suite"
+export DOTFILES_ENVIRONMENT_LOADED=1
