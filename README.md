@@ -30,7 +30,6 @@
 4. Clone the Dotfiles repository.
 
     ```sh
-    mkdir -p "$HOME/.dotfiles"
     git clone git@github.com:kirillgashkov/dotfiles.git "$HOME/.dotfiles"
     ```
 
