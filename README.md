@@ -25,6 +25,7 @@
     ```sh
     mkdir -p "$HOME/.ssh"
     cp /path/to/your/key "$HOME/.ssh"
+    chmod 0700 "$HOME/.ssh/key"
     ```
 
 4. Clone the Dotfiles repository.
