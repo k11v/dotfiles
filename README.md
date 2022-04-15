@@ -30,7 +30,7 @@
 
     ```sh
     mkdir -p "$HOME/.dotfiles"
-    git clone git@github.com:kirillgashkov/dotfiles.git "$HOME/Repositories/dotfiles"
+    git clone git@github.com:kirillgashkov/dotfiles.git "$HOME/.dotfiles"
     ```
 
 5. Run the setup script (via caffeinate to prevent Mac from sleeping).
