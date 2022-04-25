@@ -43,8 +43,3 @@ repo() {
 suite() {
     cd "$SUITES/$1"
 }
-
-# Get Internet speed
-speedtest() {
-    curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
-}
