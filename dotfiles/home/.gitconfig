@@ -19,6 +19,9 @@
     track = update-index --no-assume-unchanged
     download = clone --depth=1
 
+[init]
+	defaultBranch = main
+
 [color]
     ui = auto
 
