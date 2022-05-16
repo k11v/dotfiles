@@ -8,6 +8,11 @@ sed() {
     /usr/local/bin/gsed "$@"
 }
 
+# Use newer git by default
+git() {
+    /usr/local/bin/git "$@"
+}
+
 # Change working directory to the top-most Finder window location
 cdf() {
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
