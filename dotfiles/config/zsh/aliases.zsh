@@ -10,6 +10,10 @@ alias o="open"
 
 alias c="clear"
 
+# Editor
+
+alias v="nvim"
+
 # GNU utils
 
 alias ls="ls --color=auto"
