@@ -42,3 +42,8 @@ alias gp="git push"
 alias gr="git reset HEAD"
 alias gs="git status -sb"
 alias gu="git pull"
+
+# Docker
+
+alias d="docker"
+alias dc="docker compose"
