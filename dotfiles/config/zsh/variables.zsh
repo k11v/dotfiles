@@ -53,6 +53,6 @@ export BAT_PAGER=""
 
 # My utils
 
-export REPOSITORIES="$HOME/Repositories"
+export REPOSITORIES="$HOME/local/repositories"
 export SUITES="$HOME/.config/suite"
 export DOTFILES_ENVIRONMENT_LOADED=1
