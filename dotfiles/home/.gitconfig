@@ -20,7 +20,7 @@
     download = clone --depth=1
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [color]
     ui = auto
