@@ -1,8 +1,0 @@
-# Ignore system files
-.*
-*~
-
-# Keep Git files
-!.gitignore
-!.gitattributes
-!.gitmodules
