@@ -14,13 +14,7 @@
 	<true/>
 	<key>fastAppendBackToClipboard</key>
 	<true/>
-	<key>fastAppendSeparator</key>
-	<integer>1</integer>
 	<key>persistFor</key>
-	<integer>2</integer>
-	<key>persistForFiles</key>
-	<integer>2</integer>
-	<key>persistForImages</key>
 	<integer>2</integer>
 </dict>
 </plist>
