@@ -10,10 +10,6 @@
 		<string>Wallet</string>
 		<string>Bitwarden</string>
 	</array>
-	<key>fastAppend</key>
-	<true/>
-	<key>fastAppendBackToClipboard</key>
-	<true/>
 	<key>persistFor</key>
 	<integer>2</integer>
 </dict>
