@@ -29,6 +29,8 @@ _prompt_precmd() {
 
     if [[ -n "${VIRTUAL_ENV-}" ]]; then
         venv=" via %B%F{yellow}${VIRTUAL_ENV:t}%f%b"
+    elif [[ -n "${PYENV_VERSION-}" ]]; then
+        venv=" via %B%F{yellow}${PYENV_VERSION}%f%b"
     fi
 
     if [[ "$exit_status" -ne 0 ]]; then
