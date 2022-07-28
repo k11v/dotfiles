@@ -39,19 +39,14 @@ myexternalip() {
     dig +short myip.opendns.com @resolver1.opendns.com
 }
 
-# Quickly jump into a local files directory
-lf() {
-    cd "$LOCAL_FILES/$1"
-}
-
-# Quickly jump into a remote files directory
-rf() {
-    cd "$REMOTE_FILES/$1"
-}
-
 # Quickly jump into a repository
 repo() {
     cd "$REPOSITORIES/$1"
+}
+
+# Quickly jump into a note directory
+note() {
+    cd "$NOTES/$1"
 }
 
 # Quickly jump into a suite directory

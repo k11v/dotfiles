@@ -1,5 +1,0 @@
-#compdef lf
-#
-# Usage: lf <directory>
-
-_files -/ -W "$LOCAL_FILES"

@@ -1,5 +1,0 @@
-#compdef rf
-#
-# Usage: rf <directory>
-
-_files -/ -W "$REMOTE_FILES"
