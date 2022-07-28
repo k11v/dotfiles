@@ -31,12 +31,12 @@
 4. Clone the Dotfiles repository.
 
     ```sh
-    git clone git@github.com:kirillgashkov/dotfiles.git "$HOME/.dotfiles"
+    git clone git@github.com:kirillgashkov/dotfiles.git "$HOME/local/repositories/dotfiles"
     ```
 
 5. Run the setup script (via caffeinate to prevent Mac from sleeping).
 
     ```sh
-    cd "$HOME/.dotfiles"
+    cd "$HOME/local/repositories/dotfiles"
     caffeinate -d ./setup.sh
     ```
