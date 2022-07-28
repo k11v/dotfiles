@@ -40,12 +40,12 @@ myexternalip() {
 }
 
 # Quickly jump into a local files directory
-local() {
+lf() {
     cd "$LOCAL_FILES/$1"
 }
 
 # Quickly jump into a remote files directory
-remote() {
+rf() {
     cd "$REMOTE_FILES/$1"
 }
 
