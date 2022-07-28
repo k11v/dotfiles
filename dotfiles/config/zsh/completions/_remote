@@ -1,0 +1,5 @@
+#compdef remote
+#
+# Usage: remote <directory>
+
+_files -/ -W "$REMOTE_FILES"

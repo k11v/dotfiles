@@ -1,0 +1,5 @@
+#compdef local
+#
+# Usage: local <directory>
+
+_files -/ -W "$LOCAL_FILES"

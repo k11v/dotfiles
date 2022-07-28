@@ -53,6 +53,8 @@ export BAT_PAGER=""
 
 # My utils
 
+export LOCAL_FILES="$HOME/local"
+export REMOTE_FILES="$HOME/remote"
 export REPOSITORIES="$HOME/local/repositories"
 export SUITES="$HOME/.config/suite"
 export DOTFILES_ENVIRONMENT_LOADED=1
