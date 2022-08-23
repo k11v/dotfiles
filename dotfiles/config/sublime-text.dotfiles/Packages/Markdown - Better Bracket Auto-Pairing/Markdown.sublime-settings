@@ -1,0 +1,5 @@
+{
+    // Turn off the default auto-pairing of brackets and quotes for Markdown in
+    // favor of key bindings I added in "Default.sublime-keymap"
+    "auto_match_enabled": false,
+}

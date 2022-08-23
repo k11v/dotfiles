@@ -1,14 +1,32 @@
-{
+{    
+    // Theme
+    "color_scheme": "Mariana.sublime-color-scheme",
+    "theme": "Adaptive.sublime-theme",
+
+    // JetBrains Mono with recommended settings
     "font_face": "JetBrains Mono",
     "font_size": 13,
-    "mini_diff": "auto",
+    "line_padding_top": 2,
+    "line_padding_bottom": 2,
+
+    // Interface
     "rulers": [80],
+    "mini_diff": "auto",
+
+    // UX
+    "scroll_past_end": false,
+    "find_selected_text": false,
+    "close_windows_when_empty": true,
+
+    // No word wrap
+    "word_wrap": false,
+
+    // 4-space indention in new files
+    "tab_size": 4,
     "translate_tabs_to_spaces": true,
-    "auto_match_enabled": true,
-    "scroll_past_end": 0.3,
-    "show_full_path": true,
-    "ignored_packages":
-    [
-		"Vintage",
-    ],
+    "detect_indentation": true,
+
+    // Russian-English spell checking
+    "spell_check": false,
+    "dictionary": "Packages/Language - Russian-English/ru_RU-en_US.dic",
 }
