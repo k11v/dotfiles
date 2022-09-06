@@ -1,56 +1,56 @@
 {
-    "title": "Prioritize Spotify when pressing media keys",
-    "rules": [
+  "title": "Prioritize Spotify when pressing media keys",
+  "rules": [
+    {
+      "description": "Prioritize Spotify when pressing F7 (previous track)",
+      "manipulators": [
         {
-            "description": "Prioritize Spotify when pressing F7 (previous track)",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "f7",
-                        "modifiers": {}
-                    },
-                    "to_if_alone": [
-                        {
-                            "shell_command": "osascript -e 'tell application \"Spotify\" to previous track'"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "description": "Prioritize Spotify when pressing F8 (play/pause)",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "f8",
-                        "modifiers": {}
-                    },
-                    "to_if_alone": [
-                        {
-                            "shell_command": "osascript -e 'tell application \"Spotify\" to playpause'"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "description": "Prioritize Spotify when pressing F9 (next track)",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "f9",
-                        "modifiers": {}
-                    },
-                    "to_if_alone": [
-                        {
-                            "shell_command": "osascript -e 'tell application \"Spotify\" to next track'"
-                        }
-                    ]
-                }
-            ]
+          "type": "basic",
+          "from": {
+            "key_code": "f7",
+            "modifiers": {}
+          },
+          "to_if_alone": [
+            {
+              "shell_command": "osascript -e 'tell application \"Spotify\" to previous track'"
+            }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "description": "Prioritize Spotify when pressing F8 (play/pause)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f8",
+            "modifiers": {}
+          },
+          "to_if_alone": [
+            {
+              "shell_command": "osascript -e 'tell application \"Spotify\" to playpause'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Prioritize Spotify when pressing F9 (next track)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f9",
+            "modifiers": {}
+          },
+          "to_if_alone": [
+            {
+              "shell_command": "osascript -e 'tell application \"Spotify\" to next track'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
