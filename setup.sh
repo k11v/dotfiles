@@ -210,7 +210,7 @@ section "Setting up transmission"
 handle_exit "$?"
 
 section "Setting up hammerspoon"
-"$setups/setup-hammerspoon.sh"
+"$setups/setup-hammerspoon.sh" "$dotfiles/config/hammerspoon.dotfiles"
 handle_exit "$?"
 
 
