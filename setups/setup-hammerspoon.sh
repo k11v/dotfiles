@@ -29,8 +29,8 @@ any_failure=0
 
 # Setup app preferences using macOS defaults
 
-defaults write org.hammerspoon.Hammerspoon MJShowDockIconKey -bool true   # Unhide Dock icon
-defaults write org.hammerspoon.Hammerspoon MJShowMenuIconKey -bool false  # Hide menu bar icon
+defaults write org.hammerspoon.Hammerspoon MJShowDockIconKey -bool false  # Hide the Dock icon
+defaults write org.hammerspoon.Hammerspoon MJShowMenuIconKey -bool false  # Hide the menu bar icon
 any_success=1
 
 
