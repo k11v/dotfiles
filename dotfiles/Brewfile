@@ -40,6 +40,7 @@ brew "tmux"
 brew "tree"
 brew "wget"
 brew "yarn"
+cask "alacritty"
 cask "alfred"
 cask "appcleaner"
 cask "discord"
@@ -69,6 +70,7 @@ cask "yandex-cloud-cli"
 cask "zoom"
 mas "Amphetamine", id: 937984704
 mas "Bitwarden", id: 1352778147
+mas "Craft", id: 1487937127
 mas "Flow", id: 1423210932
 mas "Things", id: 904280696
 mas "WireGuard", id: 1451685025
