@@ -3,3 +3,12 @@ window:
     x: 15
     y: 15
   decorations: buttonless
+
+font:
+  normal:
+    family: JetBrains Mono
+  size: 13.0
+  offset:
+    y: 10
+  glyph_offset:
+    y: 5
