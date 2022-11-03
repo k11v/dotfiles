@@ -14,4 +14,5 @@ font:
     y: 5
 
 import:
+  # - ~/.config/alacritty/themes/atom-one-light.yml
   - ~/.config/alacritty/themes/tomorrow-night.yml
