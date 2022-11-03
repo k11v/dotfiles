@@ -16,3 +16,11 @@ font:
 import:
   # - ~/.config/alacritty/themes/atom-one-light.yml
   - ~/.config/alacritty/themes/tomorrow-night.yml
+
+shell:
+  program: /usr/local/bin/tmux
+  args:
+    - new-session
+    - -A
+    - -s
+    - main
