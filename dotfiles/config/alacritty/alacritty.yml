@@ -28,3 +28,8 @@ shell:
 
 key_bindings:
   - { key: R, mods: Alt, command: { program: "/bin/sh", args: ["-c", "/usr/local/bin/tmux kill-server; /usr/local/bin/alacritty &"] } }  # Reload tmux (for dotfiles development)
+
+  - { key: N, mods: Command, chars: "\x02\x63" }              # New window       (C-b c)
+  - { key: N, mods: Command|Shift, chars: "\x02\x1b\x43" }    # New session      (C-b M-C) (User-defined)
+  - { key: W, mods: Command, chars: "\x02\x78" }              # Close pane       (C-b x)
+  - { key: W, mods: Command|Shift, chars: "\x02\x1b\x58" }    # Close session    (C-b M-X) (User-defined)
