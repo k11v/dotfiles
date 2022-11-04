@@ -27,4 +27,4 @@ shell:
     - main
 
 key_bindings:
-  - { key: Comma, mods: Command, command: { program: "/bin/sh", args: ["-c", "/usr/local/bin/tmux kill-server; /usr/local/bin/alacritty &"] } }  # Reload tmux (for dotfiles development)
+  - { key: R, mods: Alt, command: { program: "/bin/sh", args: ["-c", "/usr/local/bin/tmux kill-server; /usr/local/bin/alacritty &"] } }  # Reload tmux (for dotfiles development)
