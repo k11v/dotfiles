@@ -54,3 +54,5 @@ key_bindings:
 
   - { key: Left,  mods: Command|Shift,  chars: "\x02\x70"         }  # Select left window       (C-b p)
   - { key: Right, mods: Command|Shift,  chars: "\x02\x6e"         }  # Select right window      (C-b n)
+
+  - { key: K,     mods: Command,        chars: ""                 }  # Clear scrollback buffer  (???) (User-defined)
