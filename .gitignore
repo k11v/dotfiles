@@ -6,7 +6,6 @@
 Brewfile.lock.json
 
 # Keep dotfiles
-!.gitconfig
 !.hushlogin
 !.zshrc
 !.zshenv
