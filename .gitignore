@@ -9,6 +9,7 @@ Brewfile.lock.json
 !.gitconfig
 !.hushlogin
 !.zshrc
+!.zshenv
 !.hammerspoon/
 
 # Keep git files
