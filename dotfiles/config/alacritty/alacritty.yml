@@ -60,4 +60,4 @@ key_bindings:
   - { key: R,     mods: Command,        chars: "\x02\x2c"         }  # Rename window            (C-b ,)
   - { key: R,     mods: Command|Shift,  chars: "\x02\x24"         }  # Rename session           (C-b $)
 
-  - { key: K,     mods: Command,        chars: ""                 }  # Clear scrollback buffer  (???) (User-defined)
+  - { key: K,     mods: Command,        chars: "\x02\x1b\x4b"     }  # Clear scrollback buffer  (C-b M-K) (User-defined)
