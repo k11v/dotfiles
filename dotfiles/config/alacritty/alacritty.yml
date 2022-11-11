@@ -21,10 +21,12 @@ import:
 shell:
   program: /usr/local/bin/tmux
   args:
-    - new-session
-    - -A
-    - -s
-    - main
+    - start-server
+    - ;
+    - run-shell
+    - "/usr/local/bin/tmux has-session || /usr/local/bin/tmux new-session -d -s unnamed"
+    - ;
+    - attach-session
 
 key_bindings:
   - { key: Q,     mods: Command|Alt,    chars: "\x02\x1b\x51"     }  # Kill server              (C-b M-Q) (User-defined)
