@@ -43,10 +43,12 @@ alias gr="git reset HEAD"
 alias gs="git status -sb"
 alias gu="git pull"
 
-# Docker Compose
+# Docker
 
-alias cu="docker compose up"
-alias cud="docker compose up -d"
-alias cd="docker compose down"
-alias cdv="docker compose down -v"
-alias cl="docker compose logs"
+alias d="docker"
+alias dc="docker compose"
+alias dcu="docker compose up"
+alias dcud="docker compose up -d"
+alias dcd="docker compose down"
+alias dcdv="docker compose down -v"
+alias dcl="docker compose logs"
