@@ -58,6 +58,9 @@ key_bindings:
   - { key: Left,  mods: Command|Shift,  chars: "\x02\x70"         }  # Select left window       (C-b p)
   - { key: Right, mods: Command|Shift,  chars: "\x02\x6e"         }  # Select right window      (C-b n)
 
+  - { key: Left,  mods: Command|Alt|Shift,  chars: "\x02\x1b\x50" }  # Swap with left window    (C-b M-P)
+  - { key: Right, mods: Command|Alt|Shift,  chars: "\x02\x1b\x4e" }  # Swap with right window   (C-b M-N)
+
   - { key: S,     mods: Command|Shift,  chars: "\x02\x1b\x53"     }  # Select session           (C-b M-S) (User-defined)
 
   - { key: R,     mods: Command,        chars: "\x02\x2c"         }  # Rename window            (C-b ,)
