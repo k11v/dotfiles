@@ -1,5 +1,10 @@
-_prompt_precmd() {
-    local exit_status="$?" git_ref git_commit
+# Prompt styles
+
+typeset -A _prompt_builders  # Declare an associative array
+_prompt_builders=()
+
+_make_regular_prompt() {
+    local exit_status="$1" git_ref git_commit
     local username hostname branch venv workdir symbol
     
     workdir="%B%F{cyan}%~%f%b"
@@ -37,7 +42,30 @@ _prompt_precmd() {
         symbol="%B%F{red}❯%f%b"
     fi
 
-    PROMPT="$username$hostname$workdir$branch$venv $symbol "
+    printf "%s" "$username$hostname$workdir$branch$venv $symbol "
+}
+_prompt_builders["regular"]="_make_regular_prompt"
+
+_make_simple_prompt() {
+    local exit_status="$1"
+    local symbol
+
+    if [[ "$exit_status" -eq 0 ]]; then
+        symbol="%B%F{green}❯%f%b"
+    else
+        symbol="%B%F{red}❯%f%b"
+    fi
+
+    printf "%s" "$symbol "
+}
+_prompt_builders["simple"]="_make_simple_prompt"
+
+# Prompt precmd
+
+_prompt_precmd() {
+    local exit_status="$?"
+    
+    PROMPT="$("$_prompt_builders["$PROMPT_STYLE"]" "$exit_status")"
 }
 
 autoload -Uz add-zsh-hook

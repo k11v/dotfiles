@@ -22,8 +22,10 @@ PS2="%B…%b "
 HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
 HISTSIZE=10000
 SAVEHIST=10000
-ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 KEYTIMEOUT=1
+
+ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"  # User-defined
+PROMPT_STYLE="regular"                      # User-defined
 
 # Less
 
