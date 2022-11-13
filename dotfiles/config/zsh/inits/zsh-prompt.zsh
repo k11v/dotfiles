@@ -65,7 +65,7 @@ _prompt_builders["simple"]="_make_simple_prompt"
 _prompt_precmd() {
     local exit_status="$?"
     
-    PROMPT="$("$_prompt_builders["$PROMPT_STYLE"]" "$exit_status")"
+    PROMPT="$("${_prompt_builders["$PROMPT_STYLE"]-_make_default_prompt}" "$exit_status")"
 }
 
 autoload -Uz add-zsh-hook
