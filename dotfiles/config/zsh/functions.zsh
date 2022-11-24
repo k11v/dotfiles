@@ -53,3 +53,11 @@ note() {
 suite() {
     cd "$SUITES/$1"
 }
+
+# Load a .env file (formatted according to the Compose spec)
+dotenv() {
+    local kv
+    cat "$1" | sed '/^#.*$/d' | sed '/^$/d' | sed -n '/^.*=.*$/p' | while read -r kv; do
+        export "$kv"
+    done
+}
