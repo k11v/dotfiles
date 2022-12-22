@@ -61,3 +61,11 @@ dotenv() {
         export "$kv"
     done
 }
+
+git-log-with-dates() {
+    # See:
+    # - https://devhints.io/git-log-format
+    # - https://www.git-scm.com/docs/git-config#Documentation/git-config.txt-color
+    # - https://www.git-scm.com/docs/git-log#_pretty_formats
+    git log --pretty='format:%aD %C(bold)%C(yellow)%h%Creset %s'
+}
