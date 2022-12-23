@@ -69,3 +69,7 @@ git-log-with-dates() {
     # - https://www.git-scm.com/docs/git-log#_pretty_formats
     git log --pretty='format:%aD %C(bold)%C(yellow)%h%Creset %s'
 }
+
+iconv-windows-1251-to-utf-8() {
+    iconv -f WINDOWS-1251 -t UTF-8
+}
