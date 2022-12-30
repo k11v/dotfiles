@@ -70,6 +70,39 @@ git-log-with-dates() {
     git log --pretty='format:%aD %C(bold)%C(yellow)%h%Creset %s'
 }
 
+# NOTE: This function creates dangling commits.
+git-branch-squash-merged() {
+    local branches="$(git branch --format="%(refname:short)")"
+    local current_branch="$(git branch --show-current --format="%(refname:short)")"
+    local default_branch="main"
+
+    if [[ "$current_branch" != "$default_branch" ]]; then
+        echo 1>&2 "Error: You must be on the default branch ('$default_branch') to run this command."
+        return 1
+    fi
+
+    echo "$branches" | while read -r branch; do
+        if [[ "$branch" == "$default_branch" ]]; then
+            continue
+        fi
+
+        local ancestor_commit="$(git merge-base "$branch" "$default_branch")"
+        local branch_tree="$(git rev-parse "$branch^{tree}")"
+        local recreated_squash_commit="$(git commit-tree "$branch_tree" -p "$ancestor_commit" -m "Recreated squash commit for '$branch'")"
+
+        if [[ -z "$recreated_squash_commit" ]]; then
+            echo >&2 "Error: Failed to recreate squash commit for '$branch'. Skipping."
+            continue
+        fi
+
+        if [[ $(git cherry "$default_branch" "$recreated_squash_commit") != "-"* ]]; then
+            continue
+        fi
+
+        echo "$branch"
+    done
+}
+
 iconv-windows-1251-to-utf-8() {
     iconv -f WINDOWS-1251 -t UTF-8
 }
