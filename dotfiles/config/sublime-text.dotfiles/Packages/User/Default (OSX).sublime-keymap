@@ -1,4 +1,12 @@
 [
     { "keys": ["super+n"], "command": "smart_new_file" },
+
     { "keys": ["alt+q"], "command": "wrap_lines" },
+    { "keys": ["super+alt+q"], "command": "noop" },
+
+    { "keys": ["super+alt+up"], "command": "select_lines", "args": {"forward": false} },
+    { "keys": ["ctrl+shift+up"], "command": "noop" },
+
+    { "keys": ["super+alt+down"], "command": "select_lines", "args": {"forward": true} },
+    { "keys": ["ctrl+shift+down"], "command": "noop" },
 ]

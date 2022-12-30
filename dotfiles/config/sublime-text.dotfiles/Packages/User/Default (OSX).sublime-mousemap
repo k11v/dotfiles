@@ -1,0 +1,84 @@
+[
+    //
+    // Unset Sublime Text's mouse bindings
+    //
+
+
+    // Reset basic drag select
+    {
+        "button": "button1", "count": 1, "modifiers": ["super"],
+        "press_command": "noop",
+    },
+    {
+        "button": "button1", "count": 1, "modifiers": ["shift", "super"],
+        "press_command": "noop",
+    },
+
+    // Reset drag select by words
+    {
+        "button": "button1", "count": 2, "modifiers": ["super"],
+        "press_command": "noop",
+    },
+    {
+        "button": "button1", "count": 2, "modifiers": ["shift", "super"],
+        "press_command": "noop",
+    },
+
+    // Reset drag select by lines
+    {
+        "button": "button1", "count": 3, "modifiers": ["super"],
+        "press_command": "noop",
+    },
+    {
+        "button": "button1", "count": 3, "modifiers": ["shift", "super"],
+        "press_command": "noop",
+    },
+
+    // Reset column select
+    {
+        "button": "button1", "modifiers": ["alt"],
+        "press_command": "noop",
+    },
+    {
+        "button": "button1", "modifiers": ["alt", "super"],
+        "press_command": "noop",
+    },
+    {
+        "button": "button1", "modifiers": ["alt", "shift", "super"],
+        "press_command": "noop",
+    },
+
+
+    //
+    // Set VSCode's mouse bindings
+    //
+
+
+    // Basic drag select
+    {
+        "button": "button1", "count": 1, "modifiers": ["alt"],
+        "press_command": "drag_select",
+        "press_args": {"additive": true}
+    },
+
+    // Drag select by words
+    {
+        "button": "button1", "count": 2, "modifiers": ["alt"],
+        "press_command": "drag_select",
+        "press_args": {"by": "words", "additive": true}
+    },
+
+    // Drag select by lines
+    {
+        "button": "button1", "count": 3, "modifiers": ["alt"],
+        "press_command": "drag_select",
+        "press_args": {"by": "lines", "additive": true}
+    },
+
+    // Column select
+    {
+        "button": "button1", "modifiers": ["alt", "shift"],
+        "press_command": "drag_select",
+        "press_args": {"by": "columns"}
+    },
+]
