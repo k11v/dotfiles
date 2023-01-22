@@ -10,7 +10,7 @@
     "line_padding_bottom": 2,
 
     // Interface
-    "rulers": [80],
+    "rulers": [80, 88],
     "mini_diff": "auto",
 
     // UX
