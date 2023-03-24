@@ -1,6 +1,6 @@
 [user]
     name = Kirill Gashkov
-    email = kirill@gashkov.com
+	email = k.e.gashkov@gmail.com
 
 [core]
     pager = diff-so-fancy | less
@@ -50,3 +50,8 @@
     oldHighlight = red bold 52
     newNormal = green bold
     newHighlight = green bold 22
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
