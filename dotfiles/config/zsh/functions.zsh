@@ -102,7 +102,3 @@ git-branch-squash-merged() {
         echo "$branch"
     done
 }
-
-iconv-windows-1251-to-utf-8() {
-    iconv -f WINDOWS-1251 -t UTF-8
-}
