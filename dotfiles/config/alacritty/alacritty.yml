@@ -28,3 +28,5 @@ key_bindings:
   - { key: D,     mods: Command|Shift,  chars: "\x02\x22"         }  # Split pane horizontally  (C-b ")
   - { key: W,     mods: Command,        chars: "\x02\x78"         }  # Close pane               (C-b x)
   - { key: W,     mods: Command|Shift,  chars: "\x02\x1b\x58"     }  # Close session            (C-b M-X) (User-defined)
+
+  - { key: Y,     mods: Command,        chars: "\x02\x1b\x7b"     }  # Toggle copy mode         (C-b M-{) (User-defined)
