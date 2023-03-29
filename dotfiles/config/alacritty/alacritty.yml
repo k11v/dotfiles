@@ -11,4 +11,14 @@ font:
   glyph_offset:
     y: 5
 
+shell:
+  program: /usr/local/bin/tmux
+  args:
+    - start-server
+    - ;
+    - run-shell
+    - /usr/local/bin/tmux has-session || /usr/local/bin/tmux new-session -d -s unnamed
+    - ;
+    - attach-session
+
 key_bindings: []
