@@ -3,6 +3,7 @@
 typeset -A _prompt_builders  # Declare an associative array
 _prompt_builders=()
 
+_prompt_builders["regular"]="_make_regular_prompt"
 _make_regular_prompt() {
     local exit_status="$1" git_ref git_commit
     local username hostname branch venv workdir symbol
@@ -44,8 +45,8 @@ _make_regular_prompt() {
 
     printf "%s" "$username$hostname$workdir$branch$venv $symbol "
 }
-_prompt_builders["regular"]="_make_regular_prompt"
 
+_prompt_builders["simple"]="_make_simple_prompt"
 _make_simple_prompt() {
     local exit_status="$1"
     local symbol
@@ -58,7 +59,6 @@ _make_simple_prompt() {
 
     printf "%s" "$symbol "
 }
-_prompt_builders["simple"]="_make_simple_prompt"
 
 # Prompt precmd
 
