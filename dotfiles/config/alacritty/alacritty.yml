@@ -21,4 +21,10 @@ shell:
     - ;
     - attach-session
 
-key_bindings: []
+key_bindings:
+  - { key: N,     mods: Command,        chars: "\x02\x63"         }  # New window               (C-b c)
+  - { key: N,     mods: Command|Shift,  chars: "\x02\x1b\x43"     }  # New session              (C-b M-C) (User-defined)
+  - { key: D,     mods: Command,        chars: "\x02\x25"         }  # Split pane vertically    (C-b %)
+  - { key: D,     mods: Command|Shift,  chars: "\x02\x22"         }  # Split pane horizontally  (C-b ")
+  - { key: W,     mods: Command,        chars: "\x02\x78"         }  # Close pane               (C-b x)
+  - { key: W,     mods: Command|Shift,  chars: "\x02\x1b\x58"     }  # Close session            (C-b M-X) (User-defined)
