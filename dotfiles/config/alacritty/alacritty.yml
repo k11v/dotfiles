@@ -49,4 +49,5 @@ key_bindings:
   - { key: Key8,  mods: Command,       chars: "\x02\x38"         }  # Focus window 8          (C-b 8)
   - { key: Key9,  mods: Command,       chars: "\x02\x1b\x28"     }  # Focus last window       (C-b M-() (User-defined)
 
-  - { key: P,     mods: Command,       chars: "\x02\x1b\x50"     }  # Go to session            (C-b M-P) (User-defined)
+  - { key: P,     mods: Command,       chars: "\x02\x1b\x53"     }  # Go to session           (C-b M-S) (User-defined)
+  - { key: P,     mods: Command|Shift, chars: "\x02\x1b\x50"     }  # Command palette         (C-b M-P) (User-defined)
