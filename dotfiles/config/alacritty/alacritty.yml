@@ -17,7 +17,7 @@ shell:
     - start-server
     - ;
     - run-shell
-    - /usr/local/bin/tmux has-session || /usr/local/bin/tmux new-session -d -s "_"
+    - /usr/local/bin/tmux has-session || /usr/local/bin/tmux new-session -d -s "-"
     - ;
     - attach-session
 
