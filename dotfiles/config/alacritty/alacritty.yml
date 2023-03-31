@@ -15,6 +15,9 @@ font:
   glyph_offset:
     y: 5
 
+import:
+  - ~/.config/alacritty/themes/tomorrow-night.yml
+
 shell:
   program: /usr/local/bin/tmux
   args:
