@@ -50,3 +50,12 @@ hs.hotkey.bind({"alt"}, "`", function()
     -- just launched. 'hs.application.open' didn't seem to help.
   end
 end)
+
+
+hs.hotkey.bind({"command", "alt", "shift"}, "v", function()
+  local pasteboard = hs.pasteboard.getContents()
+
+  if pasteboard then
+    hs.eventtap.keyStrokes(pasteboard)
+  end
+end)
