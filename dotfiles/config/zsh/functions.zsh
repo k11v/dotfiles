@@ -1,32 +1,6 @@
-# Use GNU ls by default
-ls() {
-    /usr/local/bin/gls "$@"
-}
-
-# Use GNU sed by default
-sed() {
-    /usr/local/bin/gsed "$@"
-}
-
-# Use newer git by default
-git() {
-    /usr/local/bin/git "$@"
-}
-
-# Use GNU strings by default
-strings() {
-    /usr/local/opt/binutils/bin/strings "$@"
-}
-
 # Change working directory to the top-most Finder window location
 cdf() {
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
-}
-
-# Compile completion cache from scratch
-recompinit() {
-    rm "$ZCOMPDUMP"
-    compinit -d "$ZCOMPDUMP"
 }
 
 # Compare files using Git's colored diff
@@ -44,6 +18,14 @@ myexternalip() {
     dig +short myip.opendns.com @resolver1.opendns.com
 }
 
+# Load a .env file (formatted according to the Compose spec)
+dotenv() {
+    local kv
+    cat "${1-.env}" | sed '/^#.*$/d' | sed '/^$/d' | sed -n '/^.*=.*$/p' | while read -r kv; do
+        export "$kv"
+    done
+}
+
 # Quickly jump into a repository
 repo() {
     cd "$REPOSITORIES/$1"
@@ -52,14 +34,6 @@ repo() {
 # Quickly jump into a space
 space() {
     cd "$SPACES/$1"
-}
-
-# Load a .env file (formatted according to the Compose spec)
-dotenv() {
-    local kv
-    cat "$1" | sed '/^#.*$/d' | sed '/^$/d' | sed -n '/^.*=.*$/p' | while read -r kv; do
-        export "$kv"
-    done
 }
 
 git-log-with-dates() {
@@ -101,4 +75,30 @@ git-branch-squash-merged() {
 
         echo "$branch"
     done
+}
+
+# Compile completion cache from scratch
+recompinit() {
+    rm "$ZCOMPDUMP"
+    compinit -d "$ZCOMPDUMP"
+}
+
+# Use GNU ls by default
+ls() {
+    /usr/local/bin/gls "$@"
+}
+
+# Use GNU sed by default
+sed() {
+    /usr/local/bin/gsed "$@"
+}
+
+# Use GNU strings by default
+strings() {
+    /usr/local/opt/binutils/bin/strings "$@"
+}
+
+# Use newer git by default
+git() {
+    /usr/local/bin/git "$@"
 }
