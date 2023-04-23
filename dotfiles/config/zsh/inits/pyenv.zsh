@@ -9,7 +9,7 @@ _init_pyenv_once() {
 
 pyenv() {
     _init_pyenv_once
-    pyenv "$@"
+    command pyenv "$@"
 }
 
 _pyenv() {
