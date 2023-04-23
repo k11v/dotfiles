@@ -1,0 +1,5 @@
+#compdef space
+#
+# Usage: space <space>
+
+_files -/ -W "$SPACES"

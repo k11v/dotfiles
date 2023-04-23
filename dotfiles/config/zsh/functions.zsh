@@ -44,6 +44,11 @@ repo() {
     cd "$REPOSITORIES/$1"
 }
 
+# Quickly jump into a space
+space() {
+    cd "$SPACES/$1"
+}
+
 # Quickly jump into a note directory
 note() {
     cd "$NOTES/$1"
