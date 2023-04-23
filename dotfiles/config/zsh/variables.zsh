@@ -63,3 +63,7 @@ export DOTFILES_ENVIRONMENT_LOADED=1
 # Homebrew kegs
 
 export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
+
+# Cargo
+
+export PATH="/Users/cyril/.cargo/bin:$PATH"
