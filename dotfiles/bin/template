@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+# Usage: template <template-file> [<destination-directory>]
+#
 # Copies the specified template file to the current working directory or to
 # the optionally specified destination directory.
 #
