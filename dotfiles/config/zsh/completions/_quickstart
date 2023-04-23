@@ -1,9 +1,0 @@
-#compdef quickstart
-#
-# Usage: quickstart <quickstart-file> [<working-directory>]
-
-local library="${XDG_CONFIG_HOME:-$HOME/.config}/quickstart"
-
-_arguments -s \
-    "1:quickstart file:_files -W '$library'" \
-    "2:working directory:_files -/"

@@ -54,11 +54,6 @@ space() {
     cd "$SPACES/$1"
 }
 
-# Quickly jump into a note directory
-note() {
-    cd "$NOTES/$1"
-}
-
 # Load a .env file (formatted according to the Compose spec)
 dotenv() {
     local kv

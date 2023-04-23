@@ -57,7 +57,6 @@ export BAT_PAGER=""
 
 export REPOSITORIES="$HOME/local/repositories"
 export SPACES="$HOME/local/spaces"
-export NOTES="$HOME/remote/notes"
 export DOTFILES_ENVIRONMENT_LOADED=1
 
 # Homebrew kegs
