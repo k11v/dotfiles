@@ -34,9 +34,9 @@ diff() {
     git diff --no-index "$@"
 }
 
-# Get local IP
-myip() {
-    ipconfig getifaddr en0
+# Get local IPs
+myips() {
+    ifconfig | grep inet | grep -v inet6 | cut -d " " -f 2
 }
 
 # Get external IP
