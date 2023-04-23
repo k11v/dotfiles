@@ -12,4 +12,5 @@ source "$ZDOTDIR/inits/zsh-prompt.zsh"
 
 source "$ZDOTDIR/inits/fzf.zsh"
 source "$ZDOTDIR/inits/pyenv.zsh"
+source "$ZDOTDIR/inits/poetry.zsh"
 source "$ZDOTDIR/inits/suite.zsh"
