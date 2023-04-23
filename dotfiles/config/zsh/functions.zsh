@@ -26,6 +26,58 @@ dotenv() {
     done
 }
 
+# Activate current directory's Python venv
+venv() {
+    local name="$(basename "$PWD")"
+
+    if [[ ! -e "$VENVS/$name" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' doesn't exist."
+        return 1
+    fi
+
+    source "$VENVS/$name/bin/activate"
+}
+
+# Create current directory's Python venv (with optional version)
+mkvenv() {
+    local version="${1-$(pyenv versions --bare | grep -E "^\d+(\.\d+)*$" | tail -1)}"
+    local name="$(basename "$PWD")"
+
+    if [[ -e "$VENVS/$name" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' already exists."
+        return 1
+    fi
+
+    if ! pyenv versions --bare | grep -E -q "^$version$"; then
+        pyenv install --skip-existing "$version"
+        [[ "$?" -ne 0 ]] && return 1
+    fi
+
+    echo "Making venv '$name' with Python $version..."
+
+    PYENV_VERSION="$version" python -m venv "$VENVS/$name"
+    [[ "$?" -ne 0 ]] && return 1
+
+    source "$VENVS/$name/bin/activate"
+}
+
+# Delete current directory's Python venv
+rmvenv() {
+    local name="$(basename "$PWD")"
+
+    if [[ ! -e "$VENVS/$name" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' doesn't exist."
+        return 1
+    fi
+
+    if [[ "$VIRTUAL_ENV" -ef "$VENVS/$name" ]]; then
+        deactivate
+        [[ "$?" -ne 0 ]] && return 1
+    fi
+
+    rm -rf "$VENVS/$name"
+}
+
 # Quickly jump into a repository
 repo() {
     cd "$REPOSITORIES/$1"
