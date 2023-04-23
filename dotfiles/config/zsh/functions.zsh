@@ -54,11 +54,6 @@ note() {
     cd "$NOTES/$1"
 }
 
-# Quickly jump into a suite directory
-suite() {
-    cd "$SUITES/$1"
-}
-
 # Load a .env file (formatted according to the Compose spec)
 dotenv() {
     local kv

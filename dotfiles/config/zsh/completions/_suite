@@ -1,5 +1,0 @@
-#compdef suite
-#
-# Usage: suite <suite>
-
-_files -/ -W "$SUITES"
