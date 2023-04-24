@@ -79,7 +79,12 @@ rmvenv() {
 }
 
 termshot() (
-    alacritty --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" --hold --command cat <(cat) &
+    alacritty \
+        --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" \
+        --option window.dimensions.columns=80 \
+        --option window.dimensions.lines=33 \
+        --hold \
+        --command cat <(cat) &
     local pid="$!"
     trap "kill $pid" EXIT
 
