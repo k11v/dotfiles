@@ -78,6 +78,9 @@ rmvenv() {
     rm -rf "$VENVS/$name"
 }
 
+termshot() {
+}
+
 # Quickly jump into a repository
 repo() {
     cd "$REPOSITORIES/$1"
