@@ -4,7 +4,6 @@ window:
     y: 10
   dynamic_padding: true
   decorations: buttonless
-  opacity: 0.9
 
 font:
   normal:
@@ -18,3 +17,6 @@ font:
 colors:
   bright:
     black: "#24282D"
+  cursor:
+    text: CellForeground
+    cursor: CellBackground
