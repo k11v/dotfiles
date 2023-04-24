@@ -79,7 +79,7 @@ rmvenv() {
 }
 
 termshot() (
-    alacritty --config-file /dev/null --hold --command /bin/echo "Hello" &
+    alacritty --config-file /dev/null --hold --command cat <(cat) &
     local pid="$!"
     trap "kill $pid" EXIT
 
