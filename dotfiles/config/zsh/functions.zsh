@@ -120,6 +120,8 @@ EOF
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Failed to find terminal window."
         exit 1
     fi
+
+    screencapture -x -o -l "$window_id" "$1"
 )
 
 # Quickly jump into a repository
