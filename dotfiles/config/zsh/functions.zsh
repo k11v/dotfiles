@@ -83,19 +83,41 @@ termshot() (
     local pid="$!"
     trap "kill $pid" EXIT
 
-    local window_id
-    window_id="$(hs -A -q <<EOF
-local windows = hs.application.applicationForPID($pid):allWindows()
-if #windows == 1 then
-    return windows[1]:id()
-else
-    error("Expected 1 window, got " .. #windows)
+    window_id="$(hs -A -q -t 10 <<EOF
+local waitDuration = 5000000 -- 5 seconds
+local waitInterval = 100000 -- 0.1 seconds
+local app
+local window
+
+repeat
+    app = app or hs.application.applicationForPID($pid)
+
+    if app then
+        window = app:mainWindow()
+
+        if window then
+            break
+        end
+    end
+
+    hs.timer.usleep(hs.math.min(waitDuration, waitInterval))
+    waitDuration = waitDuration - waitInterval
+until waitDuration <= 0
+
+if not app then
+    error("Couldn't find application for PID '$pid'.")
 end
+
+if not window then
+    error("Couldn't find window for PID '$pid'.")
+end
+
+return window:id()
 EOF
     )"
 
     if [[ "$?" -ne 0 ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Couldn't find a window for PID '$pid'."
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Failed to find terminal window."
         exit 1
     fi
 )
