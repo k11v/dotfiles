@@ -1,0 +1,20 @@
+window:
+  padding:
+    x: 10
+    y: 10
+  dynamic_padding: true
+  decorations: buttonless
+  opacity: 0.9
+
+font:
+  normal:
+    family: JetBrains Mono
+  size: 13.0
+  offset:
+    y: 10
+  glyph_offset:
+    y: 5
+
+colors:
+  bright:
+    black: "#24282D"
