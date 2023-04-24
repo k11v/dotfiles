@@ -79,6 +79,13 @@ rmvenv() {
 }
 
 termshot() {
+    local window_id
+    window_id="$(hs -A -q -c "local windows = hs.application.applicationForPID($pid):allWindows(); if #windows == 1 then return windows[1]:id() else error('Expected 1 window, got ' .. #windows) end")"
+
+    if [[ "$?" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Couldn't find a window for PID '$pid'."
+        return 1
+    fi
 }
 
 # Quickly jump into a repository
