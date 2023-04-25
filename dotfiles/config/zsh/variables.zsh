@@ -59,6 +59,9 @@ export BAT_PAGER=""
 
 # My utils
 
+export TERMSHOT_INTERACTIVE=0
+export TERMSHOT_WIDTH=80
+export TERMSHOT_MAX_HEIGHT=33
 export VENVS="$XDG_DATA_HOME/venvs"
 export REPOSITORIES="$HOME/local/repositories"
 export SPACES="$HOME/local/spaces"

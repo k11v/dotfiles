@@ -1,0 +1,74 @@
+#!/bin/sh
+
+termshot() (
+    local output_file="$1"
+
+    local terminal_content_file="$(mktemp -t termshot)"
+    cat > "$terminal_content_file"
+    trap 'rm -f -- "$terminal_content_file"' EXIT
+
+    local terminal_session_name="$(printf "%s" "$terminal_content_file" | base64)"
+
+    local terminal_content_height="$(cat "$terminal_content_file" | ansifilter --wrap 80 | grep -c ^)"
+    if [[ "$terminal_content_height" -lt "$TERMSHOT_MAX_HEIGHT" ]]; then
+        local terminal_window_height="$terminal_content_height"
+    else
+        local terminal_window_height="$TERMSHOT_MAX_HEIGHT"
+    fi
+
+    alacritty \
+        --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" \
+        --option window.dimensions.columns="$TERMSHOT_WIDTH" \
+        --option window.dimensions.lines="$terminal_window_height" \
+        --hold \
+        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session -s "$terminal_session_name" cat "$terminal_content_file" &
+    local terminal_pid="$!"
+    trap 'rm -f -- "$terminal_content_file"; kill -- "$terminal_pid"' EXIT
+
+    terminal_window_id="$(hs -A -q -t 10 <<EOF
+local waitDuration = 5000000 -- 5 seconds
+local waitInterval = 100000 -- 0.1 seconds
+local app
+local window
+
+repeat
+    app = app or hs.application.applicationForPID($terminal_pid)
+
+    if app then
+        window = app:mainWindow()
+
+        if window then
+            break
+        end
+    end
+
+    hs.timer.usleep(hs.math.min(waitDuration, waitInterval))
+    waitDuration = waitDuration - waitInterval
+until waitDuration <= 0
+
+if not app then
+    error("Couldn't find application for PID '$terminal_pid'.")
+end
+
+if not window then
+    error("Couldn't find window for PID '$terminal_pid'.")
+end
+
+return window:id()
+EOF
+    )"
+
+    if [[ "$?" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Failed to find terminal window."
+        exit 1
+    fi
+
+    if [[ "$(tmux -L termshot display-message -p -t "=$terminal_session_name:0.0" "#{history_size}")" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Terminal history is not empty."
+        exit 1
+    fi
+
+    screencapture -x -o -l "$terminal_window_id" "$output_file"
+)
+
+termshot "$@"
