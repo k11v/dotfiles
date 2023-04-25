@@ -108,8 +108,10 @@ main() {
     window_width=
     if [[ "$width" == "auto" && "$content_width" -le "$max_width" ]]; then
         window_width="$content_width"
-    else
+    elif [[ "$width" == "auto" ]]; then
         window_width="$max_width"
+    else
+        window_width="$width"
     fi
 
     content_height="$(cat "$content_file" | ansifilter --wrap "$window_width" | grep -c ^)"
@@ -120,8 +122,10 @@ main() {
     window_height=
     if [[ "$height" == "auto" && "$content_height" -le "$max_height" ]]; then
         window_height="$content_height"
-    else
+    elif [[ "$height" == "auto" ]]; then
         window_height="$max_height"
+    else
+        window_height="$height"
     fi
 
     alacritty \
