@@ -78,6 +78,10 @@ rmvenv() {
     rm -rf "$VENVS/$name"
 }
 
+export TERMSHOT_INTERACTIVE=0
+export TERMSHOT_WIDTH=80
+export TERMSHOT_MAX_HEIGHT=33
+
 termshot() (
     local output_file="$1"
 
@@ -85,12 +89,21 @@ termshot() (
     cat > "$terminal_content_file"
     trap 'rm -f -- "$terminal_content_file"' EXIT
 
+    local terminal_session_name="$(printf "%s" "$terminal_content_file" | base64)"
+
+    local terminal_content_height="$(cat "$terminal_content_file" | ansifilter --wrap 80 | grep -c ^)"
+    if [[ "$terminal_content_height" -lt "$TERMSHOT_MAX_HEIGHT" ]]; then
+        local terminal_window_height="$terminal_content_height"
+    else
+        local terminal_window_height="$TERMSHOT_MAX_HEIGHT"
+    fi
+
     alacritty \
         --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" \
-        --option window.dimensions.columns=80 \
-        --option window.dimensions.lines=33 \
+        --option window.dimensions.columns="$TERMSHOT_WIDTH" \
+        --option window.dimensions.lines="$terminal_window_height" \
         --hold \
-        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session cat "$terminal_content_file" &
+        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session -s "$terminal_session_name" cat "$terminal_content_file" &
     local terminal_pid="$!"
     trap 'rm -f -- "$terminal_content_file"; kill -- "$terminal_pid"' EXIT
 
@@ -129,6 +142,11 @@ EOF
 
     if [[ "$?" -ne 0 ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Failed to find terminal window."
+        exit 1
+    fi
+
+    if [[ "$(tmux -L termshot display-message -p -t "=$terminal_session_name:0.0" "#{history_size}")" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Terminal history is not empty."
         exit 1
     fi
 
