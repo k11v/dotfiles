@@ -123,8 +123,8 @@ main() {
         --option window.dimensions.lines="$window_height" \
         --command \
             "$(command -v tmux)" \
-            -f "$XDG_CONFIG_HOME/termshot/tmux.conf" \
             -L termshot \
+            -f "$XDG_CONFIG_HOME/termshot/tmux.conf" \
                 new-session \
                 -s "$session_name" \
                     cat "$content_file" \
