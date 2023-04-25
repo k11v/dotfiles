@@ -88,6 +88,11 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
+if [[ -z "$output_file" ]]; then
+    echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Missing required option '--output'."
+    exit 1
+fi
+
 if [[ "${#positional[@]}" -ne 1 ]]; then
     echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Expected exactly 1 positional argument, got ${#positional[@]}."
     exit 1
