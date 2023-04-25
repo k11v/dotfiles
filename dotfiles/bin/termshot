@@ -111,7 +111,12 @@ main() {
     on_exit() { rm -f -- "$content_file"; }
 
     session_name="$(printf "%s" "$content_file" | base64)"
+
     content_height="$(cat "$content_file" | ansifilter --wrap 80 | grep -c ^)"
+    if [[ $(tail -c1 "$content_file" | wc -l) -gt 0 ]]; then
+        # Add 1 to the height if content ends with a newline
+        content_height="$((content_height + 1))"
+    fi
 
     window_width="$width"
     window_height=
