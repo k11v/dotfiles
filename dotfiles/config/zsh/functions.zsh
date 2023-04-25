@@ -79,14 +79,18 @@ rmvenv() {
 }
 
 termshot() (
+    local content_file="$(mktemp -t termshot)"
+    cat > "$content_file"
+    trap 'rm -f -- "$content_file"' EXIT
+
     alacritty \
         --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" \
         --option window.dimensions.columns=80 \
         --option window.dimensions.lines=33 \
         --hold \
-        --command cat <(cat) &
+        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session cat "$content_file" &
     local pid="$!"
-    trap "kill $pid" EXIT
+    trap 'rm -f -- "$content_file"; kill -- "$pid"' EXIT
 
     window_id="$(hs -A -q -t 10 <<EOF
 local waitDuration = 5000000 -- 5 seconds
