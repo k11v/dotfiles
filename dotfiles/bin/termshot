@@ -1,5 +1,89 @@
 #!/bin/sh
 
+usage() {
+    cat << EOF
+Usage: $0 [options] <input>
+
+Arguments:
+  <input>                                   Input file [required].
+
+Options:
+  --width                                   Set the width of the terminal window [default: 80].
+  --min-width                               Set the minimum width of the terminal window (not supported).
+  --max-width                               Set the maximum width of the terminal window (not supported).
+  --height                                  Set the height of the terminal window [default: auto].
+  --min-height                              Set the minimum height of the terminal window (not supported).
+  --max-height                              Set the maximum height of the terminal window [default: 33].
+  -i, --interactive / -n, --no-interactive  Enable/disable interaction with the terminal before taking the screenshot [default: false].
+  -o, --output                              Output file (.png) [required].
+  -h, --help                                Show this message.
+
+Examples:
+  $0 output.txt -o screenshot.png
+  $0 --height 33 output.txt -o screenshot.png
+  $0 <(tmux capture-pane -p -S - -E - -e) -o screenshot.png
+EOF
+}
+
+width=80
+# min_width=
+# max_width=
+height="auto"
+# min_height=
+max_height=33
+interactive=0
+output_file=""
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --width)
+            width="$2"
+            shift 2
+            ;;
+        --min-width)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--min-width' not supported."
+            shift 2
+            ;;
+        --max-width)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--max-width' not supported."
+            shift 2
+            ;;
+        --height)
+            height="$2"
+            shift 2
+            ;;
+        --min-height)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--min-height' not supported."
+            shift 2
+            ;;
+        --max-height)
+            max_height="$2"
+            shift 2
+            ;;
+        -i|--interactive)
+            interactive=1
+            shift 1
+            ;;
+        -n|--no-interactive)
+            interactive=0
+            shift 1
+            ;;
+        -o|--output)
+            output_file="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unknown option: $1"
+            usage >&2
+            exit 1
+            ;;
+    esac
+done
+
 termshot() (
     local output_file="$1"
 
