@@ -7,10 +7,10 @@ Arguments:
   <input>                                   Input file [required].
 
 Options:
-  --width                                   Set the width of the terminal window [default: 80].
+  -W, --width                               Set the width of the terminal window [default: 80].
   --min-width                               Set the minimum width of the terminal window (not supported).
   --max-width                               Set the maximum width of the terminal window (not supported).
-  --height                                  Set the height of the terminal window [default: auto].
+  -H, --height                              Set the height of the terminal window [default: auto].
   --min-height                              Set the minimum height of the terminal window (not supported).
   --max-height                              Set the maximum height of the terminal window [default: 33].
   -i, --interactive / -n, --no-interactive  Enable/disable interaction with the terminal before taking the screenshot [default: false].
@@ -37,7 +37,7 @@ positional=()
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
-        --width)
+        -W|--width)
             width="$2"
             shift 2
             ;;
@@ -49,7 +49,7 @@ while [[ "$#" -gt 0 ]]; do
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--max-width' not supported."
             exit 1
             ;;
-        --height)
+        -H|--height)
             height="$2"
             shift 2
             ;;
