@@ -177,6 +177,10 @@ EOF
         exit 1
     fi
 
+    if [[ "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{client_width}")" -ne "$window_width" || "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{client_height}")" -ne "$window_height" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Actual terminal window size does not match requested size."
+    fi
+
     if [[ "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{history_size}")" -ne 0 ]]; then
         echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Content is too large to fit in the terminal window."
         tmux -L termshot copy-mode -t "=$session_name:0.0" -H ";" send-keys -t "=$session_name:0.0" -X history-top
