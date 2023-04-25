@@ -1,10 +1,7 @@
 #!/usr/bin/env zsh
 
 usage="$(cat << EOF
-Usage: $(basename "$0") [options] <input>
-
-Arguments:
-  <input>                                   Input file [required].
+Usage: $(basename "$0") [options]
 
 Options:
   -W, --width <width>                       Set the width of the terminal window [integer | "auto"] [default: 80].
@@ -18,10 +15,11 @@ Options:
   -h, --help                                Show this message.
 
 Examples:
-  $(basename "$0") output.txt -o screenshot.png
-  $(basename "$0") --height 33 output.txt -o screenshot.png
-  $(basename "$0") --width auto --max-width 100 output.txt -o screenshot.png
-  $(basename "$0") <(tmux capture-pane -p -S - -E - -e) -o screenshot.png
+  cat output.txt | $(basename "$0") -o screenshot.png
+  cat output.txt | $(basename "$0") -o screenshot.png --height 33
+  cat output.txt | $(basename "$0") -o screenshot.png --width auto --max-width 100
+  cat output.txt | $(basename "$0") -o screenshot.png --interactive
+  tmux capture-pane -e -p -S - -E - |  $(basename "$0") -o screenshot.png
 EOF
 )"
 
@@ -83,8 +81,8 @@ while [[ "$#" -gt 0 ]]; do
             exit 1
             ;;
         *)
-            positional+=("$1")
-            shift 1
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unexpected positional argument: $1"
+            exit 1
             ;;
     esac
 done
@@ -94,13 +92,6 @@ if [[ -z "$output_file" ]]; then
     exit 1
 fi
 
-if [[ "${#positional[@]}" -ne 1 ]]; then
-    echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Expected exactly 1 positional argument, got ${#positional[@]}."
-    exit 1
-fi
-
-input_file="${positional[1]}"
-
 on_exit() {}
 trap 'on_exit' EXIT
 trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
@@ -108,7 +99,7 @@ trap 'on_exit; trap - INT; kill -INT "$$"' INT
 
 main() {
     content_file="$(mktemp -t termshot)"
-    cat "$input_file" > "$content_file"
+    cat > "$content_file"
     on_exit() { rm -f -- "$content_file"; }
 
     session_name="$(printf "%s" "$content_file" | base64)"
