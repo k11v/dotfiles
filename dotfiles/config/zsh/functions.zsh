@@ -79,27 +79,27 @@ rmvenv() {
 }
 
 termshot() (
-    local content_file="$(mktemp -t termshot)"
-    cat > "$content_file"
-    trap 'rm -f -- "$content_file"' EXIT
+    local terminal_content_file="$(mktemp -t termshot)"
+    cat > "$terminal_content_file"
+    trap 'rm -f -- "$terminal_content_file"' EXIT
 
     alacritty \
         --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" \
         --option window.dimensions.columns=80 \
         --option window.dimensions.lines=33 \
         --hold \
-        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session cat "$content_file" &
-    local pid="$!"
-    trap 'rm -f -- "$content_file"; kill -- "$pid"' EXIT
+        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session cat "$terminal_content_file" &
+    local terminal_pid="$!"
+    trap 'rm -f -- "$terminal_content_file"; kill -- "$terminal_pid"' EXIT
 
-    window_id="$(hs -A -q -t 10 <<EOF
+    terminal_window_id="$(hs -A -q -t 10 <<EOF
 local waitDuration = 5000000 -- 5 seconds
 local waitInterval = 100000 -- 0.1 seconds
 local app
 local window
 
 repeat
-    app = app or hs.application.applicationForPID($pid)
+    app = app or hs.application.applicationForPID($terminal_pid)
 
     if app then
         window = app:mainWindow()
@@ -114,11 +114,11 @@ repeat
 until waitDuration <= 0
 
 if not app then
-    error("Couldn't find application for PID '$pid'.")
+    error("Couldn't find application for PID '$terminal_pid'.")
 end
 
 if not window then
-    error("Couldn't find window for PID '$pid'.")
+    error("Couldn't find window for PID '$terminal_pid'.")
 end
 
 return window:id()
@@ -130,7 +130,7 @@ EOF
         exit 1
     fi
 
-    screencapture -x -o -l "$window_id" "$1"
+    screencapture -x -o -l "$terminal_window_id" "$1"
 )
 
 # Quickly jump into a repository
