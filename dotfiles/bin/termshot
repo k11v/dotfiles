@@ -7,14 +7,14 @@ Arguments:
   <input>                                   Input file [required].
 
 Options:
-  -W, --width                               Set the width of the terminal window [default: 80].
-  --min-width                               Set the minimum width of the terminal window (not supported).
-  --max-width                               Set the maximum width of the terminal window (not supported).
-  -H, --height                              Set the height of the terminal window [default: auto].
-  --min-height                              Set the minimum height of the terminal window (not supported).
-  --max-height                              Set the maximum height of the terminal window [default: 33].
+  -W, --width <width>                       Set the width of the terminal window [integer] [default: 80].
+  --min-width <min-width>                   Set the minimum width of the terminal window [integer] [not supported].
+  --max-width <max-width>                   Set the maximum width of the terminal window [integer] [not supported].
+  -H, --height <height>                     Set the height of the terminal window [integer | "auto"] [default: auto].
+  --min-height <min-height>                 Set the minimum height of the terminal window [integer] [not supported].
+  --max-height <max-height>                 Set the maximum height of the terminal window [integer] [default: 33].
   -i, --interactive / -n, --no-interactive  Enable/disable interaction with the terminal before taking the screenshot [default: false].
-  -o, --output                              Output file (.png) [required].
+  -o, --output <output-file>                Output file (.png) [file] [required].
   -h, --help                                Show this message.
 
 Examples:
