@@ -177,7 +177,7 @@ EOF
 
     if [[ "$interactive" -eq 1 ]]; then
         echo >&2 "Interactive mode enabled.\nPress any key to continue..."
-        read -n 1 -s
+        read -s -k
     fi
 
     screencapture -x -o -l "$window_id" "$output_file"
