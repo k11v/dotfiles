@@ -17,9 +17,5 @@ setopt SHARE_HISTORY           # Share history between all sessions
 
 # Input/output
 
-unsetopt CASE_GLOB             # Make globs case-insensitive
-setopt NULL_GLOB               # Resolve unmatched globs to an empty string
-unsetopt CLOBBER               # Do not allow '>' redirection to override files
-setopt APPEND_CREATE           # Allow '>>' redirection to create new files
 unsetopt FLOW_CONTROL          # Make '^S' and '^Q' key bindings available
 setopt INTERACTIVE_COMMENTS    # Allow comments in interactive shells
