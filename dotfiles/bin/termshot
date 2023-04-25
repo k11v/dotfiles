@@ -7,9 +7,9 @@ Arguments:
   <input>                                   Input file [required].
 
 Options:
-  -W, --width <width>                       Set the width of the terminal window [integer] [default: 80].
+  -W, --width <width>                       Set the width of the terminal window [integer | "auto"] [default: 80].
   --min-width <min-width>                   Set the minimum width of the terminal window [integer] [not supported].
-  --max-width <max-width>                   Set the maximum width of the terminal window [integer] [not supported].
+  --max-width <max-width>                   Set the maximum width of the terminal window [integer].
   -H, --height <height>                     Set the height of the terminal window [integer | "auto"] [default: auto].
   --min-height <min-height>                 Set the minimum height of the terminal window [integer] [not supported].
   --max-height <max-height>                 Set the maximum height of the terminal window [integer] [default: 33].
@@ -20,13 +20,14 @@ Options:
 Examples:
   $(basename "$0") output.txt -o screenshot.png
   $(basename "$0") --height 33 output.txt -o screenshot.png
+  $(basename "$0") --width auto --max-width 100 output.txt -o screenshot.png
   $(basename "$0") <(tmux capture-pane -p -S - -E - -e) -o screenshot.png
 EOF
 )"
 
 width=80
 # min_width=
-# max_width=
+max_width=80
 height="auto"
 # min_height=
 max_height=33
@@ -46,8 +47,8 @@ while [[ "$#" -gt 0 ]]; do
             exit 1
             ;;
         --max-width)
-            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--max-width' not supported."
-            exit 1
+            max_width="$2"
+            shift 2
             ;;
         -H|--height)
             height="$2"
@@ -112,13 +113,19 @@ main() {
 
     session_name="$(printf "%s" "$content_file" | base64)"
 
-    content_height="$(cat "$content_file" | ansifilter --wrap 80 | grep -c ^)"
-    if [[ $(tail -c1 "$content_file" | wc -l) -gt 0 ]]; then
+    content_width="$(cat "$content_file" | ansifilter | awk '{ print length }' | sort -n | tail -n 1)"
+    window_width=
+    if [[ "$width" == "auto" && "$content_width" -le "$max_width" ]]; then
+        window_width="$content_width"
+    else
+        window_width="$max_width"
+    fi
+
+    content_height="$(cat "$content_file" | ansifilter --wrap "$window_width" | grep -c ^)"
+    if [[ $(tail -c 1 "$content_file" | wc -l) -gt 0 ]]; then
         # Add 1 to the height if content ends with a newline
         content_height="$((content_height + 1))"
     fi
-
-    window_width="$width"
     window_height=
     if [[ "$height" == "auto" && "$content_height" -le "$max_height" ]]; then
         window_height="$content_height"
