@@ -171,7 +171,7 @@ EOF
     fi
 
     if [[ "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{history_size}")" -ne 0 ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Terminal content is too large to fit in a single screenshot."
+        echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Content is too large to fit in the terminal window."
         tmux -L termshot copy-mode -t "=$session_name:0.0" -H ";" send-keys -t "=$session_name:0.0" -X history-top
     fi
 
