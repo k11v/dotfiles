@@ -79,7 +79,6 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         -*)
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unknown option: $1"
-            printf >&2 "%s" "$usage"
             exit 1
             ;;
         *)
@@ -90,8 +89,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 if [[ "${#positional[@]}" -ne 1 ]]; then
-    echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Expected exactly 1 positional argument."
-    printf >&2 "%s" "$usage"
+    echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Expected exactly 1 positional argument, got ${#positional[@]}."
     exit 1
 fi
 
