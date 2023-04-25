@@ -100,11 +100,15 @@ fi
 
 input_file="${positional[1]}"
 
+on_exit() {}
+trap 'on_exit' EXIT
+trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
+trap 'on_exit; trap - INT; kill -INT "$$"' INT
 
 main() {
     content_file="$(mktemp -t termshot)"
     cat "$input_file" > "$content_file"
-    trap 'rm -f -- "$content_file"' EXIT
+    on_exit() { rm -f -- "$content_file"; }
 
     session_name="$(printf "%s" "$content_file" | base64)"
     content_height="$(cat "$content_file" | ansifilter --wrap 80 | grep -c ^)"
@@ -130,7 +134,7 @@ main() {
                     cat "$content_file" \
     &
     alacritty_pid="$!"
-    trap 'rm -f -- "$content_file"; kill -- "$alacritty_pid"' EXIT
+    on_exit() { rm -f -- "$content_file"; kill -- "$alacritty_pid"; }
 
     window_id="$(hs -A -q -t 10 << EOF
 local waitDuration = 5000000 -- 5 seconds
