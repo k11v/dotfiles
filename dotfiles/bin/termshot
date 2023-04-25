@@ -43,11 +43,11 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         --min-width)
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--min-width' not supported."
-            shift 2
+            exit 1
             ;;
         --max-width)
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--max-width' not supported."
-            shift 2
+            exit 1
             ;;
         --height)
             height="$2"
@@ -55,7 +55,7 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         --min-height)
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--min-height' not supported."
-            shift 2
+            exit 1
             ;;
         --max-height)
             max_height="$2"
