@@ -97,39 +97,46 @@ fi
 
 input_file="${positional[1]}"
 
-termshot() (
-    local output_file="$1"
 
-    local terminal_content_file="$(mktemp -t termshot)"
-    cat > "$terminal_content_file"
-    trap 'rm -f -- "$terminal_content_file"' EXIT
+main() {
+    content_file="$(mktemp -t termshot)"
+    cat "$input_file" > "$content_file"
+    trap 'rm -f -- "$content_file"' EXIT
 
-    local terminal_session_name="$(printf "%s" "$terminal_content_file" | base64)"
+    session_name="$(printf "%s" "$content_file" | base64)"
+    content_height="$(cat "$content_file" | ansifilter --wrap 80 | grep -c ^)"
 
-    local terminal_content_height="$(cat "$terminal_content_file" | ansifilter --wrap 80 | grep -c ^)"
-    if [[ "$terminal_content_height" -lt "$TERMSHOT_MAX_HEIGHT" ]]; then
-        local terminal_window_height="$terminal_content_height"
+    window_width="$width"
+    window_height=
+    if [[ "$height" == "auto" && "$content_height" -le "$max_height" ]]; then
+        window_height="$content_height"
     else
-        local terminal_window_height="$TERMSHOT_MAX_HEIGHT"
+        window_height="$max_height"
     fi
 
     alacritty \
-        --config-file "$XDG_CONFIG_HOME/termshot/alacritty.yml" \
-        --option window.dimensions.columns="$TERMSHOT_WIDTH" \
-        --option window.dimensions.lines="$terminal_window_height" \
-        --hold \
-        --command "$(command -v tmux)" -f "$XDG_CONFIG_HOME/termshot/tmux.conf" -L termshot new-session -s "$terminal_session_name" cat "$terminal_content_file" &
-    local terminal_pid="$!"
-    trap 'rm -f -- "$terminal_content_file"; kill -- "$terminal_pid"' EXIT
+        --config-file "${XDG_CONFIG_HOME:-$HOME/.config}/termshot/alacritty.yml" \
+        --option window.dimensions.columns="$window_width" \
+        --option window.dimensions.lines="$window_height" \
+        --command \
+            "$(command -v tmux)" \
+            -f "$XDG_CONFIG_HOME/termshot/tmux.conf" \
+            -L termshot \
+                new-session \
+                -s "$session_name" \
+                    cat "$content_file" \
+    &
+    alacritty_pid="$!"
+    trap 'rm -f -- "$content_file"; kill -- "$alacritty_pid"' EXIT
 
-    terminal_window_id="$(hs -A -q -t 10 <<EOF
+    window_id="$(hs -A -q -t 10 << EOF
 local waitDuration = 5000000 -- 5 seconds
 local waitInterval = 100000 -- 0.1 seconds
 local app
 local window
 
 repeat
-    app = app or hs.application.applicationForPID($terminal_pid)
+    app = app or hs.application.applicationForPID($alacritty_pid)
 
     if app then
         window = app:mainWindow()
@@ -144,11 +151,11 @@ repeat
 until waitDuration <= 0
 
 if not app then
-    error("Couldn't find application for PID '$terminal_pid'.")
+    error("Couldn't find application for PID '$alacritty_pid'.")
 end
 
 if not window then
-    error("Couldn't find window for PID '$terminal_pid'.")
+    error("Couldn't find window for PID '$alacritty_pid'.")
 end
 
 return window:id()
@@ -160,12 +167,17 @@ EOF
         exit 1
     fi
 
-    if [[ "$(tmux -L termshot display-message -p -t "=$terminal_session_name:0.0" "#{history_size}")" -ne 0 ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Terminal history is not empty."
-        exit 1
+    if [[ "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{history_size}")" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Terminal content is too large to fit in a single screenshot."
+        tmux -L termshot copy-mode -t "=$session_name:0.0" -H ";" send-keys -t "=$session_name:0.0" -X history-top
     fi
 
-    screencapture -x -o -l "$terminal_window_id" "$output_file"
-)
+    if [[ "$interactive" -eq 1 ]]; then
+        echo >&2 "Interactive mode enabled.\nPress any key to continue..."
+        read -n 1 -s
+    fi
 
-termshot "$@"
+    screencapture -x -o -l "$window_id" "$output_file"
+}
+
+main
