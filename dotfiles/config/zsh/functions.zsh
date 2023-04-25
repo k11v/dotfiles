@@ -79,6 +79,8 @@ rmvenv() {
 }
 
 termshot() (
+    local output_file="$1"
+
     local terminal_content_file="$(mktemp -t termshot)"
     cat > "$terminal_content_file"
     trap 'rm -f -- "$terminal_content_file"' EXIT
@@ -130,7 +132,7 @@ EOF
         exit 1
     fi
 
-    screencapture -x -o -l "$terminal_window_id" "$1"
+    screencapture -x -o -l "$terminal_window_id" "$output_file"
 )
 
 # Quickly jump into a repository
