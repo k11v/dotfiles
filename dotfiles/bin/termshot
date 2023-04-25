@@ -105,7 +105,7 @@ main() {
 
     session_name="$(printf "%s" "$content_file" | base64)"
 
-    content_width="$(cat "$content_file" | ansifilter | awk '{ print length }' | sort -n | tail -n 1)"
+    content_width="$(cat "$content_file" | sed 's/\x1b\[[0-9;]*m//g' | awk '{ print length }' | sort -n | tail -n 1)"
     window_width=
     if [[ "$width" == "auto" && "$content_width" -le "$max_width" ]]; then
         window_width="$content_width"
@@ -115,7 +115,7 @@ main() {
         window_width="$width"
     fi
 
-    content_height="$(cat "$content_file" | ansifilter --wrap "$((window_width + 1))" | grep -c ^)"
+    content_height="$(cat "$content_file" | sed 's/\x1b\[[0-9;]*m//g' | fold -w "$window_width" | grep -c ^)"
     if [[ $(tail -c 1 "$content_file" | wc -l) -gt 0 ]]; then
         # Add 1 to the height if content ends with a newline
         content_height="$((content_height + 1))"
