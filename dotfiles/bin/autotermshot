@@ -63,6 +63,33 @@ find_files() {
 }
 
 
+pane_plan=""
+edit_plan=""
+shot_plan=""
+
+make_plan() {
+    if [[ "$redo" == "pane" ]]; then
+        pane_plan="redo"
+        edit_plan="redo"
+        shot_plan="redo"
+    elif [[ "$redo" == "edit" ]]; then
+        edit_plan="redo"
+        shot_plan="redo"
+    elif [[ "$redo" == "shot" ]]; then
+        shot_plan="redo"
+    fi
+
+    if [[ ! -e "$shot_file" ]]; then
+        shot_plan="do"
+
+        if [[ ! -e "$pane_file" ]]; then
+            pane_plan="do"
+            edit_plan="do"
+        fi
+    fi
+}
+
+
 on_exit() {
     find_files_on_exit;
 }
@@ -75,6 +102,7 @@ trap 'on_exit; trap - INT; kill -INT "$$"' INT
 main() {
     load_args "$@"
     find_files
+    make_plan
 }
 
 main "$@"
