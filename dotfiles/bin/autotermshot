@@ -138,7 +138,7 @@ execute_edit_plan() {
             exit 2
         fi
 
-        cat "$raw_pane_file" | sed '/^$/d' > "$pane_file"  # TODO: Use real editor
+        mkdir -p "$(dirname "$pane_file")" && cat "$raw_pane_file" | sed '/^$/d' > "$pane_file"  # TODO: Use real editor
 
         if [[ "$?" -ne 0 ]]; then
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane edit failed."
@@ -173,7 +173,7 @@ execute_shot_plan() {
             exit 2
         fi
 
-        cat "$pane_file" | termshot > "$shot_file"  # TODO: Apply options
+        mkdir -p "$(dirname "$shot_file")" && cat "$pane_file" | termshot > "$shot_file"  # TODO: Apply options
 
         if [[ "$?" -ne 0 ]]; then
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Shot capture failed."
