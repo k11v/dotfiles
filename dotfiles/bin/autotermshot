@@ -90,6 +90,48 @@ make_plan() {
 }
 
 
+execute_pane_plan() {
+    if [[ "$pane_plan" == "do" || "$pane_plan" == "redo" ]]; then
+        if [[ "$allow_pane_capture" -eq 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane capture not allowed."
+            exit 1
+        fi
+
+        if [[ "$pane_plan" == "redo" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) pane capture"
+        elif [[ "$pane_plan" == "do" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) pane capture"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected pane plan: $pane_plan"
+            exit 2
+        fi
+
+        tmux capture-pane -e -p -S - -E - > "$raw_pane_file"
+
+        if [[ "$?" -ne 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane capture failed."
+            exit 1
+        fi
+    else
+        if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane capture"
+                cat "$pane_file" > "$raw_pane_file"
+            else
+                echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
+                exit 2
+            fi
+        else
+            echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane capture"
+        fi
+    fi
+}
+
+execute_plan() {
+    execute_pane_plan
+}
+
+
 on_exit() {
     find_files_on_exit;
 }
