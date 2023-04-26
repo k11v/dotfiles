@@ -75,8 +75,18 @@ make_plan() {
     elif [[ "$redo" == "edit" ]]; then
         edit_plan="redo"
         shot_plan="redo"
+
+        if [[ ! -e "$pane_file" ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Cannot redo pane edit without pane capture."
+            exit 1
+        fi
     elif [[ "$redo" == "shot" ]]; then
         shot_plan="redo"
+
+        if [[ ! -e "$pane_file" ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Cannot redo shot without pane capture."
+            exit 1
+        fi
     fi
 
     if [[ ! -e "$shot_file" ]]; then
