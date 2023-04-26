@@ -130,9 +130,9 @@ execute_pane_plan() {
 execute_edit_plan() {
     if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
         if [[ "$edit_plan" == "redo" ]]; then
-            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) pane edit"
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
         elif [[ "$edit_plan" == "do" ]]; then
-            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) pane edit"
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
         else
             echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected edit plan: $edit_plan"
             exit 2
@@ -165,9 +165,9 @@ execute_edit_plan() {
 execute_shot_plan() {
     if [[ "$shot_plan" == "do" || "$shot_plan" == "redo" ]]; then
         if [[ "$shot_plan" == "redo" ]]; then
-            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) shot capture"
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) shot capture $(tput bold)$shot_file$(tput sgr0)"
         elif [[ "$shot_plan" == "do" ]]; then
-            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) shot capture"
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) shot capture $(tput bold)$shot_file$(tput sgr0)"
         else
             echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected shot plan: $edit_plan"
             exit 2
