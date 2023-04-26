@@ -115,7 +115,7 @@ execute_pane_plan() {
     else
         if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
             if [[ -e "$pane_file" ]]; then
-                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane capture"
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane capture $pane_file"
                 cat "$pane_file" > "$raw_pane_file"
             else
                 echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
@@ -127,8 +127,44 @@ execute_pane_plan() {
     fi
 }
 
+execute_edit_plan() {
+    if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
+        if [[ "$edit_plan" == "redo" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) pane edit"
+        elif [[ "$edit_plan" == "do" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) pane edit"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected edit plan: $edit_plan"
+            exit 2
+        fi
+
+        cat "$raw_pane_file" | sed '/^$/d' > "$pane_file"  # TODO: Use real editor
+
+        if [[ "$?" -ne 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane edit failed."
+            exit 1
+        fi
+    else
+        if [[ "$shot_plan" == "do" || "$shot_plan" == "redo" ]]; then
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane edit $pane_file"
+            else
+                echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
+                exit 2
+            fi
+        else
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane edit"
+            else
+                echo "$(tput bold)$(tput setaf 1)Missing$(tput sgr0) pane edit"
+            fi
+        fi
+    fi
+}
+
 execute_plan() {
     execute_pane_plan
+    execute_edit_plan
 }
 
 
