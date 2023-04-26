@@ -54,13 +54,35 @@ load_args() {
     fi
 }
 
-on_exit() {}
+
+raw_pane_file=
+pane_file=
+shot_file=
+
+find_files_on_exit() {}
+find_files() {
+    raw_pane_file="$(mktemp -t autotermshot)"
+    pane_file="${output_file}.autotermshot/pane.txt"
+    shot_file="$output_file"
+
+    find_files_on_exit() {
+        rm -f "$raw_pane_file";
+    }
+}
+
+
+on_exit() {
+    find_files_on_exit;
+}
+
 trap 'on_exit' EXIT
 trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
 trap 'on_exit; trap - INT; kill -INT "$$"' INT
 
+
 main() {
     load_args "$@"
+    find_files
 }
 
 main "$@"
