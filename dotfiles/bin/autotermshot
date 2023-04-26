@@ -115,7 +115,7 @@ execute_pane_plan() {
     else
         if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
             if [[ -e "$pane_file" ]]; then
-                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane capture $pane_file"
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane capture $(tput bold)$pane_file$(tput sgr0)"
                 cat "$pane_file" > "$raw_pane_file"
             else
                 echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
@@ -147,7 +147,7 @@ execute_edit_plan() {
     else
         if [[ "$shot_plan" == "do" || "$shot_plan" == "redo" ]]; then
             if [[ -e "$pane_file" ]]; then
-                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane edit $pane_file"
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
             else
                 echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
                 exit 2
@@ -181,7 +181,7 @@ execute_shot_plan() {
         fi
     else
         if [[ -e "$shot_file" ]]; then
-            echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) shot capture $shot_file"
+            echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) shot capture $(tput bold)$shot_file$(tput sgr0)"
         else
             echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected shot file: $shot_file"
             exit 2
