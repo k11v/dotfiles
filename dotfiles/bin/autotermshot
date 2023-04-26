@@ -54,6 +54,11 @@ load_args() {
     fi
 }
 
+on_exit() {}
+trap 'on_exit' EXIT
+trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
+trap 'on_exit; trap - INT; kill -INT "$$"' INT
+
 main() {
     load_args "$@"
 }
