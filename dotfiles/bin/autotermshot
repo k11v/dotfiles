@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
 
-redo_pane=0
-redo_edit=0
-redo_shot=0
+redo=""
 
 allow_pane_capture=0
 
@@ -12,21 +10,15 @@ load_args() {
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
             -p|--redo-pane)
-                redo_pane=1
-                redo_edit=1
-                redo_shot=1
+                redo="pane"
                 shift
                 ;;
             -e|--redo-edit)
-                redo_pane=0
-                redo_edit=1
-                redo_shot=1
+                redo="edit"
                 shift
                 ;;
             -s|--redo-shot)
-                redo_pane=0
-                redo_edit=0
-                redo_shot=1
+                redo="shot"
                 shift
                 ;;
             -a|--allow-pane-capture)
