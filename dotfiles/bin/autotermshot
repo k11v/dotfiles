@@ -122,7 +122,11 @@ execute_pane_plan() {
                 exit 2
             fi
         else
-            echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane capture"
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane capture $(tput bold)$pane_file$(tput sgr0)"
+            else
+                echo "$(tput bold)$(tput setaf 1)Missing$(tput sgr0) pane capture $(tput bold)$pane_file$(tput sgr0)"
+            fi
         fi
     fi
 }
@@ -154,9 +158,9 @@ execute_edit_plan() {
             fi
         else
             if [[ -e "$pane_file" ]]; then
-                echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane edit"
+                echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
             else
-                echo "$(tput bold)$(tput setaf 1)Missing$(tput sgr0) pane edit"
+                echo "$(tput bold)$(tput setaf 1)Missing$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
             fi
         fi
     fi
