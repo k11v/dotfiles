@@ -162,9 +162,37 @@ execute_edit_plan() {
     fi
 }
 
+execute_shot_plan() {
+    if [[ "$shot_plan" == "do" || "$shot_plan" == "redo" ]]; then
+        if [[ "$shot_plan" == "redo" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) shot capture"
+        elif [[ "$shot_plan" == "do" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) shot capture"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected shot plan: $edit_plan"
+            exit 2
+        fi
+
+        cat "$pane_file" | termshot > "$shot_file"  # TODO: Apply options
+
+        if [[ "$?" -ne 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Shot capture failed."
+            exit 1
+        fi
+    else
+        if [[ -e "$shot_file" ]]; then
+            echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) shot capture $shot_file"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected shot file: $shot_file"
+            exit 2
+        fi
+    fi
+}
+
 execute_plan() {
     execute_pane_plan
     execute_edit_plan
+    execute_shot_plan
 }
 
 
@@ -181,6 +209,7 @@ main() {
     load_args "$@"
     find_files
     make_plan
+    execute_plan
 }
 
 main "$@"
