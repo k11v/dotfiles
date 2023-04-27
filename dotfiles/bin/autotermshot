@@ -3,6 +3,7 @@
 redo=""
 
 allow_pane_capture=0
+remove_trailing_newline_before_shot_capture=1
 
 output_file=
 
@@ -23,6 +24,10 @@ load_args() {
                 ;;
             -a|--allow-pane-capture)
                 allow_pane_capture=1
+                shift
+                ;;
+            --no-remove-trailing-newline-before-shot-capture)
+                remove_trailing_newline_before_shot_capture=0
                 shift
                 ;;
             -o|--output)
@@ -187,7 +192,10 @@ execute_shot_plan() {
             exit 2
         fi
 
-        mkdir -p "$(dirname "$shot_file")" && cat "$pane_file" | termshot > "$shot_file"  # TODO: Apply options
+        mkdir -p "$(dirname "$shot_file")" \
+            && cat "$pane_file" \
+            | { [[ "$remove_trailing_newline_before_shot_capture" -eq 1 ]] && sed -z '$ s/\n$//' || cat; } \
+            | termshot > "$shot_file"  # TODO: Apply options
 
         if [[ "$?" -ne 0 ]]; then
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Shot capture failed."
