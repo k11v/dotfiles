@@ -40,7 +40,7 @@ venv() {
 
 # Create current directory's Python venv (with optional version)
 mkvenv() {
-    local version="${1-$(pyenv versions --bare | grep -E "^\d+(\.\d+)*$" | tail -1)}"
+    local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
     local name="$(basename "$PWD")"
 
     if [[ -e "$VENVS/$name" ]]; then
@@ -48,7 +48,7 @@ mkvenv() {
         return 1
     fi
 
-    if ! pyenv versions --bare | grep -E -q "^$version$"; then
+    if ! pyenv versions --bare | grep -P -q "^$version\$"; then
         pyenv install --skip-existing "$version"
         [[ "$?" -ne 0 ]] && return 1
     fi
