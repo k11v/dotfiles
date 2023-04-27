@@ -90,7 +90,7 @@ trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
 trap 'on_exit; trap - INT; kill -INT "$$"' INT
 
 main() {
-    content_file="$(mktemp -t termshot)"
+    content_file="$(mktemp -t termshot.XXXXXXXXXX)"
     cat > "$content_file"
     on_exit() { rm -f -- "$content_file"; }
 
@@ -187,7 +187,7 @@ EOF
         read -s -k
     fi
 
-    screenshot_file="$(mktemp -t termshot)"
+    screenshot_file="$(mktemp -t termshot.XXXXXXXXXX)"
     screencapture -x -o -l "$window_id" "$screenshot_file"
     ret="$?"
     on_exit() { rm -f -- "$content_file" "$screenshot_file"; kill -- "$alacritty_pid"; }

@@ -53,7 +53,7 @@ shot_file=
 
 find_files_on_exit() {}
 find_files() {
-    raw_pane_file="$(mktemp -t autotermshot)"
+    raw_pane_file="$(mktemp -t autotermshot.XXXXXXXXXX)"
     pane_file="${output_file}.autotermshot/pane.txt"
     shot_file="$output_file"
 
