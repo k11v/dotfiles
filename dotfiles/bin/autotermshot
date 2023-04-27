@@ -8,6 +8,8 @@ remove_trailing_newline_before_shot_capture=1
 
 output_file=
 
+termshot_args=()
+
 load_args() {
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
@@ -39,13 +41,9 @@ load_args() {
                 output_file="$2"
                 shift 2
                 ;;
-            -*)
-                echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unknown option: $1"
-                exit 1
-                ;;
             *)
-                echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unexpected argument: $1"
-                exit 1
+                termshot_args+=("$1")
+                shift
                 ;;
         esac
     done
@@ -201,7 +199,7 @@ execute_shot_plan() {
         mkdir -p "$(dirname "$shot_file")" \
             && cat "$pane_file" \
             | { [[ "$remove_trailing_newline_before_shot_capture" -eq 1 ]] && sed -z '$ s/\n$//' || cat; } \
-            | termshot > "$shot_file"  # TODO: Apply options
+            | termshot "${termshot_args[@]}" > "$shot_file"
 
         if [[ "$?" -ne 0 ]]; then
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Shot capture failed."
