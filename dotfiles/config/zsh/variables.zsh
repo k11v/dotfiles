@@ -63,11 +63,3 @@ export VENVS="$XDG_DATA_HOME/venvs"
 export REPOSITORIES="$HOME/local/repositories"
 export SPACES="$HOME/local/spaces"
 export DOTFILES_ENVIRONMENT_LOADED=1
-
-# Homebrew kegs
-
-export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
-
-# Cargo
-
-export PATH="/Users/cyril/.cargo/bin:$PATH"

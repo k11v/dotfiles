@@ -134,23 +134,3 @@ recompinit() {
     rm "$ZCOMPDUMP"
     compinit -d "$ZCOMPDUMP"
 }
-
-# Use GNU ls by default
-ls() {
-    /usr/local/bin/gls "$@"
-}
-
-# Use GNU sed by default
-sed() {
-    /usr/local/bin/gsed "$@"
-}
-
-# Use GNU strings by default
-strings() {
-    /usr/local/opt/binutils/bin/strings "$@"
-}
-
-# Use newer git by default
-git() {
-    /usr/local/bin/git "$@"
-}
