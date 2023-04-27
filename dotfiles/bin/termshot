@@ -94,7 +94,7 @@ main() {
     cat > "$content_file"
     on_exit() { rm -f -- "$content_file"; }
 
-    session_name="$(printf "%s" "$content_file" | base64)"
+    session_name="$(printf "%s" "$content_file" | sha256sum | cut -d " " -f 1)"
 
     content_width="$(cat "$content_file" | sed 's/\x1b\[[0-9;]*m//g' | awk '{ print length }' | sort -n | tail -n 1)"
     window_width=
