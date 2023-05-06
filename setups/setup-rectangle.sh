@@ -1,6 +1,7 @@
 #!/bin/sh
 
 mixins="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/mixins"
+source "$mixins/assert.sh"
 source "$mixins/exit.sh"
 source "$mixins/require.sh"
 
