@@ -175,10 +175,6 @@ section "Setting up tldr"
 "$setups/setup-tldr.sh"
 handle_exit "$?"
 
-section "Setting up iterm2"
-"$setups/setup-iterm2.sh" "$dotfiles/config/iterm2.dotfiles"
-handle_exit "$?"
-
 section "Setting up sublime-text"
 "$setups/setup-sublime-text.sh" "$dotfiles/config/sublime-text.dotfiles"
 handle_exit "$?"
