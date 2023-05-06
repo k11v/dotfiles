@@ -8,7 +8,6 @@ source "$mixins/require.sh"
 
 assert_loaded_environment
 
-require_group "macbook"
 require_macos
 
 
