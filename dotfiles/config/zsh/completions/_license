@@ -1,0 +1,7 @@
+#compdef license
+#
+# Usage: license <license-file> [<directory>]
+
+_arguments -s \
+    "1:license file:_files -W '${XDG_CONFIG_HOME:-$HOME/.config}/license/files'" \
+    "2:directory:_files -/"
