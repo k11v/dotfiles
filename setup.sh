@@ -135,6 +135,14 @@ if [ -z "$macbook" ]; then
     fi
 fi
 
+# Prepare groups
+
+if [ "$macbook" -eq 1 ]; then
+    export DOTFILES_SETUP_GROUPS="macbook"
+else
+    export DOTFILES_SETUP_GROUPS=""
+fi
+
 # Set up
 
 section "Installing Homebrew"
@@ -161,11 +169,9 @@ section "Setting up macOS"
 "$setups/setup-macos.sh"
 handle_exit "$?"
 
-if [ "$macbook" -eq 1 ]; then
-    section "Setting up macOS (MacBook specific)"
-    "$setups/setup-macos.macbook.sh"
-    handle_exit "$?"
-fi
+section "Setting up macOS (MacBook specific)"
+"$setups/setup-macos.macbook.sh"
+handle_exit "$?"
 
 section "Setting up fzf"
 "$setups/setup-fzf.sh"
