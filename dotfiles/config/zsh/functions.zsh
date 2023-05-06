@@ -130,9 +130,9 @@ repo() {
     cd "$REPOSITORIES/$1"
 }
 
-# Quickly jump into a space
+# Quickly jump into a workspace
 space() {
-    cd "$SPACES/$1"
+    cd "$WORKSPACES/$1"
 }
 
 git-log-with-dates() {

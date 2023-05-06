@@ -2,4 +2,4 @@
 #
 # Usage: space <space>
 
-_files -/ -W "$SPACES"
+_files -/ -W "$WORKSPACES"

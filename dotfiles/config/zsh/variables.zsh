@@ -60,8 +60,8 @@ export BAT_PAGER=""
 # My utils
 
 export VENVS="$XDG_DATA_HOME/venvs"
-export REPOSITORIES="$HOME/local/repositories"
-export SPACES="$HOME/local/spaces"
+export REPOSITORIES="$HOME/Repositories"
+export WORKSPACES="$HOME/Workspaces"
 export DOTFILES_ENVIRONMENT_LOADED=1
 
 # Homebrew
