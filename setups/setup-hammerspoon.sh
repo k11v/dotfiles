@@ -8,7 +8,7 @@ source "$mixins/require.sh"
 
 
 assert_loaded_environment
-assert_non_empty_string "$1" "Configuration directory from Dotfiles 'hammerspoon.dotfiles' is not provided (1st positional argument)"
+assert_non_empty_string "$1" "Argument 1 must be a path to 'config/hammerspoon.dotfiles'"
 assert_absolute_path "$1"
 assert_directory "$1"
 

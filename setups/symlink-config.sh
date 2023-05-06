@@ -9,7 +9,7 @@ source "$mixins/require.sh"
 
 assert_loaded_environment
 assert_non_empty_xdg_variables
-assert_non_empty_string "$1" "First argument (dotfiles-config-directory) is missing"
+assert_non_empty_string "$1" "Argument 1 must be a path to 'config'"
 assert_absolute_path "$1"
 assert_directory "$1"
 
