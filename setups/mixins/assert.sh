@@ -1,3 +1,10 @@
+assert_loaded_environment() {
+    if [ "$DOTFILES_ENVIRONMENT_LOADED" -ne 1 ]; then
+        echo >&2 "$(basename "$0"): Environment is not loaded"
+        exit 1
+    fi
+}
+
 assert_non_empty_string() {
     if [ -z "$1" ]; then
         echo >&2 "$(basename "$0"): $2"

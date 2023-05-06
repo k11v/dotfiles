@@ -7,7 +7,7 @@ source "$mixins/link.sh"
 source "$mixins/require.sh"
 
 
-require_environment
+assert_loaded_environment
 
 assert_non_empty_string "$1" "First argument (dotfiles-home-directory) is missing"
 assert_absolute_path "$1"

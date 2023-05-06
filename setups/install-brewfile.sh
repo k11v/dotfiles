@@ -6,7 +6,7 @@ source "$mixins/exit.sh"
 source "$mixins/require.sh"
 
 
-require_environment
+assert_loaded_environment
 require_command brew
 
 assert_non_empty_string "$1" "First argument (brewfile) is missing"

@@ -5,7 +5,7 @@ source "$mixins/exit.sh"
 source "$mixins/require.sh"
 
 
-require_environment
+assert_loaded_environment
 require_command fzf
 require_command brew
 

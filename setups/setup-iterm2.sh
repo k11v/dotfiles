@@ -6,7 +6,7 @@ source "$mixins/exit.sh"
 source "$mixins/require.sh"
 
 
-require_environment
+assert_loaded_environment
 require_macos
 require_macos_application "iTerm"
 

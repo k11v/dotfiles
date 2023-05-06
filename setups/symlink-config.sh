@@ -7,7 +7,7 @@ source "$mixins/link.sh"
 source "$mixins/require.sh"
 
 
-require_environment
+assert_loaded_environment
 
 assert_non_empty_xdg_variables
 assert_non_empty_string "$1" "First argument (dotfiles-config-directory) is missing"
