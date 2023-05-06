@@ -8,12 +8,12 @@ source "$mixins/require.sh"
 
 
 assert_loaded_environment
-require_macos
-require_macos_application "Hammerspoon"
-
 assert_non_empty_string "$1" "Configuration directory from Dotfiles 'hammerspoon.dotfiles' is not provided (1st positional argument)"
 assert_absolute_path "$1"
 assert_directory "$1"
+
+require_macos
+require_macos_application "Hammerspoon"
 
 
 any_success=0

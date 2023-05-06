@@ -7,9 +7,9 @@ source "$mixins/require.sh"
 
 
 assert_loaded_environment
-require_command brew
-
 assert_non_empty_string "$1" "First argument (brewfile) is missing"
+
+require_command brew
 
 
 brew bundle install --file "$1"

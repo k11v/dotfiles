@@ -8,12 +8,12 @@ source "$mixins/require.sh"
 
 
 assert_loaded_environment
-require_macos
-require_macos_application "Sublime Text"
-
 assert_non_empty_string "$1" "First argument (dotfiles-sublime-text-directory) is missing"
 assert_absolute_path "$1"
 assert_directory "$1"
+
+require_macos
+require_macos_application "Sublime Text"
 
 
 src_packages="$1/Packages"

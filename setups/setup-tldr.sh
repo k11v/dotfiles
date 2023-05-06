@@ -6,6 +6,7 @@ source "$mixins/require.sh"
 
 
 assert_loaded_environment
+
 require_command tldr
 
 

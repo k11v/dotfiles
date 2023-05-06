@@ -7,12 +7,12 @@ source "$mixins/require.sh"
 
 
 assert_loaded_environment
-require_macos
-require_macos_application "iTerm"
-
 assert_non_empty_string "$1" "First argument (dotfiles-iterm2-directory) is missing"
 assert_absolute_path "$1"
 assert_directory "$1"
+
+require_macos
+require_macos_application "iTerm"
 
 
 defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$1"
