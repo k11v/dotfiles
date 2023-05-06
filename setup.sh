@@ -173,10 +173,6 @@ section "Setting up fzf"
 "$setups/setup-fzf.sh"
 handle_exit "$?"
 
-section "Setting up pyenv"
-"$setups/setup-pyenv.sh"
-handle_exit "$?"
-
 section "Setting up tldr"
 "$setups/setup-tldr.sh"
 handle_exit "$?"
