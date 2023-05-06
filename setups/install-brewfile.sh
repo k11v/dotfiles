@@ -12,7 +12,6 @@ source "$DOTFILES_SETUP_MIXINS/require.sh"
 require_environment
 require_command brew
 
-
 assert_non_empty_string "$1" "First argument (brewfile) is missing"
 
 

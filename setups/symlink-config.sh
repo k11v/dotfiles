@@ -12,7 +12,6 @@ source "$DOTFILES_SETUP_MIXINS/require.sh"
 
 require_environment
 
-
 assert_non_empty_xdg_variables
 assert_non_empty_string "$1" "First argument (dotfiles-config-directory) is missing"
 assert_absolute_path "$1"
