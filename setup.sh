@@ -110,8 +110,6 @@ if [ "$?" -ne 0 ]; then
     exit 1
 fi
 
-export DOTFILES_SETUP_MIXINS="$setups/__mixins__"
-
 # Set up if symlinks only
 
 if [ "$symlinks_only" -eq 1 ]; then
