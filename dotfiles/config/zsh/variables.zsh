@@ -82,6 +82,10 @@ export MANPATH="/usr/local/opt/findutils/libexec/gnuman:$MANPATH"
 export PATH="/usr/local/opt/gawk/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/gawk/libexec/gnuman:$MANPATH"
 
+# gnu-getopt. Not symlinked by default. Provides GNU `getopt`.
+export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
+export MANPATH="/usr/local/opt/gnu-getopt/share/man:$MANPATH"
+
 # gnu-indent. G-prefixed by default. Provides GNU `indent`.
 export PATH="/usr/local/opt/gnu-indent/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/gnu-indent/libexec/gnuman:$MANPATH"
