@@ -38,16 +38,6 @@ venv() {
     source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name/bin/activate"
 }
 
-# Activate current directory's Python venv (h)ere
-venvh() {
-    if [[ ! -e "$PWD/venv" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv(h) doesn't exist."
-        return 1
-    fi
-
-    source "$PWD/venv/bin/activate"
-}
-
 # Create current directory's Python venv (with optional version)
 mkvenv() {
     local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
@@ -78,35 +68,6 @@ mkvenv() {
     source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name/bin/activate"
 }
 
-# Create current directory's Python venv (h)ere (with optional version)
-mkvenvh() {
-    local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
-
-    if [[ -z "$version" ]]; then
-        local last_version="$(pyenv install --list | grep -E '^[[:space:]]*[[:digit:]]+(\.[[:digit:]]+)*[[:space:]]*$' | tail -1 | xargs)"
-        pyenv install --skip-existing "$last_version"
-        [[ "$?" -ne 0 ]] && return 1
-        version="$last_version"
-    fi
-
-    if [[ -e "$PWD/venv" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv(h) already exists."
-        return 1
-    fi
-
-    if ! pyenv versions --bare | grep -P -q "^$version\$"; then
-        pyenv install --skip-existing "$version"
-        [[ "$?" -ne 0 ]] && return 1
-    fi
-
-    echo "Making venv(h) with Python $version..."
-
-    PYENV_VERSION="$version" python -m venv "$PWD/venv"
-    [[ "$?" -ne 0 ]] && return 1
-
-    source "$PWD/venv/bin/activate"
-}
-
 # Delete current directory's Python venv
 rmvenv() {
     local name="$(basename "$PWD")"
@@ -122,21 +83,6 @@ rmvenv() {
     fi
 
     rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
-}
-
-# Delete current directory's Python venv (h)ere
-rmvenvh() {
-    if [[ ! -e "$PWD/venv" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv(h) doesn't exist."
-        return 1
-    fi
-
-    if [[ "$VIRTUAL_ENV" -ef "$PWD/venv" ]]; then
-        deactivate
-        [[ "$?" -ne 0 ]] && return 1
-    fi
-
-    rm -rf "$PWD/venv"
 }
 
 # Quickly jump into a repository
