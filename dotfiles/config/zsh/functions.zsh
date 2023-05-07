@@ -30,12 +30,12 @@ dotenv() {
 venv() {
     local name="$(basename "$PWD")"
 
-    if [[ ! -e "$VENVS/$name" ]]; then
+    if [[ ! -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' doesn't exist."
         return 1
     fi
 
-    source "$VENVS/$name/bin/activate"
+    source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name/bin/activate"
 }
 
 # Activate current directory's Python venv (h)ere
@@ -53,7 +53,7 @@ mkvenv() {
     local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
     local name="$(basename "$PWD")"
 
-    if [[ -e "$VENVS/$name" ]]; then
+    if [[ -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' already exists."
         return 1
     fi
@@ -65,10 +65,10 @@ mkvenv() {
 
     echo "Making venv '$name' with Python $version..."
 
-    PYENV_VERSION="$version" python -m venv "$VENVS/$name"
+    PYENV_VERSION="$version" python -m venv "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
     [[ "$?" -ne 0 ]] && return 1
 
-    source "$VENVS/$name/bin/activate"
+    source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name/bin/activate"
 }
 
 # Create current directory's Python venv (h)ere (with optional version)
@@ -97,17 +97,17 @@ mkvenvh() {
 rmvenv() {
     local name="$(basename "$PWD")"
 
-    if [[ ! -e "$VENVS/$name" ]]; then
+    if [[ ! -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' doesn't exist."
         return 1
     fi
 
-    if [[ "$VIRTUAL_ENV" -ef "$VENVS/$name" ]]; then
+    if [[ "$VIRTUAL_ENV" -ef "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
         deactivate
         [[ "$?" -ne 0 ]] && return 1
     fi
 
-    rm -rf "$VENVS/$name"
+    rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
 }
 
 # Delete current directory's Python venv (h)ere
