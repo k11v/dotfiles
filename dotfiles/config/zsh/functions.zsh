@@ -53,6 +53,13 @@ mkvenv() {
     local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
     local name="$(basename "$PWD")"
 
+    if [[ -z "$version" ]]; then
+        local last_version="$(pyenv install --list | grep -E '^[[:space:]]*[[:digit:]]+(\.[[:digit:]]+)*[[:space:]]*$' | tail -1 | xargs)"
+        pyenv install --skip-existing "$last_version"
+        [[ "$?" -ne 0 ]] && return 1
+        version="$last_version"
+    fi
+
     if [[ -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' already exists."
         return 1
@@ -74,6 +81,13 @@ mkvenv() {
 # Create current directory's Python venv (h)ere (with optional version)
 mkvenvh() {
     local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
+
+    if [[ -z "$version" ]]; then
+        local last_version="$(pyenv install --list | grep -E '^[[:space:]]*[[:digit:]]+(\.[[:digit:]]+)*[[:space:]]*$' | tail -1 | xargs)"
+        pyenv install --skip-existing "$last_version"
+        [[ "$?" -ne 0 ]] && return 1
+        version="$last_version"
+    fi
 
     if [[ -e "$PWD/venv" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv(h) already exists."
