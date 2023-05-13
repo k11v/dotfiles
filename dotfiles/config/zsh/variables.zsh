@@ -65,50 +65,6 @@ export DOTFILES_ENVIRONMENT_LOADED=1
 
 # Homebrew
 
-# binutils. Not symlinked by default. Provides GNU `strings`, etc.
-export PATH="/usr/local/opt/binutils/bin:$PATH"
-export MANPATH="/usr/local/opt/binutils/share/man:$MANPATH"
-
-# coreutils. G-prefixed by default. Provides GNU `cp`, `ls`, `rm`, etc.
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-
-# findutils. G-prefixed by default. Provides GNU `find`, `xargs`, etc.
-export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/findutils/libexec/gnuman:$MANPATH"
-
-# gawk. G-prefixed by default. Provides GNU `awk`.
-export PATH="/usr/local/opt/gawk/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/gawk/libexec/gnuman:$MANPATH"
-
-# gnu-getopt. Not symlinked by default. Provides GNU `getopt`.
-export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
-export MANPATH="/usr/local/opt/gnu-getopt/share/man:$MANPATH"
-
-# gnu-indent. G-prefixed by default. Provides GNU `indent`.
-export PATH="/usr/local/opt/gnu-indent/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/gnu-indent/libexec/gnuman:$MANPATH"
-
-# gnu-sed. G-prefixed by default. Provides GNU `sed`.
-export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH"
-
-# gnu-tar. G-prefixed by default. Provides GNU `tar`.
-export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/gnu-tar/libexec/gnuman:$MANPATH"
-
-# grep. G-prefixed by default. Provides GNU `egrep`, `fgrep`, `grep`.
-export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/grep/libexec/gnuman:$MANPATH"
-
-# inetutils. Partly G-prefixed by default. Provides GNU `hostname`, `ping`, etc.
-export PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/inetutils/libexec/gnuman:$MANPATH"
-
-# make. G-prefixed by default. Provides GNU `make`.
-export PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/make/libexec/gnuman:$MANPATH"
-
 # libpq. Not symlinked by default. Provides `pg_dump`, `psql`, etc.
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export MANPATH="/usr/local/opt/libpq/share/man:$MANPATH"

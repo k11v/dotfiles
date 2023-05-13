@@ -1,3 +1,22 @@
+# GNU utils
+
+# binutils. Not symlinked by default. Provides GNU `strings`, etc.
+strings() { /usr/local/opt/binutils/bin/strings "$@"; }
+
+# coreutils. G-prefixed by default. Provides GNU `cp`, `ls`, `rm`, etc.
+ls() { /usr/local/opt/coreutils/libexec/gnubin/ls "$@"; }
+
+# gnu-sed. G-prefixed by default. Provides GNU `sed`.
+sed() { /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"; }
+
+# grep. G-prefixed by default. Provides GNU `egrep`, `fgrep`, `grep`.
+egrep() { /usr/local/opt/grep/libexec/gnubin/egrep "$@"; }
+fgrep() { /usr/local/opt/grep/libexec/gnubin/fgrep "$@"; }
+grep() { /usr/local/opt/grep/libexec/gnubin/grep "$@"; }
+
+
+# My utils
+
 # Change working directory to the top-most Finder window location
 cdf() {
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
