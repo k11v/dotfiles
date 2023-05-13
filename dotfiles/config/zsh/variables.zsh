@@ -72,3 +72,7 @@ export MANPATH="/usr/local/opt/libpq/share/man:$MANPATH"
 # mysql-client. Not symlinked by default. Provides `mysql`, etc.
 export PATH="/usr/local/opt/mysql-client/bin:$PATH"
 export MANPATH="/usr/local/opt/mysql-client/share/man:$MANPATH"
+
+# openjdk. Not symlinked by default. Provides `java`, etc.
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export PATH="/usr/local/opt/openjdk/share/man:$PATH"
