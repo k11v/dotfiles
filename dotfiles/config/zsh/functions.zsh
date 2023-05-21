@@ -48,19 +48,21 @@ dotenv() {
 # Activate current directory's Python venv
 venv() {
     local name="$(basename "$PWD")"
+    local venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
 
-    if [[ ! -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' doesn't exist."
+    if [[ ! -e "$venv" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv doesn't exist: $venv"
         return 1
     fi
 
-    source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name/bin/activate"
+    source "$venv/bin/activate"
 }
 
 # Create current directory's Python venv (with optional version)
 mkvenv() {
     local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
     local name="$(basename "$PWD")"
+    local venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
 
     if [[ -z "$version" ]]; then
         local last_version="$(pyenv install --list | grep -E '^[[:space:]]*[[:digit:]]+(\.[[:digit:]]+)*[[:space:]]*$' | tail -1 | xargs)"
@@ -69,8 +71,8 @@ mkvenv() {
         version="$last_version"
     fi
 
-    if [[ -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' already exists."
+    if [[ -e "$venv" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv already exists: $venv"
         return 1
     fi
 
@@ -79,29 +81,30 @@ mkvenv() {
         [[ "$?" -ne 0 ]] && return 1
     fi
 
-    echo "Making venv '$name' with Python $version..."
+    echo "Making venv '$venv' with Python $version..."
 
-    PYENV_VERSION="$version" python -m venv "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
+    PYENV_VERSION="$version" python -m venv "$venv"
     [[ "$?" -ne 0 ]] && return 1
 
-    source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name/bin/activate"
+    source "$venv/bin/activate"
 }
 
 # Delete current directory's Python venv
 rmvenv() {
     local name="$(basename "$PWD")"
+    local venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
 
-    if [[ ! -e "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv '$name' doesn't exist."
+    if [[ ! -e "$venv" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv doesn't exist: $venv"
         return 1
     fi
 
-    if [[ "$VIRTUAL_ENV" -ef "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name" ]]; then
+    if [[ "$VIRTUAL_ENV" -ef "$venv" ]]; then
         deactivate
         [[ "$?" -ne 0 ]] && return 1
     fi
 
-    rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
+    rm -rf "$venv"
 }
 
 # Quickly jump into a repository
