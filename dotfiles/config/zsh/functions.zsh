@@ -47,8 +47,15 @@ dotenv() {
 
 # Activate current directory's Python venv
 venv() {
-    local name="$(basename "$PWD")"
-    local venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
+    local venv
+    if [[ -z "$1" ]]; then
+        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
+    elif [[ "$1" == "venv" ]]; then
+        venv="$PWD/venv"
+    else
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Argument 1 can only be 'venv' if provided."
+        return 1
+    fi
 
     if [[ ! -e "$venv" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv doesn't exist: $venv"
@@ -61,8 +68,15 @@ venv() {
 # Create current directory's Python venv (with optional version)
 mkvenv() {
     local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
-    local name="$(basename "$PWD")"
-    local venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
+    local venv
+    if [[ -z "$2" ]]; then
+        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
+    elif [[ "$2" == "venv" ]]; then
+        venv="$PWD/venv"
+    else
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Argument 2 can only be 'venv' if provided."
+        return 1
+    fi
 
     if [[ -z "$version" ]]; then
         local last_version="$(pyenv install --list | grep -E '^[[:space:]]*[[:digit:]]+(\.[[:digit:]]+)*[[:space:]]*$' | tail -1 | xargs)"
@@ -91,8 +105,15 @@ mkvenv() {
 
 # Delete current directory's Python venv
 rmvenv() {
-    local name="$(basename "$PWD")"
-    local venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$name"
+    local venv
+    if [[ -z "$1" ]]; then
+        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
+    elif [[ "$1" == "venv" ]]; then
+        venv="$PWD/venv"
+    else
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Argument 1 can only be 'venv' if provided."
+        return 1
+    fi
 
     if [[ ! -e "$venv" ]]; then
         echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv doesn't exist: $venv"
