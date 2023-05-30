@@ -57,6 +57,10 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 export BAT_PAGER=""
 
+# Tealdeer
+
+export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
+
 # My utils
 
 export REPOSITORIES="$HOME/Repositories"
