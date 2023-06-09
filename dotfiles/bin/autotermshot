@@ -130,10 +130,10 @@ execute_pane_plan() {
         fi
 
         if [[ -n "$target_pane" ]]; then
-            tmux capture-pane -e -p -S - -E - -t "$target_pane" \
+            tmux capture-pane -e -J -p -S - -E - -t "$target_pane" \
                 | { [[ "$remove_trailing_newlines_after_pane_capture" -eq 1 ]] && gsed -Ez '$ s/\n+$//' || cat; } > "$raw_pane_file"
         else
-            tmux capture-pane -e -p -S - -E - \
+            tmux capture-pane -e -J -p -S - -E - \
                 | { [[ "$remove_trailing_newlines_after_pane_capture" -eq 1 ]] && gsed -Ez '$ s/\n+$//' || cat; } > "$raw_pane_file"
         fi
 
