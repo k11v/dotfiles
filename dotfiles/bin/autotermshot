@@ -4,6 +4,7 @@ redo=""
 
 allow_pane_capture=0
 target_pane=""
+remove_trailing_spaces_after_pane_capture=1
 remove_trailing_newlines_after_pane_capture=1
 remove_trailing_newline_before_shot_capture=1
 
@@ -33,6 +34,10 @@ load_args() {
             -t)
                 target_pane="$2"
                 shift 2
+                ;;
+            --remove-trailing-spaces-after-pane-capture)
+                remove_trailing_spaces_after_pane_capture=0
+                shift
                 ;;
             --no-remove-trailing-newlines-after-pane-capture)
                 remove_trailing_newlines_after_pane_capture=0
@@ -131,9 +136,11 @@ execute_pane_plan() {
 
         if [[ -n "$target_pane" ]]; then
             tmux capture-pane -e -J -p -S - -E - -t "$target_pane" \
+                | { [[ "$remove_trailing_spaces_after_pane_capture" -eq 1 ]] && gsed -E 's/ *$//' || cat; } \
                 | { [[ "$remove_trailing_newlines_after_pane_capture" -eq 1 ]] && gsed -Ez '$ s/\n+$//' || cat; } > "$raw_pane_file"
         else
             tmux capture-pane -e -J -p -S - -E - \
+                | { [[ "$remove_trailing_spaces_after_pane_capture" -eq 1 ]] && gsed -E 's/ *$//' || cat; } \
                 | { [[ "$remove_trailing_newlines_after_pane_capture" -eq 1 ]] && gsed -Ez '$ s/\n+$//' || cat; } > "$raw_pane_file"
         fi
 
