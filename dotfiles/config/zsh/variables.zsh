@@ -56,6 +56,7 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # Bat
 
 export BAT_PAGER=""
+export BAT_THEME="TwoDark"
 
 # Tealdeer
 
