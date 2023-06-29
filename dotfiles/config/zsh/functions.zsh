@@ -14,7 +14,7 @@ egrep() { /usr/local/opt/grep/libexec/gnubin/egrep "$@"; }
 fgrep() { /usr/local/opt/grep/libexec/gnubin/fgrep "$@"; }
 grep() { /usr/local/opt/grep/libexec/gnubin/grep "$@"; }
 
-# gcc. "-13"-suffixed by default. Provides `g++`, `gcc`.
+# gcc. "-13"-suffixed by default. Provides `g++`, `gcc`, etc.
 g++() { /usr/local/opt/gcc/bin/g++-13 "$@" }
 gcc() { /usr/local/opt/gcc/bin/gcc-13 "$@" }
 
