@@ -46,7 +46,7 @@ bc++11-prod() {
         return 1
     fi
 
-    g++ -std=c++11 -O2 -Wall -Wextra -o "$(basename "$1" ".cpp").prod" "$1"
+    g++ -std=c++11 -O2 -Wall -Wextra -o "$(basename "$1" ".cpp")" "$1"
 }
 
 rpython3.5() {
