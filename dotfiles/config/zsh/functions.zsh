@@ -55,7 +55,7 @@ rpython3.5() {
         return 1
     fi
 
-    PYENV_VERSION="3.5" pyenv exec python "$1"
+    PYENV_VERSION="3.5" pyenv exec python3.5 "$1"
 }
 
 
