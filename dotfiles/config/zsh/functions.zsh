@@ -19,6 +19,46 @@ g++() { /usr/local/opt/gcc/bin/g++-13 "$@" }
 gcc() { /usr/local/opt/gcc/bin/gcc-13 "$@" }
 
 
+# Competitive programming utils
+
+bc++11() {
+    if [ -z "$1" ]; then
+        echo "Error: The input file must be provided." >&2
+        return 1
+    fi
+
+    if [ "$1" = "$(basename "$1" ".cpp")" ]; then
+        echo "Error: The name of the input file must end with '.cpp'." >&2
+        return 1
+    fi
+
+    g++ -std=c++11 -Og -Wall -Wextra -o "$(basename "$1" ".cpp")" "$1"
+}
+
+bc++11-prod() {
+    if [ -z "$1" ]; then
+        echo "Error: The input file must be provided." >&2
+        return 1
+    fi
+
+    if [ "$1" = "$(basename "$1" ".cpp")" ]; then
+        echo "Error: The name of the input file must end with '.cpp'." >&2
+        return 1
+    fi
+
+    g++ -std=c++11 -O2 -Wall -Wextra -o "$(basename "$1" ".cpp").prod" "$1"
+}
+
+rpython3.5() {
+    if [ -z "$1" ]; then
+        echo "Error: The input file must be provided." >&2
+        return 1
+    fi
+
+    PYENV_VERSION="3.5" pyenv exec python "$1"
+}
+
+
 # My utils
 
 # Change working directory to the top-most Finder window location
