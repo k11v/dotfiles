@@ -21,6 +21,35 @@ gcc() { /usr/local/opt/gcc/bin/gcc-13 "$@" }
 
 # Competitive programming utils
 
+gentest() {
+    if [ -z "$1" ] || [ ! -e "$1" ] || [ -z "$2" ] || [ ! -e "$2" ] || [ -z "$3" ] || [ ! -e "$3" ]; then
+        if [ -z "$1" ]; then
+            echo "Error: Generator program not provided." >&2
+        elif [ ! -e "$1" ]; then
+            echo "Error: Generator program not found: $1" >&2
+        fi
+        if [ -z "$2" ]; then
+            echo "Error: Correct program not provided." >&2
+        elif [ ! -e "$2" ]; then
+            echo "Error: Correct program not found: $2" >&2
+        fi
+        if [ -z "$3" ]; then
+            echo "Error: Examined program not provided." >&2
+        elif [ ! -e "$3" ]; then
+            echo "Error: Examined program not found: $3" >&2
+        fi
+        echo "Usage: gentest <generator> <correct> <examined>" >&2
+        return 1
+    fi
+
+    i=0
+    while ((++i)); do
+        echo "$i"
+        "$1" "$i" > int
+        command diff <("$2" < int) <("$3" < int) || break
+    done
+}
+
 bc++11() {
     if [ -z "$1" ]; then
         echo "Error: The input file must be provided." >&2
