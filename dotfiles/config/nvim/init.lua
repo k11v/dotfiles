@@ -1,3 +1,11 @@
+-- Configure leader
+--
+-- Note: Must happen before plugin initialization, otherwise wrong leader will
+-- be used.
+
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 -- Init lazy
 
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
