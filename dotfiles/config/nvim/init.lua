@@ -34,7 +34,27 @@ if not vim.loop.fs_stat(lazy_path) then
 end
 vim.opt.rtp:prepend(lazy_path)
 
-require("lazy").setup({})
+require("lazy").setup({
+	{
+		"L3MON4D3/LuaSnip",
+		lazy = false,
+		init = function() end,
+		config = function()
+			require("luasnip").setup({
+				history = true, -- Enables jumping back into exited snippet.
+				update_events = { "TextChanged", "TextChangedI" }, -- Enables active snippet rerender on change.
+				delete_check_events = { "TextChanged" }, -- Enables deleted snippet removal from history on change.
+			})
+
+			require("luasnip.loaders.from_lua").lazy_load({
+				paths = { vim.fn.stdpath("config") .. "/lua/snippets" },
+			})
+		end,
+		build = function()
+			vim.system({ "make", "install_jsregexp" }):wait()
+		end,
+	},
+})
 
 --
 -- Bindings
