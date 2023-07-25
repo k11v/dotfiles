@@ -35,9 +35,9 @@ end
 vim.opt.rtp:prepend(lazy_path)
 
 require("lazy").setup({
+	-- Snippets
 	{
 		"L3MON4D3/LuaSnip",
-		lazy = false,
 		dependencies = nil,
 		init = nil,
 		config = function()
@@ -46,26 +46,28 @@ require("lazy").setup({
 				update_events = { "TextChanged", "TextChangedI" }, -- Enables active snippet rerender on change.
 				delete_check_events = { "TextChanged" }, -- Enables deleted snippet removal from history on change.
 			})
-
-			require("luasnip.loaders.from_lua").lazy_load({
-				paths = { vim.fn.stdpath("config") .. "/lua/snippets" },
-			})
 		end,
 		build = function()
 			vim.fn.system({ "make", "install_jsregexp" })
 		end,
+		lazy = true,
+	},
+
+	-- Completion
+	{
+		"saadparwaiz1/cmp_luasnip",
+		dependencies = nil,
+		init = nil,
+		config = nil,
+		build = nil,
+		lazy = true,
 	},
 	{
 		"hrsh7th/nvim-cmp",
-		lazy = false,
-		dependencies = {
-			"LuaSnip",
-			"cmp_luasnip",
-		},
+		dependencies = { "LuaSnip", "cmp_luasnip" },
 		init = nil,
 		config = function()
 			local cmp = require("cmp")
-
 			cmp.setup({
 				mapping = {
 					-- stylua: ignore start
@@ -93,14 +95,8 @@ require("lazy").setup({
 			})
 		end,
 		build = nil,
-	},
-	{
-		"saadparwaiz1/cmp_luasnip",
-		lazy = false,
-		dependencies = nil,
-		init = nil,
-		config = nil,
-		build = nil,
+		lazy = true,
+		event = { "BufNewFile", "BufReadPre" },
 	},
 })
 
