@@ -59,8 +59,8 @@ require("lazy").setup({
 		"hrsh7th/nvim-cmp",
 		lazy = false,
 		dependencies = {
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
+			"LuaSnip",
+			"cmp_luasnip",
 		},
 		init = nil,
 		config = function()
