@@ -38,7 +38,8 @@ require("lazy").setup({
 	{
 		"L3MON4D3/LuaSnip",
 		lazy = false,
-		init = function() end,
+		dependencies = nil,
+		init = nil,
 		config = function()
 			require("luasnip").setup({
 				history = true, -- Enables jumping back into exited snippet.
@@ -51,7 +52,7 @@ require("lazy").setup({
 			})
 		end,
 		build = function()
-			vim.system({ "make", "install_jsregexp" }):wait()
+			vim.fn.system({ "make", "install_jsregexp" })
 		end,
 	},
 })
