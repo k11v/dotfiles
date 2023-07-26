@@ -125,6 +125,21 @@ require("lazy").setup(
 			build = nil,
 			lazy = true,
 		},
+		{
+			"neovim/nvim-lspconfig",
+			dependencies = { "mason-lspconfig.nvim" },
+			init = nil,
+			config = function()
+				require("mason-lspconfig").setup_handlers({
+					["pyright"] = function()
+						require("lspconfig")["pyright"].setup({})
+					end
+				})
+			end,
+			build = nil,
+			lazy = true,
+			event = { "BufNewFile", "BufReadPre" },
+		},
 	},
 	{
 		install = { colorscheme = { "default" } }, -- https://github.com/folke/lazy.nvim/issues/713
