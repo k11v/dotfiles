@@ -112,6 +112,16 @@ require("lazy").setup({
 		end,
 		lazy = false, -- Lazy-loading Mason is not recommended.
 	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		dependencies = { "mason.nvim" },
+		init = nil,
+		config = function()
+			require("mason-lspconfig").setup()
+		end,
+		build = nil,
+		lazy = true,
+	},
 })
 
 --
