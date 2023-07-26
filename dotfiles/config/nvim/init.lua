@@ -98,6 +98,20 @@ require("lazy").setup({
 		lazy = true,
 		event = { "BufNewFile", "BufReadPre" },
 	},
+
+	-- Tools
+	{
+		"williamboman/mason.nvim",
+		dependencies = nil,
+		init = nil,
+		config = function()
+			require("mason").setup()
+		end,
+		build = function()
+			vim.cmd.MasonUpdate()
+		end,
+		lazy = false, -- Lazy-loading Mason is not recommended.
+	},
 })
 
 --
