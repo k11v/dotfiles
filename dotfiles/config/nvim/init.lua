@@ -110,7 +110,7 @@ require("lazy").setup({
 		build = function()
 			vim.cmd.MasonUpdate()
 		end,
-		lazy = false, -- Lazy-loading Mason is not recommended.
+		lazy = true,
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
