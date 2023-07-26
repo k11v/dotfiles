@@ -56,6 +56,14 @@ require("lazy").setup(
 
 		-- Completion
 		{
+			"hrsh7th/cmp-nvim-lsp",
+			dependencies = nil,
+			init = nil,
+			config = nil,
+			build = nil,
+			lazy = true,
+		},
+		{
 			"saadparwaiz1/cmp_luasnip",
 			dependencies = nil,
 			init = nil,
@@ -91,6 +99,7 @@ require("lazy").setup(
 						completeopt = "menu,menuone,noinsert",
 					},
 					sources = {
+						{ name = "nvim_lsp" },
 						{ name = "luasnip" },
 					},
 				})
@@ -127,12 +136,16 @@ require("lazy").setup(
 		},
 		{
 			"neovim/nvim-lspconfig",
-			dependencies = { "mason-lspconfig.nvim" },
+			dependencies = { "mason-lspconfig.nvim", "nvim-cmp" },
 			init = nil,
 			config = function()
+				local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 				require("mason-lspconfig").setup_handlers({
 					["pyright"] = function()
-						require("lspconfig")["pyright"].setup({})
+						require("lspconfig")["pyright"].setup({
+							capabilities = cmp_capabilities,
+						})
 					end
 				})
 			end,
