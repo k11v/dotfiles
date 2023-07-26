@@ -13,6 +13,8 @@ alias c="clear"
 # Editor
 
 alias v="nvim"
+alias vi="nvim"
+alias vim="nvim"
 
 # GNU utils
 
