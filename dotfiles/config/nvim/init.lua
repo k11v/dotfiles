@@ -138,12 +138,17 @@ require("lazy").setup({
 		dependencies = { "mason-lspconfig.nvim", "nvim-cmp" },
 		init = nil,
 		config = function()
-			local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local capabilities = vim.tbl_deep_extend(
+				"force",
+				{},
+				vim.lsp.protocol.make_client_capabilities(),
+				require("cmp_nvim_lsp").default_capabilities(),
+			)
 
 			require("mason-lspconfig").setup_handlers({
 				["pyright"] = function()
 					require("lspconfig")["pyright"].setup({
-						capabilities = cmp_capabilities,
+						capabilities = capabilities,
 					})
 				end,
 			})
