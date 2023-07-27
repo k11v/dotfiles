@@ -134,10 +134,10 @@ require("lazy").setup({
 		event = { "BufNewFile", "BufReadPre" },
 	},
 
-	-- LSP client
+	-- LSP
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "nvim-cmp" },
+		dependencies = { "cmp-nvim-lsp" },
 		init = nil,
 		config = function()
 			local capabilities = vim.tbl_deep_extend(
