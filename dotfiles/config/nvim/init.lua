@@ -63,30 +63,22 @@ require("lazy").setup({
 		lazy = true,
 	},
 	{
-		"saadparwaiz1/cmp_luasnip",
-		dependencies = nil,
-		init = nil,
-		config = nil,
-		build = nil,
-		lazy = true,
-	},
-	{
 		"hrsh7th/nvim-cmp",
-		dependencies = { "LuaSnip", "cmp_luasnip" },
+		dependencies = { "LuaSnip" },
 		init = nil,
 		config = function()
 			local cmp = require("cmp")
 			cmp.setup({
 				mapping = {
-						-- stylua: ignore start
-						["<C-Space>"] = cmp.mapping(cmp.mapping.complete(),                                                         { "i", "s", "c" }),
-						["<C-n>"]     = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),         { "i", "s", "c" }),
-						["<C-p>"]     = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),         { "i", "s", "c" }),
-						["<C-y>"]     = cmp.mapping(cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }), { "i", "s", "c" }),
-						["<C-e>"]     = cmp.mapping(cmp.mapping.abort(),                                                            { "i", "s", "c" }),
-						["<Down>"]    = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),         { "i", "s" }),
-	                    ["<Up>"]      = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),         { "i", "s" }),
-	                    ["<CR>"]      = cmp.mapping(cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }), { "i", "s" }),
+					-- stylua: ignore start
+					["<C-Space>"] = cmp.mapping(cmp.mapping.complete(),                                                         { "i", "s", "c" }),
+					["<C-n>"]     = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),         { "i", "s", "c" }),
+					["<C-p>"]     = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),         { "i", "s", "c" }),
+					["<C-y>"]     = cmp.mapping(cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }), { "i", "s", "c" }),
+					["<C-e>"]     = cmp.mapping(cmp.mapping.abort(),                                                            { "i", "s", "c" }),
+					["<Down>"]    = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),         { "i", "s" }),
+					["<Up>"]      = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),         { "i", "s" }),
+					["<CR>"]      = cmp.mapping(cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }), { "i", "s" }),
 					-- stylua: ignore end
 				},
 				snippet = {
@@ -99,7 +91,6 @@ require("lazy").setup({
 				},
 				sources = {
 					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
 				},
 			})
 		end,
