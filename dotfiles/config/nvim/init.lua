@@ -35,7 +35,42 @@ end
 vim.opt.rtp:prepend(lazy_path)
 
 require("lazy").setup({
-	-- Snippets
+	-- Package manager
+	{
+		"williamboman/mason.nvim",
+		dependencies = nil,
+		init = nil,
+		config = function()
+			local mason = require("mason")
+			local mason_registry = require("mason-registry")
+
+			local packages = {
+				-- lspconfig
+				"pyright",
+
+				-- null-ls
+				"black",
+			}
+
+			mason.setup()
+			mason_registry.refresh(
+				function() -- https://github.com/williamboman/mason.nvim/issues/1309#issuecomment-1555018732
+					for _, pkg_name in ipairs(packages) do
+						local pkg = mason_registry.get_package(pkg_name)
+						if not pkg:is_installed() then
+							pkg:install()
+						end
+					end
+				end
+			)
+		end,
+		build = function()
+			vim.cmd.MasonUpdate()
+		end,
+		lazy = false, -- Lazy-loading mason.nvim is not recommended.
+	},
+
+	-- Snippet engine
 	{
 		"L3MON4D3/LuaSnip",
 		dependencies = nil,
@@ -53,7 +88,7 @@ require("lazy").setup({
 		lazy = true,
 	},
 
-	-- Completion
+	-- Completion engine
 	{
 		"hrsh7th/cmp-nvim-lsp",
 		dependencies = nil,
@@ -99,54 +134,52 @@ require("lazy").setup({
 		event = { "BufNewFile", "BufReadPre" },
 	},
 
-	-- Tools
-	{
-		"williamboman/mason.nvim",
-		dependencies = nil,
-		init = nil,
-		config = function()
-			require("mason").setup()
-		end,
-		build = function()
-			vim.cmd.MasonUpdate()
-		end,
-		lazy = true,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "mason.nvim" },
-		init = nil,
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = { "pyright" },
-			})
-		end,
-		build = nil,
-		lazy = true,
-	},
+	-- LSP client
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "mason-lspconfig.nvim", "nvim-cmp" },
+		dependencies = { "nvim-cmp" },
 		init = nil,
 		config = function()
 			local capabilities = vim.tbl_deep_extend(
 				"force",
 				{},
 				vim.lsp.protocol.make_client_capabilities(),
-				require("cmp_nvim_lsp").default_capabilities(),
+				require("cmp_nvim_lsp").default_capabilities()
 			)
 
-			require("mason-lspconfig").setup_handlers({
-				["pyright"] = function()
-					require("lspconfig")["pyright"].setup({
-						capabilities = capabilities,
-					})
-				end,
+			require("lspconfig")["pyright"].setup({
+				capabilities = capabilities,
 			})
 		end,
 		build = nil,
 		lazy = true,
 		event = { "BufNewFile", "BufReadPre" },
+	},
+	{
+		"jose-elias-alvarez/null-ls.nvim",
+		dependencies = { "plenary.nvim" },
+		init = nil,
+		config = function()
+			local null_ls = require("null-ls")
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.formatting.black,
+				},
+			})
+		end,
+		build = nil,
+		lazy = true,
+		event = { "BufNewFile", "BufReadPre" },
+	},
+
+	-- Dependencies
+	{
+		"nvim-lua/plenary.nvim",
+		dependencies = nil,
+		init = nil,
+		config = nil,
+		build = nil,
+		lazy = true,
 	},
 }, {
 	install = { colorscheme = { "default" } }, -- https://github.com/folke/lazy.nvim/issues/713
