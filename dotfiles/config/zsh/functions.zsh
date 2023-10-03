@@ -101,7 +101,7 @@ diff() {
 }
 
 # Get local IPs
-myips() {
+myip() {
     ifconfig | grep inet | grep -v inet6 | cut -d " " -f 2
 }
 
