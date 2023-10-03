@@ -53,6 +53,11 @@ export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 export PATH="$PYENV_ROOT/shims:$PATH"
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
+# Go
+
+export GOPATH="$XDG_DATA_HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
 # Bat
 
 export BAT_PAGER=""
