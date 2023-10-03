@@ -257,3 +257,12 @@ recompinit() {
     rm "$ZCOMPDUMP"
     compinit -d "$ZCOMPDUMP"
 }
+
+# Pipe to browser
+bcat() {
+    local tempdir="$(mktemp -d)"
+    cat > "$tempdir/document.html"
+    open "$tempdir/document.html"
+    sleep 0.2
+    rm -rf -- "$tempdir"
+}
