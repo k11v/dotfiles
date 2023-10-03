@@ -1,6 +1,3 @@
 {
-    "word_wrap": true,
-    "wrap_width": 81,  // Sublime Text wraps text 1 character early
-    "wrap_width_style": "min",
     "rulers": [80],
 }
