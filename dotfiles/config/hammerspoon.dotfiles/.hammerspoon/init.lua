@@ -86,9 +86,9 @@ local function hide_alacritty(alacritty)
 end
 
 ---@param alacritty hs.application
----@param force_full_screen boolean
+---@param relative_height? number
 ---@return nil
-local function show_alacritty(alacritty, force_full_screen)
+local function show_alacritty(alacritty, relative_height)
   local alacritty_window = get_alacritty_window(alacritty)
   local active_space = get_active_space()
 
@@ -99,15 +99,26 @@ local function show_alacritty(alacritty, force_full_screen)
   local window_frame = alacritty_window:frame()
   local window_screen_frame = alacritty_window:screen():frame()
   local active_screen_frame = get_space_screen(active_space):frame()
-  
+
   local is_window_full_screen = false
   if alacritty_window:isFullScreen() then
     alacritty_window:setFullScreen(false)
     is_window_full_screen = true
-  elseif force_full_screen then
-    is_window_full_screen = true
   else
     is_window_full_screen = window_frame.h >= window_screen_frame.h
+  end
+
+  local absolute_height
+  if relative_height == nil then
+    absolute_height = (
+      is_window_full_screen
+      and active_screen_frame.h
+      or math.min(window_frame.h, active_screen_frame.h)
+    )
+  else
+    absolute_height = (
+      active_screen_frame.h * math.min(math.max(0, relative_height), 1)
+    )
   end
 
   if not is_window_on_space(alacritty_window, active_space) then
@@ -118,20 +129,19 @@ local function show_alacritty(alacritty, force_full_screen)
     x = active_screen_frame.x,
     y = active_screen_frame.y,
     w = active_screen_frame.w,
-    h = is_window_full_screen and active_screen_frame.h or math.min(window_frame.h, active_screen_frame.h)
+    h = absolute_height,
   }), 0)
   alacritty:activate()
   alacritty:unhide()
 end
 
 ---@param alacritty hs.application
----@param force_full_screen boolean
 ---@return nil
-local function toggle_alacritty(alacritty, force_full_screen)
+local function toggle_alacritty(alacritty)
   if is_alacritty_active_app(alacritty) then
     hide_alacritty(alacritty)
   else
-    show_alacritty(alacritty, force_full_screen)
+    show_alacritty(alacritty)
   end
 end
 
@@ -147,17 +157,17 @@ end
 hs.hotkey.bind({"alt"}, "`", function()
   local alacritty = get_alacritty()
   if alacritty then
-    toggle_alacritty(alacritty, false)
+    toggle_alacritty(alacritty)
   else
-    show_alacritty(open_alacritty(), true)
+    show_alacritty(open_alacritty(), 1)
   end
 end)
 
 hs.hotkey.bind({"shift", "alt"}, "`", function()
   local alacritty = get_alacritty()
   if alacritty then
-    show_alacritty(alacritty, true)
+    show_alacritty(alacritty, 1)
   else
-    show_alacritty(open_alacritty(), true)
+    show_alacritty(open_alacritty(), 1)
   end
 end)
