@@ -57,27 +57,15 @@ local function get_alacritty_window(alacritty)
   if not alacritty_window:isStandard() then
     notify_and_error("Expected a standard alacritty window, got non-standard.")
   end
+  if alacritty_window:isFullScreen() then
+    notify_and_error("Expected a non-full-screen alacritty window, got full-screen.")
+  end
   return alacritty_window
 end
 
 ---@param alacritty hs.application
 ---@return nil
 local function hide_alacritty(alacritty)
-  local alacritty_window = get_alacritty_window(alacritty)
-  
-  local window_frame = alacritty_window:frame()
-  local window_screen_frame = alacritty_window:screen():frame()
-
-  if alacritty_window:isFullScreen() then
-    alacritty_window:setFullScreen(false)
-    alacritty_window:setFrame(hs.geometry({
-      x = window_screen_frame.x,
-      y = window_screen_frame.y,
-      w = window_screen_frame.w,
-      h = window_screen_frame.h,
-    }), 0)
-  end
-
   alacritty:hide()
 end
 
@@ -92,13 +80,7 @@ local function show_alacritty(alacritty, relative_height)
   local window_screen_frame = alacritty_window:screen():frame()
   local active_screen_frame = get_space_screen(active_space):frame()
 
-  local is_window_full_screen = false
-  if alacritty_window:isFullScreen() then
-    alacritty_window:setFullScreen(false)
-    is_window_full_screen = true
-  else
-    is_window_full_screen = window_frame.h >= window_screen_frame.h
-  end
+  local is_window_full_screen = window_frame.h >= window_screen_frame.h
 
   local absolute_height
   if relative_height == nil then
