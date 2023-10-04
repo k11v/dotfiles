@@ -1,4 +1,4 @@
----@param message
+---@param message string
 ---@return nil
 local function notify_and_panic(message)
   local notification = hs.notify:new()
