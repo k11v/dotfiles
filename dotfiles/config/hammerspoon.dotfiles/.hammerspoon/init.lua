@@ -74,8 +74,9 @@ local function hide_alacritty(alacritty)
 end
 
 ---@param alacritty hs.application
+---@param force_full_screen boolean
 ---@return nil
-local function show_alacritty(alacritty)
+local function show_alacritty(alacritty, force_full_screen)
   local alacritty_window = get_alacritty_window(alacritty)
   local active_space = get_active_space()
 
@@ -90,6 +91,8 @@ local function show_alacritty(alacritty)
   local is_window_full_screen = false
   if alacritty_window:isFullScreen() then
     alacritty_window:setFullScreen(false)
+    is_window_full_screen = true
+  elseif force_full_screen then
     is_window_full_screen = true
   else
     is_window_full_screen = window_frame.h >= window_screen_frame.h
@@ -108,12 +111,13 @@ local function show_alacritty(alacritty)
 end
 
 ---@param alacritty hs.application
+---@param force_full_screen boolean
 ---@return nil
-local function toggle_alacritty(alacritty)
+local function toggle_alacritty(alacritty, force_full_screen)
   if is_alacritty_active_app(alacritty) then
     hide_alacritty(alacritty)
   else
-    show_alacritty(alacritty)
+    show_alacritty(alacritty, force_full_screen)
   end
 end
 
@@ -129,8 +133,17 @@ end
 hs.hotkey.bind({"alt"}, "`", function()
   local alacritty = get_alacritty()
   if alacritty then
-    toggle_alacritty(alacritty)
+    toggle_alacritty(alacritty, false)
   else
-    show_alacritty(open_alacritty())
+    show_alacritty(open_alacritty(), true)
+  end
+end)
+
+hs.hotkey.bind({"shift", "alt"}, "`", function()
+  local alacritty = get_alacritty()
+  if alacritty then
+    show_alacritty(alacritty, true)
+  else
+    show_alacritty(open_alacritty(), true)
   end
 end)
