@@ -63,6 +63,12 @@ local function get_alacritty_window(alacritty)
   return alacritty_window
 end
 
+---@param alacritty_window hs.window
+---@return boolean
+local function is_alacritty_window_full_screen(alacritty_window)
+  return alacritty_window:frame().h >= alacritty_window:screen():frame().h
+end
+
 ---@param alacritty hs.application
 ---@return nil
 local function hide_alacritty(alacritty)
@@ -77,15 +83,12 @@ local function show_alacritty(alacritty, relative_height)
   local active_space = get_active_space()
 
   local window_frame = alacritty_window:frame()
-  local window_screen_frame = alacritty_window:screen():frame()
   local active_screen_frame = get_space_screen(active_space):frame()
-
-  local is_window_full_screen = window_frame.h >= window_screen_frame.h
 
   local absolute_height
   if relative_height == nil then
     absolute_height = (
-      is_window_full_screen
+      is_alacritty_window_full_screen(alacritty_window)
       and active_screen_frame.h
       or math.min(window_frame.h, active_screen_frame.h)
     )
