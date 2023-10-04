@@ -1,52 +1,124 @@
+local is_alacritty_full_screen = false
+
+---@return hs.application|nil
+local function get_alacritty()
+  local alacritties = hs.application.applicationsForBundleID("org.alacritty")
+  return #alacritties < 1 and nil or alacritties[1]
+end
+
+---@param alacritty hs.application
+---@return boolean
+local function is_alacritty_active_app(alacritty)
+  return alacritty:isFrontmost()
+end
+
+---@return integer
+local function get_active_space()
+  return hs.spaces.focusedSpace()
+end
+
+---@param space integer
+---@return hs.screen
+local function get_space_screen(space)
+  local space_screen = hs.screen.find(hs.spaces.spaceDisplay(space))
+  if not space_screen then
+    error("Expected a space screen, got nil.")
+  end
+  return space_screen
+end
+
+---@param alacritty hs.application
+---@return hs.window
+local function get_alacritty_window(alacritty)
+  local alacritty_window = alacritty:mainWindow()
+  if not alacritty_window then
+    error("Expected an alacritty window, got nil.")
+  end
+  if not alacritty_window:isStandard() then
+    error("Expected a standard alacritty window, got non-standard.")
+  end
+  return alacritty_window
+end
+
+---@param alacritty hs.application
+---@return nil
 local function hide_alacritty(alacritty)
+  local alacritty_window = get_alacritty_window(alacritty)
+  
+  if alacritty_window:isMinimized() then
+    alacritty_window:unminimize()
+  end
+  
+  local window_frame = alacritty_window:frame()
+  local window_screen_frame = alacritty_window:screen():frame()
+
+  if alacritty_window:isFullScreen() then
+    alacritty_window:setFullScreen(false)
+    alacritty_window:setFrame(hs.geometry({
+      x = window_screen_frame.x,
+      y = window_screen_frame.y,
+      w = window_screen_frame.w,
+      h = window_screen_frame.h,
+    }), 0)
+  end
+
   alacritty:hide()
 end
 
+---@param alacritty hs.application
+---@return nil
 local function show_alacritty(alacritty)
-  local alacritty_window = alacritty:mainWindow()
+  local alacritty_window = get_alacritty_window(alacritty)
+  local active_space = get_active_space()
 
-  if alacritty_window and alacritty_window:isStandard() then
-    local focused_space_id = hs.spaces.focusedSpace()
-    local focused_screen_id = hs.spaces.spaceDisplay(focused_space_id)
-
-    window_frame = alacritty_window:frame()
-    screen_frame = hs.screen.find(focused_screen_id):frame()
-
-    alacritty_window:setFrame(
-      hs.geometry({
-        x = screen_frame.x,
-        y = screen_frame.y,
-        w = screen_frame.w,
-        h = window_frame.h,
-      }),
-      0
-    )
-
-    hs.spaces.moveWindowToSpace(alacritty_window, focused_space_id)
+  if alacritty_window:isMinimized() then
+    alacritty_window:unminimize()
   end
 
+  local window_frame = alacritty_window:frame()
+  local window_screen_frame = alacritty_window:screen():frame()
+  local active_screen_frame = get_space_screen(active_space):frame()
+  
+  local is_window_full_screen = false
+  if alacritty_window:isFullScreen() then
+    alacritty_window:setFullScreen(false)
+    is_window_full_screen = true
+  else
+    is_window_full_screen = window_frame.h >= window_screen_frame.h
+  end
+
+  alacritty:hide()
+  hs.spaces.moveWindowToSpace(alacritty_window, active_space)
+  alacritty_window:setFrame(hs.geometry({
+    x = active_screen_frame.x,
+    y = active_screen_frame.y,
+    w = active_screen_frame.w,
+    h = is_window_full_screen and active_screen_frame.h or math.min(window_frame.h, active_screen_frame.h)
+  }), 0)
   alacritty:activate()
   alacritty:unhide()
-  -- FIXME: The Alacritty window flickers when it is being shown from the
-  -- "hidden" state. When it is visible, no flickering occurs.
 end
 
+---@param alacritty hs.application
+---@return nil
 local function toggle_alacritty(alacritty)
-  if alacritty:isFrontmost() then
+  if is_alacritty_active_app(alacritty) then
     hide_alacritty(alacritty)
   else
     show_alacritty(alacritty)
   end
 end
 
-hs.hotkey.bind({"alt"}, "`", function()
-  local alacritty = hs.application.find("alacritty")
+---@return nil
+local function launch_alacritty()
+  hs.application.launchOrFocusByBundleID("org.alacritty")
+end
 
+hs.hotkey.bind({"alt"}, "`", function()
+  local alacritty = get_alacritty()
   if alacritty then
     toggle_alacritty(alacritty)
   else
-    hs.application.launchOrFocus("alacritty")
-    -- TODO: Make 'show_alacritty(alacritty)' work in the case when the app was
-    -- just launched. 'hs.application.open' didn't seem to help.
+    launch_alacritty()
   end
 end)
