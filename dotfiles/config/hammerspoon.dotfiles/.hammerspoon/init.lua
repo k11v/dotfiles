@@ -65,10 +65,6 @@ end
 local function hide_alacritty(alacritty)
   local alacritty_window = get_alacritty_window(alacritty)
   
-  if alacritty_window:isMinimized() then
-    alacritty_window:unminimize()
-  end
-  
   local window_frame = alacritty_window:frame()
   local window_screen_frame = alacritty_window:screen():frame()
 
@@ -91,10 +87,6 @@ end
 local function show_alacritty(alacritty, relative_height)
   local alacritty_window = get_alacritty_window(alacritty)
   local active_space = get_active_space()
-
-  if alacritty_window:isMinimized() then
-    alacritty_window:unminimize()
-  end
 
   local window_frame = alacritty_window:frame()
   local window_screen_frame = alacritty_window:screen():frame()
