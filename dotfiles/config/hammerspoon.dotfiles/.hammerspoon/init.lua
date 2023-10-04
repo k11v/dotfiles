@@ -1,4 +1,12 @@
-local is_alacritty_full_screen = false
+---@param message
+---@return nil
+local function notify_and_error(message)
+  local notification = hs.notify:new()
+  notification:title("Hammerspoon")
+  notification:informativeText(message)
+  notification:send()
+  error(message)
+end
 
 ---@return hs.application|nil
 local function get_alacritty()
@@ -22,7 +30,7 @@ end
 local function get_space_screen(space)
   local space_screen = hs.screen.find(hs.spaces.spaceDisplay(space))
   if not space_screen then
-    error("Expected a space screen, got nil.")
+    notify_and_error("Expected a space screen, got nil.")
   end
   return space_screen
 end
@@ -32,10 +40,10 @@ end
 local function get_alacritty_window(alacritty)
   local alacritty_window = alacritty:mainWindow()
   if not alacritty_window then
-    error("Expected an alacritty window, got nil.")
+    notify_and_error("Expected an Alacritty window, got nil.")
   end
   if not alacritty_window:isStandard() then
-    error("Expected a standard alacritty window, got non-standard.")
+    notify_and_error("Expected a standard alacritty window, got non-standard.")
   end
   return alacritty_window
 end
@@ -109,9 +117,13 @@ local function toggle_alacritty(alacritty)
   end
 end
 
----@return nil
-local function launch_alacritty()
-  hs.application.launchOrFocusByBundleID("org.alacritty")
+---@return hs.application
+local function open_alacritty()
+  local alacritty = hs.application.open("org.alacritty", 1, true)
+  if not alacritty then
+    notify_and_error("Expected an Alacritty instance, got nil.")
+  end
+  return alacritty
 end
 
 hs.hotkey.bind({"alt"}, "`", function()
@@ -119,6 +131,6 @@ hs.hotkey.bind({"alt"}, "`", function()
   if alacritty then
     toggle_alacritty(alacritty)
   else
-    launch_alacritty()
+    show_alacritty(open_alacritty())
   end
 end)
