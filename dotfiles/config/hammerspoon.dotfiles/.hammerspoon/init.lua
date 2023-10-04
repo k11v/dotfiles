@@ -35,6 +35,18 @@ local function get_space_screen(space)
   return space_screen
 end
 
+---@param window hs.window
+---@param space integer
+---@return boolean
+local function is_window_on_space(window, space)
+  for _, s in ipairs(hs.spaces.windowSpaces(window)) do
+    if s == space then
+      return true
+    end
+  end
+  return false
+end
+
 ---@param alacritty hs.application
 ---@return hs.window
 local function get_alacritty_window(alacritty)
@@ -98,8 +110,10 @@ local function show_alacritty(alacritty, force_full_screen)
     is_window_full_screen = window_frame.h >= window_screen_frame.h
   end
 
-  alacritty:hide()
-  hs.spaces.moveWindowToSpace(alacritty_window, active_space)
+  if not is_window_on_space(alacritty_window, active_space) then
+    alacritty:hide()
+    hs.spaces.moveWindowToSpace(alacritty_window, active_space)
+  end
   alacritty_window:setFrame(hs.geometry({
     x = active_screen_frame.x,
     y = active_screen_frame.y,
