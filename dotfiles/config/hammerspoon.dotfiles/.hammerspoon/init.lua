@@ -8,18 +8,6 @@ local function notify_and_panic(message)
   error(message)
 end
 
----@return hs.application|nil
-local function get_alacritty()
-  local alacritties = hs.application.applicationsForBundleID("org.alacritty")
-  return #alacritties < 1 and nil or alacritties[1]
-end
-
----@param alacritty hs.application
----@return boolean
-local function is_alacritty_active_app(alacritty)
-  return alacritty:isFrontmost()
-end
-
 ---@return integer
 local function get_active_space()
   return hs.spaces.focusedSpace()
@@ -45,6 +33,18 @@ local function is_window_on_space(window, space)
     end
   end
   return false
+end
+
+---@return hs.application|nil
+local function get_alacritty()
+  local alacritties = hs.application.applicationsForBundleID("org.alacritty")
+  return #alacritties < 1 and nil or alacritties[1]
+end
+
+---@param alacritty hs.application
+---@return boolean
+local function is_alacritty_active_app(alacritty)
+  return alacritty:isFrontmost()
 end
 
 ---@param alacritty hs.application
