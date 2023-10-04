@@ -1,6 +1,6 @@
 ---@param message
 ---@return nil
-local function notify_and_error(message)
+local function notify_and_panic(message)
   local notification = hs.notify:new()
   notification:title("Hammerspoon")
   notification:informativeText(message)
@@ -30,7 +30,7 @@ end
 local function get_space_screen(space)
   local space_screen = hs.screen.find(hs.spaces.spaceDisplay(space))
   if not space_screen then
-    notify_and_error("Expected a space screen, got nil.")
+    notify_and_panic("Expected a space screen, got nil.")
   end
   return space_screen
 end
@@ -52,13 +52,13 @@ end
 local function get_alacritty_window(alacritty)
   local alacritty_window = alacritty:mainWindow()
   if not alacritty_window then
-    notify_and_error("Expected an Alacritty window, got nil.")
+    notify_and_panic("Expected an Alacritty window, got nil.")
   end
   if not alacritty_window:isStandard() then
-    notify_and_error("Expected a standard alacritty window, got non-standard.")
+    notify_and_panic("Expected a standard alacritty window, got non-standard.")
   end
   if alacritty_window:isFullScreen() then
-    notify_and_error("Expected a non-full-screen alacritty window, got full-screen.")
+    notify_and_panic("Expected a non-full-screen alacritty window, got full-screen.")
   end
   return alacritty_window
 end
@@ -123,7 +123,7 @@ end
 local function open_alacritty()
   local alacritty = hs.application.open("org.alacritty", 1, true)
   if not alacritty then
-    notify_and_error("Expected an Alacritty instance, got nil.")
+    notify_and_panic("Expected an Alacritty instance, got nil.")
   end
   return alacritty
 end
