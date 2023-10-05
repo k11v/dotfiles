@@ -82,7 +82,7 @@ local function show_alacritty(alacritty, relative_height)
   local alacritty_window = get_alacritty_window(alacritty)
   local active_space = get_active_space()
 
-  local window_frame = alacritty_window:frame()
+  local alacritty_window_frame = alacritty_window:frame()
   local active_screen_frame = get_space_screen(active_space):frame()
 
   local absolute_height
@@ -90,7 +90,7 @@ local function show_alacritty(alacritty, relative_height)
     absolute_height = (
       is_alacritty_window_full_screen(alacritty_window)
       and active_screen_frame.h
-      or math.min(window_frame.h, active_screen_frame.h)
+      or math.min(alacritty_window_frame.h, active_screen_frame.h)
     )
   else
     absolute_height = (
