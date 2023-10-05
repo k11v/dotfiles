@@ -16,7 +16,7 @@ font:
     y: 5
 
 import:
-  - ~/.config/alacritty/themes/tomorrow-night.yml
+  - ~/.config/alacritty/themes/tomorrow_night.yaml
 
 shell:
   program: /usr/local/bin/tmux
