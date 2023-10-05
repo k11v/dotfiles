@@ -70,6 +70,12 @@ local function is_alacritty_window_full_screen(alacritty_window)
 end
 
 ---@param alacritty hs.application
+---@return boolean
+local function is_alacritty_full_screen(alacritty)
+  return is_alacritty_window_full_screen(get_alacritty_window(alacritty))
+end
+
+---@param alacritty hs.application
 ---@return nil
 local function hide_alacritty(alacritty)
   alacritty:hide()
@@ -122,6 +128,20 @@ local function toggle_alacritty(alacritty)
   end
 end
 
+---@param alacritty hs.application
+---@return nil
+local function show_alacritty_and_toggle_size(alacritty)
+  if is_alacritty_active_app(alacritty) then
+    if is_alacritty_full_screen(alacritty) then
+      show_alacritty(alacritty, 0.5)
+    else
+      show_alacritty(alacritty, 1)
+    end
+  else
+    show_alacritty(alacritty)
+  end
+end
+
 ---@return hs.application
 local function open_alacritty()
   local alacritty = hs.application.open("org.alacritty", 1, true)
@@ -143,7 +163,7 @@ end)
 hs.hotkey.bind({"shift", "alt"}, "`", function()
   local alacritty = get_alacritty()
   if alacritty then
-    show_alacritty(alacritty, 1)
+    show_alacritty_and_toggle_size(alacritty)
   else
     show_alacritty(open_alacritty(), 1)
   end
