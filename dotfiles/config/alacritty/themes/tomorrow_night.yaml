@@ -1,5 +1,6 @@
 # We don't override other colors in this theme file because
 # Tomorrow Night is Alacritty's default theme.
+
 colors:
   bright:
     black: "#24282D"
