@@ -55,10 +55,10 @@ local function get_alacritty_window(alacritty)
     notify_and_panic("Expected an Alacritty window, got nil.")
   end
   if not alacritty_window:isStandard() then
-    notify_and_panic("Expected a standard alacritty window, got non-standard.")
+    notify_and_panic("Expected a standard Alacritty window, got non-standard.")
   end
   if alacritty_window:isFullScreen() then
-    notify_and_panic("Expected a non-full-screen alacritty window, got full-screen.")
+    notify_and_panic("Expected a non-full-screen Alacritty window, got full-screen.")
   end
   return alacritty_window
 end
