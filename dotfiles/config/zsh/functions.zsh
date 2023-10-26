@@ -118,6 +118,11 @@ dotenv() {
     done
 }
 
+# Generate a v4 UUID
+uuid4() {
+    python3 -c "import uuid; print(uuid.uuid4())"
+}
+
 # Activate current directory's Python venv
 venv() {
     local venv
