@@ -1,7 +1,7 @@
 {    
     // Theme
-    "color_scheme": "Mariana.sublime-color-scheme",
-    "theme": "Adaptive.sublime-theme",
+    "color_scheme": "auto",
+    "theme": "auto",
 
     // JetBrains Mono with recommended settings
     "font_face": "JetBrains Mono",
@@ -29,4 +29,8 @@
     // Russian-English spell checking
     "spell_check": false,
     "dictionary": "Packages/Language - Russian-English/ru_RU-en_US.dic",
+    "dark_theme": "Adaptive.sublime-theme",
+    "light_theme": "Adaptive.sublime-theme",
+    "dark_color_scheme": "Mariana.sublime-color-scheme",
+    "light_color_scheme": "Breakers.sublime-color-scheme",
 }
