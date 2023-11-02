@@ -271,3 +271,8 @@ bcat() {
     sleep 0.2
     rm -rf -- "$tempdir"
 }
+
+# Display the current date in UTC and ISO 8601 format
+unidate() {
+    date -u "+%Y-%m-%dT%H:%M:%SZ"
+}
