@@ -126,13 +126,12 @@ uuid4() {
 # Activate current directory's Python venv
 venv() {
     local venv
-    if [[ -z "$1" ]]; then
-        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
-    elif [[ "$1" == "venv" ]]; then
+    if [[ -e "$PWD/venv" ]]; then
         venv="$PWD/venv"
+    elif [[ -e "$PWD/.venv" ]]; then
+        venv="$PWD/.venv"
     else
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Argument 1 can only be 'venv' if provided."
-        return 1
+        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
     fi
 
     if [[ ! -e "$venv" ]]; then
@@ -149,11 +148,8 @@ mkvenv() {
     local venv
     if [[ -z "$2" ]]; then
         venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
-    elif [[ "$2" == "venv" ]]; then
-        venv="$PWD/venv"
     else
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Argument 2 can only be 'venv' if provided."
-        return 1
+        venv="$PWD/$2"
     fi
 
     if [[ -z "$version" ]]; then
@@ -184,13 +180,12 @@ mkvenv() {
 # Delete current directory's Python venv
 rmvenv() {
     local venv
-    if [[ -z "$1" ]]; then
-        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
-    elif [[ "$1" == "venv" ]]; then
+    if [[ -e "$PWD/venv" ]]; then
         venv="$PWD/venv"
+    elif [[ -e "$PWD/.venv" ]]; then
+        venv="$PWD/.venv"
     else
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Argument 1 can only be 'venv' if provided."
-        return 1
+        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
     fi
 
     if [[ ! -e "$venv" ]]; then
