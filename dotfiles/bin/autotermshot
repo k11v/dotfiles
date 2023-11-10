@@ -7,6 +7,7 @@ target_pane=""
 remove_trailing_spaces_after_pane_capture=1
 remove_trailing_newlines_after_pane_capture=1
 remove_trailing_newline_before_shot_capture=1
+skip_edit=0
 
 output_file=
 
@@ -35,8 +36,12 @@ load_args() {
                 target_pane="$2"
                 shift 2
                 ;;
+            --skip-edit)
+                skip_edit=1
+                shift
+                ;;
             --remove-trailing-spaces-after-pane-capture)
-                remove_trailing_spaces_after_pane_capture=0
+                remove_trailing_spaces_after_pane_capture=1
                 shift
                 ;;
             --no-remove-trailing-newlines-after-pane-capture)
@@ -178,7 +183,11 @@ execute_edit_plan() {
             exit 2
         fi
 
-        mkdir -p "$(dirname "$pane_file")" && cat "$raw_pane_file" | vipe > "$pane_file"
+        if [[ "$skip_edit" -eq 1 ]]; then
+            mkdir -p "$(dirname "$pane_file")" && cat "$raw_pane_file" > "$pane_file"
+        else
+            mkdir -p "$(dirname "$pane_file")" && cat "$raw_pane_file" | vipe > "$pane_file"
+        fi
 
         if [[ "$?" -ne 0 ]]; then
             echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane edit failed."
