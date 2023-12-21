@@ -10,6 +10,7 @@ Brewfile.lock.json
 !.zshrc
 !.zshenv
 !.hammerspoon/
+!.inputrc
 
 # Keep git files
 !.gitignore
