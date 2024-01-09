@@ -271,3 +271,18 @@ bcat() {
 now() {
     date -u "+%Y-%m-%dT%H:%M:%SZ"
 }
+
+# Get website's title
+titleof() {
+    curl -sSL -o - -- "$1" | perl -l -0777 -n -e 'print $1 if /<title.*?>\s*(.*?)\s*<\/title/si'
+}
+
+# Activate shared Python venv
+shvenv() {
+    source "${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/shared/bin/activate"
+}
+
+# https://stackoverflow.com/questions/4438306/how-to-remove-trailing-whitespaces-with-sed
+anyfmt() {
+    /usr/local/opt/gnu-sed/libexec/gnubin/sed -i 's/[ \t]*$//' "$1"
+}
