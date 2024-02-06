@@ -13,6 +13,9 @@ size = 13.0
 offset.y = 10
 glyph_offset.y = 5
 
+[colors]
+transparent_background_colors = true
+
 [shell]
 program = "/usr/local/bin/tmux"
 args = [
