@@ -1,0 +1,5 @@
+#compdef note
+#
+# Usage: note <note>
+
+_files -/ -W "$NOTES"

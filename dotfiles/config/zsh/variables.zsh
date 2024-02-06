@@ -70,6 +70,7 @@ export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
 
 export REPOSITORIES="$HOME/Repositories"
 export WORKSPACES="$HOME/Workspaces"
+export NOTES="$HOME/Cloud/notes"
 export DOTFILES_ENVIRONMENT_LOADED=1
 
 # Homebrew

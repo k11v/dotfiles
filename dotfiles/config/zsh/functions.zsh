@@ -211,6 +211,11 @@ space() {
     cd "$WORKSPACES/$1"
 }
 
+# Quickly jump into a note
+note() {
+    cd "$NOTES/$1"
+}
+
 git-log-with-dates() {
     # See:
     # - https://devhints.io/git-log-format
