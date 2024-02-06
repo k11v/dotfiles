@@ -1,3 +1,6 @@
+vim.g.mapleader = " " -- Set global leader to space. Should be set before key bindings in order to take effect
+vim.g.maplocalleader = " " -- Set local leader to space. Should be set before key bindings in order to take effect
+
 vim.opt.expandtab = true -- Use the appropriate number of spaces to insert a <Tab>
 vim.opt.tabstop = 2 -- Number of spaces that a <Tab> in the file counts for
 vim.opt.softtabstop = 2 -- Number of spaces that a <Tab> counts for while performing editing operations, like inserting a <Tab> or using <BS>
