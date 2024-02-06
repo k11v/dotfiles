@@ -9,6 +9,7 @@ vim.opt.shiftwidth = 2 -- Number of spaces to use for each step of (auto)indent
 vim.opt.number = true -- Print the line number in front of each line
 vim.opt.relativenumber = true -- Show the line number relative to the line with the cursor in front of each line
 vim.opt.cursorline = true -- Highlight the text line of the cursor
+vim.opt.cursorlineopt = "number" -- Make 'cursorline' highlight only the line number of the cursor
 
 vim.opt.listchars = { tab = "→ ", space = "·" } -- Strings to use for non-printable characters when they are shown using ':set list'
 
