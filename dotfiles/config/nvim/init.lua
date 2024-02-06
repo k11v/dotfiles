@@ -10,8 +10,7 @@ vim.opt.number = true -- Print the line number in front of each line
 vim.opt.relativenumber = true -- Show the line number relative to the line with the cursor in front of each line
 vim.opt.cursorline = true -- Highlight the text line of the cursor
 
-vim.opt.list = true -- Show non-printable characters. Recommended by Vim Galore
-vim.opt.listchars = { tab = "→ ", space = "·" } -- Strings to use for non-printable characters
+vim.opt.listchars = { tab = "→ ", space = "·" } -- Strings to use for non-printable characters when they are shown using ':set list'
 
 vim.opt.report = 0 -- Threshold for reporting number of lines changed. Recommended by Vim Galore
 
