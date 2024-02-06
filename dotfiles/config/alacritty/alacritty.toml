@@ -1,3 +1,5 @@
+import = ["~/.local/share/nvim/site/pack/dotfiles/opt/tokyonight.nvim/extras/alacritty/tokyonight_night.toml"]
+
 [window]
 padding.x = 10
 padding.y = 10
