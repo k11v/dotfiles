@@ -57,7 +57,7 @@ require("lazy").setup({
 		end,
 		init = function()
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = {}, -- TODO: Add parsers via modules (e.g. the Python module should add "python")
+				ensure_installed = { "c", "lua", "query", "vim", "vimdoc" }, -- Replace Neovim's built-in parsers with nvim-treesitter's own compatible parsers -- TODO: Add other parsers via modules (e.g. the Python module should add "python", the Markdown module should add "markdown", "markdown_inline", "html", etc.)
 				auto_install = true,
 				highlight = { enable = true },
 			})
