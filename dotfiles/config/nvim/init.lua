@@ -68,7 +68,12 @@ require("lazy").setup({
 		lazy = false,
 		dependencies = { "https://github.com/nvim-tree/nvim-web-devicons" },
 		init = function()
-			require("lualine").setup()
+			require("lualine").setup({
+				options = {
+					component_separators = { left = "│", right = "│" },
+					section_separators = { left = "", right = "" },
+				},
+			})
 		end,
 	},
 })
