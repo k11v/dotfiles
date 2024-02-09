@@ -100,4 +100,12 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		url = "https://github.com/echasnovski/mini.nvim",
+		lazy = false,
+		init = function()
+			require("mini.pairs").setup()
+			require("mini.surround").setup()
+		end,
+	},
 })
