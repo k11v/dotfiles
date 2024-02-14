@@ -85,4 +85,4 @@ export MANPATH="/usr/local/opt/mysql-client/share/man:$MANPATH"
 
 # openjdk. Not symlinked by default. Provides `java`, etc.
 export PATH="/usr/local/opt/openjdk/bin:$PATH"
-export PATH="/usr/local/opt/openjdk/share/man:$PATH"
+export MANPATH="/usr/local/opt/openjdk/share/man:$MANPATH"
