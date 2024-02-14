@@ -66,6 +66,11 @@ export BAT_THEME="TwoDark"
 
 export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
 
+# Skim
+
+# https://github.com/folke/tokyonight.nvim/blob/main/extras/fzf/tokyonight_night.zsh
+export SKIM_DEFAULT_OPTIONS="--color=fg:#c0caf5,bg:#1a1b26,hl:#ff9e64,fg+:#c0caf5,bg+:#292e42,hl+:#ff9e64,info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff,marker:#9ece6a,spinner:#9ece6a,header:#9ece6a"
+
 # My utils
 
 export REPOSITORIES="$HOME/Repositories"
