@@ -60,7 +60,7 @@ export PATH="$GOPATH/bin:$PATH"
 # Bat
 
 export BAT_PAGER=""
-export BAT_THEME="TwoDark"
+export BAT_THEME="tokyonight_night"
 
 # Tealdeer
 
