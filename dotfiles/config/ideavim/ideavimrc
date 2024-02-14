@@ -1,3 +1,5 @@
-# Yank to system clipboard.
-# set clipboard+=unnamed
 set relativenumber
+nnoremap <silent> gy "+y
+vnoremap <silent> gy "+y
+nnoremap <silent> gp "+p
+vnoremap <silent> gp "+p
