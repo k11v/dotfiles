@@ -22,8 +22,8 @@ vim.opt.langmap = {
 
 vim.opt.shellcmdflag = "-i " .. vim.opt.shellcmdflag:get() -- Use interactive shell for :!
 
-vim.keymap.set({ "n", "v" }, "gy", '"+y')
-vim.keymap.set({ "n", "v" }, "gp", '"+p')
+vim.keymap.set({ "n", "v" }, "gy", '"+y', { silent = true })
+vim.keymap.set({ "n", "v" }, "gp", '"+p', { silent = true })
 
 --
 -- Plugins
@@ -136,6 +136,10 @@ require("lazy").setup({
 					},
 				},
 			})
+
+      vim.keymap.set({ "n" }, "<leader>b", function() require("fzf-lua").buffers() end, { silent = true })
+      vim.keymap.set({ "n" }, "<leader>f", function() require("fzf-lua").files() end, { silent = true })
+      vim.keymap.set({ "n" }, "<leader>h", function() require("fzf-lua").oldfiles() end, { silent = true })
 		end,
 	},
 })
