@@ -111,4 +111,31 @@ require("lazy").setup({
 			require("mini.surround").setup()
 		end,
 	},
+	{
+		url = "https://github.com/ibhagwan/fzf-lua",
+		lazy = false,
+		dependencies = { "https://github.com/nvim-tree/nvim-web-devicons" },
+		init = function()
+			require("fzf-lua").setup({
+				fzf_bin = "sk",
+				winopts = {
+					border = "single",
+					preview = {
+						title = false,
+						scrollbar = false,
+						delay = 10,
+					},
+				},
+				previewers = {
+					builtin = {
+						extensions = {
+							["jpg"] = { "chafa", "--symbols=solid" },
+							["png"] = { "chafa", "--symbols=solid" },
+							["svg"] = { "chafa", "--symbols=solid" },
+						},
+					},
+				},
+			})
+		end,
+	},
 })
