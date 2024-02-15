@@ -132,6 +132,7 @@ require("lazy").setup({
       vim.keymap.set({ "n" }, "<leader>b", function() require("fzf-lua").buffers() end, { silent = true })
       vim.keymap.set({ "n" }, "<leader>f", function() require("fzf-lua").files() end, { silent = true })
       vim.keymap.set({ "n" }, "<leader>h", function() require("fzf-lua").oldfiles() end, { silent = true })
+      vim.keymap.set({ "n" }, "<leader>g", function() require("fzf-lua").live_grep() end, { silent = true })
 		end,
 	},
 })
