@@ -22,8 +22,12 @@ vim.opt.langmap = {
 
 vim.opt.shellcmdflag = "-i " .. vim.opt.shellcmdflag:get() -- Use interactive shell for :!
 
-vim.keymap.set({ "n", "v" }, "gy", '"+y', { silent = true })
-vim.keymap.set({ "n", "v" }, "gp", '"+p', { silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>P", '"+P', { silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>d", '"+d', { silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>D", '"+D', { silent = true })
 
 --
 -- Plugins
