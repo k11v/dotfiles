@@ -15,7 +15,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Zsh
 
-export FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
+FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
 PROMPT_EOL_MARK=""
 PS2="%B…%b "
 HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
