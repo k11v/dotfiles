@@ -52,7 +52,7 @@ require("lazy").setup({
 		url = "https://github.com/folke/tokyonight.nvim",
 		lazy = false,
 		priority = math.huge,
-		init = function()
+		config = function()
 			vim.cmd.colorscheme("tokyonight-night")
 		end,
 	},
@@ -62,7 +62,7 @@ require("lazy").setup({
 		build = function()
 			vim.cmd.TSUpdate()
 		end,
-		init = function()
+		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = { "c", "lua", "query", "vim", "vimdoc" }, -- Replace Neovim's built-in parsers with nvim-treesitter's own compatible parsers -- TODO: Add other parsers via modules (e.g. the Python module should add "python", the Markdown module should add "markdown", "markdown_inline", "html", etc.)
 				auto_install = true,
@@ -74,7 +74,7 @@ require("lazy").setup({
 		url = "https://github.com/nvim-lualine/lualine.nvim",
 		lazy = false,
 		dependencies = { "https://github.com/nvim-tree/nvim-web-devicons" },
-		init = function()
+		config = function()
 			require("lualine").setup({
 				options = {
 					component_separators = { left = "│", right = "│" },
@@ -102,7 +102,7 @@ require("lazy").setup({
 	{
 		url = "https://github.com/echasnovski/mini.nvim",
 		lazy = false,
-		init = function()
+		config = function()
 			require("mini.pairs").setup()
 			require("mini.surround").setup()
 		end,
@@ -111,7 +111,7 @@ require("lazy").setup({
 		url = "https://github.com/ibhagwan/fzf-lua",
 		lazy = false,
 		dependencies = { "https://github.com/nvim-tree/nvim-web-devicons" },
-		init = function()
+		config = function()
 			require("fzf-lua").setup({
 				fzf_bin = "sk",
 				winopts = {
