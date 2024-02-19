@@ -1,9 +1,15 @@
+
+set number
 set relativenumber
 
-nnoremap <silent> gy "+y
-vnoremap <silent> gy "+y
-nnoremap <silent> gp "+p
-vnoremap <silent> gp "+p
+let mapleader = " "
+let maplocalleader = " "
+noremap <leader>y "+y
+noremap <leader>Y "+Y
+noremap <leader>p "+p
+noremap <leader>P "+P
+noremap <leader>d "+d
+noremap <leader>D "+D
 
 map й q
 map ц w
