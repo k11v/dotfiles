@@ -22,6 +22,8 @@ vim.opt.langmap = {
 
 vim.opt.shellcmdflag = "-i " .. vim.opt.shellcmdflag:get() -- Use interactive shell for :!
 
+vim.opt.timeout = false -- Disable mapped key sequence timeout
+
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { silent = true })
