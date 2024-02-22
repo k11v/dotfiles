@@ -149,7 +149,7 @@ require("lazy").setup({
 		end,
 	},
   {
-    "https://github.com/L3MON4D3/LuaSnip",
+    url = "https://github.com/L3MON4D3/LuaSnip",
     version = "v2.*",
     lazy = false,
     build = function()
