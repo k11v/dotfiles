@@ -203,4 +203,88 @@ require("lazy").setup({
 			end, { silent = true })
 		end,
 	},
+	{
+		url = "https://github.com/hrsh7th/nvim-cmp",
+		lazy = false,
+		config = function()
+			require("cmp").setup({
+				snippet = {
+					expand = function(args)
+						require("luasnip").lsp_expand(args.body)
+					end,
+				},
+				sources = {},
+			})
+
+			vim.keymap.set({ "i" }, "<C-Space>", function()
+				if not require("cmp").visible() then
+					require("cmp").complete()
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<C-n>", function()
+				if require("cmp").visible() then
+					require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })
+				else
+					require("cmp").complete()
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<C-p>", function()
+				if require("cmp").visible() then
+					require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })
+				else
+					require("cmp").complete()
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<C-b>", function()
+				if require("cmp").visible() then
+					require("cmp").scroll_docs(-4)
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<C-f>", function()
+				if require("cmp").visible() then
+					require("cmp").scroll_docs(4)
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<C-y>", function()
+				if require("cmp").visible() then
+					require("cmp").confirm({ select = false })
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<C-e>", function()
+				if require("cmp").visible() then
+					require("cmp").abort()
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<Down>", function()
+				if require("cmp").visible() then
+					require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Select })
+				else
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Down>", true, true, true), "in", false)
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<Up>", function()
+				if require("cmp").visible() then
+					require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Select })
+				else
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Up>", true, true, true), "in", false)
+				end
+			end, { silent = true })
+
+			vim.keymap.set({ "i" }, "<CR>", function()
+				if require("cmp").visible() then
+					require("cmp").confirm({ select = true })
+				else
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "in", false)
+				end
+			end, { silent = true })
+		end,
+	},
 })
