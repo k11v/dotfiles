@@ -24,6 +24,8 @@ vim.opt.shellcmdflag = "-i " .. vim.opt.shellcmdflag:get() -- Use interactive sh
 
 vim.opt.timeout = false -- Disable mapped key sequence timeout
 
+vim.opt.signcolumn = "yes" -- Always show the sign column (used by LSP to show diagnostics)
+
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { silent = true })
