@@ -261,30 +261,6 @@ require("lazy").setup({
 					require("cmp").abort()
 				end
 			end, { silent = true })
-
-			vim.keymap.set({ "i" }, "<Down>", function()
-				if require("cmp").visible() then
-					require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Select })
-				else
-					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Down>", true, true, true), "in", false)
-				end
-			end, { silent = true })
-
-			vim.keymap.set({ "i" }, "<Up>", function()
-				if require("cmp").visible() then
-					require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Select })
-				else
-					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Up>", true, true, true), "in", false)
-				end
-			end, { silent = true })
-
-			vim.keymap.set({ "i" }, "<CR>", function()
-				if require("cmp").visible() then
-					require("cmp").confirm({ select = true })
-				else
-					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "in", false)
-				end
-			end, { silent = true })
 		end,
 	},
 })
