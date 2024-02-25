@@ -240,6 +240,18 @@ require("lazy").setup({
       })
 		end,
 	},
+  {
+    url = "https://github.com/zbirenbaum/copilot.lua",
+    lazy = true,
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { auto_trigger = true, keymap = { accept = "<M-y>", dismiss = "<M-e>" } },
+        filetypes = { ["*"] = true },
+      })
+    end,
+  },
 	{
 		url = "https://github.com/hrsh7th/nvim-cmp",
 		lazy = false,
