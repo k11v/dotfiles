@@ -204,6 +204,19 @@ require("lazy").setup({
 		end,
 	},
 	{
+		url = "https://github.com/hrsh7th/cmp-nvim-lsp",
+		lazy = false,
+	},
+	{
+		url = "https://github.com/neovim/nvim-lspconfig",
+		lazy = false,
+		dependencies = { "https://github.com/hrsh7th/cmp-nvim-lsp" },
+		config = function()
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			require("lspconfig").pyright.setup({ capabilities = capabilities })
+		end,
+	},
+	{
 		url = "https://github.com/hrsh7th/nvim-cmp",
 		lazy = false,
 		config = function()
@@ -213,7 +226,9 @@ require("lazy").setup({
 						require("luasnip").lsp_expand(args.body)
 					end,
 				},
-				sources = {},
+				sources = {
+					{ name = "nvim_lsp" },
+				},
 			})
 
 			vim.keymap.set({ "i" }, "<C-Space>", function()
