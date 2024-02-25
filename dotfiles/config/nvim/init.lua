@@ -215,7 +215,29 @@ require("lazy").setup({
 		dependencies = { "https://github.com/hrsh7th/cmp-nvim-lsp" },
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 			require("lspconfig").pyright.setup({ capabilities = capabilities })
+
+      vim.keymap.set({ 'n' }, '<leader>e', vim.diagnostic.open_float)
+      vim.keymap.set({ 'n' }, '[d', vim.diagnostic.goto_prev)
+      vim.keymap.set({ 'n' }, ']d', vim.diagnostic.goto_next)
+      vim.keymap.set({ 'n' }, '<leader>q', vim.diagnostic.setloclist)
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(event)
+          vim.keymap.set({ 'n' }, 'K', vim.lsp.buf.hover, { buffer = event.buf })
+          vim.keymap.set({ 'n' }, '<C-k>', vim.lsp.buf.signature_help, { buffer = event.buf })
+          vim.keymap.set({ 'n' }, 'gd', vim.lsp.buf.definition, { buffer = event.buf })
+          vim.keymap.set({ 'n' }, 'gD', vim.lsp.buf.declaration, { buffer = event.buf })
+          vim.keymap.set({ 'n' }, 'gi', vim.lsp.buf.implementation, { buffer = event.buf })
+          vim.keymap.set({ 'n' }, 'gr', vim.lsp.buf.references, { buffer = event.buf })
+          vim.keymap.set({ 'n' }, 'gt', vim.lsp.buf.type_definition, { buffer = event.buf })
+          vim.keymap.set({ 'n', 'v' }, '<leader>ar', vim.lsp.buf.rename, { buffer = event.buf })
+          vim.keymap.set({ 'n', 'v' }, '<leader>af', vim.lsp.buf.format, { buffer = event.buf })
+          vim.keymap.set({ 'n', 'v' }, '<leader>al', vim.lsp.buf.code_action, { buffer = event.buf })
+        end,
+      })
 		end,
 	},
 	{
