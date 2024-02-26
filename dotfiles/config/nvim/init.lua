@@ -280,6 +280,13 @@ require("lazy").setup({
 			require("copilot.client").setup()
 		end,
 	},
+  {
+    url = "https://github.com/numToStr/Comment.nvim",
+    lazy = false,
+    config = function()
+      require("Comment").setup() -- Provides `gc`* and `gb`* mappings
+    end,
+  },
 	{
 		url = "https://github.com/hrsh7th/nvim-cmp",
 		lazy = false,
