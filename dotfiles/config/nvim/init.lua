@@ -219,7 +219,11 @@ require("lazy").setup({
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			require("lspconfig").pyright.setup({ capabilities = capabilities })
+			require("lspconfig").pyright.setup({ capabilities = capabilities }) -- TODO: npm install -g pyright
+			require("lspconfig").volar.setup({ -- TODO: npm install -g @volar/vue-language-server
+				capabilities = capabilities,
+				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
+			})
 
 			vim.keymap.set({ "n" }, "<leader>e", vim.diagnostic.open_float)
 			vim.keymap.set({ "n" }, "[d", vim.diagnostic.goto_prev)
