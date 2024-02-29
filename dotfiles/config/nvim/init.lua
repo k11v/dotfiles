@@ -356,4 +356,43 @@ require("lazy").setup({
 			end, { silent = true })
 		end,
 	},
+	{
+		url = "https://github.com/nvim-lua/plenary.nvim",
+	},
+	{
+		url = "https://github.com/nvimtools/none-ls.nvim",
+		lazy = false,
+		dependencies = { "https://github.com/nvim-lua/plenary.nvim" },
+		config = function()
+			require("null-ls").setup({
+				sources = {
+					{
+						name = "ruff format",
+						filetypes = { "python" },
+						method = require("null-ls").methods.FORMATTING,
+						generator = require("null-ls.helpers").formatter_factory({
+							command = "ruff",
+							args = { "format", "--no-cache", "--stdin-filename", "$FILENAME", "-" },
+							to_stdin = true,
+						}),
+						condition = function(utils)
+							return vim.fn.executable("ruff") == 1
+						end,
+					},
+				},
+				on_attach = function(client, bufnr)
+					-- TODO: Review
+					if client.supports_method("textDocument/formatting") then
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							group = vim.api.nvim_create_augroup("UserLspFormatting", {}),
+							buffer = bufnr,
+							callback = function()
+								vim.lsp.buf.format({ bufnr = bufnr })
+							end,
+						})
+					end
+				end,
+			})
+		end,
+	},
 })
