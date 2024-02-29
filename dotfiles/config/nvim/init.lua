@@ -272,7 +272,7 @@ require("lazy").setup({
 			require("copilot.highlight").setup()
 
 			vim.api.nvim_create_autocmd({ "LspAttach" }, {
-				group = vim.api.nvim_create_augroup("user_copilot", {}),
+				group = vim.api.nvim_create_augroup("UserCopilot", {}),
 				callback = function(event)
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client and client.name == "copilot" then
@@ -287,13 +287,13 @@ require("lazy").setup({
 			require("copilot.client").setup()
 		end,
 	},
-  {
-    url = "https://github.com/numToStr/Comment.nvim",
-    lazy = false,
-    config = function()
-      require("Comment").setup() -- Provides `gc`* and `gb`* mappings
-    end,
-  },
+	{
+		url = "https://github.com/numToStr/Comment.nvim",
+		lazy = false,
+		config = function()
+			require("Comment").setup() -- Provides `gc`* and `gb`* mappings
+		end,
+	},
 	{
 		url = "https://github.com/hrsh7th/nvim-cmp",
 		lazy = false,
