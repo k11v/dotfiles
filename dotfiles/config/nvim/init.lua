@@ -379,6 +379,8 @@ require("lazy").setup({
 							return vim.fn.executable("ruff") == 1
 						end,
 					},
+					require("null-ls").builtins.formatting.prettierd, -- npm install -g @fsouza/prettierd
+					require("null-ls").builtins.formatting.stylua, -- brew install stylua
 				},
 				on_attach = function(client, bufnr)
 					-- TODO: Review
