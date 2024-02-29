@@ -75,6 +75,9 @@ require("lazy").setup({
 		end,
 	},
 	{
+		url = "https://github.com/nvim-tree/nvim-web-devicons",
+	},
+	{
 		url = "https://github.com/nvim-lualine/lualine.nvim",
 		lazy = false,
 		dependencies = { "https://github.com/nvim-tree/nvim-web-devicons" },
