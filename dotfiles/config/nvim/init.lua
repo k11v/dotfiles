@@ -222,7 +222,11 @@ require("lazy").setup({
 			require("lspconfig").pyright.setup({ capabilities = capabilities }) -- TODO: npm install -g pyright
 			require("lspconfig").volar.setup({ -- TODO: npm install -g @volar/vue-language-server
 				capabilities = capabilities,
-				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
+				filetypes = { "javascript", "json", "typescript", "vue" },
+			})
+			require("lspconfig").tailwindcss.setup({ -- TODO: npm install -g @tailwindcss/language-server
+				capabilities = capabilities,
+				filetypes = { "css", "html", "javascript", "typescript", "vue" },
 			})
 
 			vim.keymap.set({ "n" }, "<leader>e", vim.diagnostic.open_float)
