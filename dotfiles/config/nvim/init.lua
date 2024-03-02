@@ -185,16 +185,16 @@ require("lazy").setup({
 				},
 			})
 
-			vim.keymap.set({ "n" }, "<leader>fb", function()
+			vim.keymap.set({ "n" }, "<leader>sb", function()
 				require("fzf-lua").buffers()
 			end, { silent = true })
-			vim.keymap.set({ "n" }, "<leader>ff", function()
+			vim.keymap.set({ "n" }, "<leader>sf", function()
 				require("fzf-lua").files()
 			end, { silent = true })
-			vim.keymap.set({ "n" }, "<leader>fh", function()
+			vim.keymap.set({ "n" }, "<leader>sh", function()
 				require("fzf-lua").oldfiles()
 			end, { silent = true })
-			vim.keymap.set({ "n" }, "<leader>fg", function()
+			vim.keymap.set({ "n" }, "<leader>sg", function()
 				require("fzf-lua").live_grep_native()
 			end, { silent = true })
 		end,
