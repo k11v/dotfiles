@@ -15,6 +15,52 @@ vim.opt.listchars = { tab = "→ ", space = "·" } -- Strings to use for non-pri
 
 vim.opt.report = 0 -- Threshold for reporting number of lines changed. Recommended by Vim Galore
 
+-- Don't show the mode, since it's already in status line
+vim.opt.showmode = false
+
+-- Make wrapped lines start at the same indentation as the line they're wrapping
+vim.opt.breakindent = true
+
+-- Case-insensitive searching UNLESS \C or capital in search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+-- Save undo history
+-- vim.opt.undofile = true
+
+-- Decrease the time for the cursor to be considered idle
+vim.opt.updatetime = 250
+
+-- Make splits open to the right and bottom
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+
+-- Enable the substitution preview
+vim.opt.inccommand = "split"
+
+-- Minimal number of screen lines to keep above and below the cursor
+vim.opt.scrolloff = 10
+
+-- Clear the search highlight when pressing escape in Normal mode
+vim.keymap.set({ "n" }, "<Esc>", function()
+	vim.cmd.nohlsearch()
+end, { silent = true })
+
+-- Disable the arrow keys in Normal mode -- TODO: Remove
+vim.keymap.set({ "n" }, "<Left>", "")
+vim.keymap.set({ "n" }, "<Right>", "")
+vim.keymap.set({ "n" }, "<Up>", "")
+vim.keymap.set({ "n" }, "<Down>", "")
+
+-- Use <C-h>, <C-j>, <C-k>, <C-l> to move between windows
+vim.keymap.set({ "n" }, "<C-h>", "<C-w><C-h>")
+vim.keymap.set({ "n" }, "<C-l>", "<C-w><C-l>")
+vim.keymap.set({ "n" }, "<C-j>", "<C-w><C-j>")
+vim.keymap.set({ "n" }, "<C-k>", "<C-w><C-k>")
+
+-- Enable the mouse mode
+vim.opt.mouse = "nvic"
+
 -- Allow switching your keyboard into a special language mode
 vim.opt.langmap = {
 	"ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯфисвуапршолдьтщзйкыегмцчня;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
