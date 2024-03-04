@@ -61,10 +61,10 @@ vim.keymap.set({ "n" }, "<C-k>", "<C-w><C-k>")
 -- Enable the mouse mode
 vim.opt.mouse = "nvic"
 
--- Allow switching your keyboard into a special language mode
-vim.opt.langmap = {
-	"ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯфисвуапршолдьтщзйкыегмцчня;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-}
+-- Enable Normal mode commands in (Russian) Universal Layout
+-- stylua: ignore
+vim.opt.langmap = { "ЙQ", "ЦW", "УE", "КR", "ЕT", "НY", "ГU", "ШI", "ЩO", "ЗP", "Б{", "Х}", "ФA", "ЫS", "ВD", "АF", "ПG", "РH", "ОJ", "ЛK", "ДL", "Ж\\", "Э|", "ЯZ", "ЧX", "СC", "МV", "ИB", "ТN", "ЬM", "Ю`", "йq", "цw", "уe", "кr", "еt", "нy", "гu", "шi", "щo", "зp", "б[", "х]", "фa", "ыs", "вd", "аf", "пg", "рh", "оj", "лk", "дl", "ж$", "э^", "яz", "чx", "сc", "мv", "иb", "тn", "ьm", "ю&" }
+vim.opt.langremap = false
 
 vim.opt.shellcmdflag = "-i " .. vim.opt.shellcmdflag:get() -- Use interactive shell for :!
 
