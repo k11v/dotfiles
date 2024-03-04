@@ -151,7 +151,7 @@ local function open_alacritty()
 	return alacritty
 end
 
-hs.hotkey.bind({ "alt" }, "`", function()
+hs.hotkey.bind({}, "f20", function()
 	local alacritty = get_alacritty()
 	if alacritty then
 		toggle_alacritty(alacritty)
@@ -160,7 +160,7 @@ hs.hotkey.bind({ "alt" }, "`", function()
 	end
 end)
 
-hs.hotkey.bind({ "shift", "alt" }, "`", function()
+hs.hotkey.bind({ "alt" }, "f20", function()
 	local alacritty = get_alacritty()
 	if alacritty then
 		show_alacritty_and_toggle_size(alacritty)
