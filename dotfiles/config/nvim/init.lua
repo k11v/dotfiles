@@ -211,6 +211,12 @@ require("lazy").setup({
 			vim.keymap.set({ "n" }, "<leader>srr", function()
 				require("fzf-lua").resume()
 			end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>srs", function()
+				require("fzf-lua").builtin({ resume = true })
+			end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>ss", function()
+				require("fzf-lua").builtin()
+			end, { silent = true })
 		end,
 	},
 	{
