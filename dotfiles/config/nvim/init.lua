@@ -26,7 +26,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Save undo history
--- vim.opt.undofile = true
+vim.opt.undofile = true
 
 -- Decrease the time for the cursor to be considered idle
 vim.opt.updatetime = 250
