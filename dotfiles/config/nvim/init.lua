@@ -187,7 +187,7 @@ require("lazy").setup({
 				},
 			})
 
-			vim.keymap.set({ "n" }, "<leader>sb", function()
+			vim.keymap.set({ "n" }, "<leader><leader>", function()
 				require("fzf-lua").buffers()
 			end, { silent = true })
 			vim.keymap.set({ "n" }, "<leader>sf", function()
