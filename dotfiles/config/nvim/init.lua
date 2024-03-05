@@ -355,7 +355,18 @@ require("lazy").setup({
 			-- - https://github.com/zbirenbaum/copilot.lua/blob/master/lua/copilot/init.lua
 			-- - https://github.com/zbirenbaum/copilot.lua/blob/master/lua/copilot/command.lua
 			require("copilot.config").setup({
-				suggestion = { auto_trigger = true, keymap = { accept = "<M-y>", dismiss = "<M-e>" } },
+				panel = {
+					enabled = false,
+				},
+				suggestion = {
+					auto_trigger = true,
+					keymap = {
+						accept = "<M-C-y>",
+						next = "<M-C-n>",
+						prev = "<M-C-p>",
+						dismiss = "<M-C-e>",
+					},
+				},
 				filetypes = { ["*"] = true },
 			})
 			require("copilot.highlight").setup()
