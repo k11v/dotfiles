@@ -62,5 +62,6 @@ bindings = [
     { key = "Y", mods = "Control|Alt", chars = "\u001b\u0019"               },  # Emit raw key            (M-C-y)
     { key = "N", mods = "Control|Alt", chars = "\u001b\u000e"               },  # Emit raw key            (M-C-n)
     { key = "P", mods = "Control|Alt", chars = "\u001b\u0010"               },  # Emit raw key            (M-C-p)
-    { key = "E", mods = "Control|Alt", chars = "\u001b\u0005"               }   # Emit raw key            (M-C-e)
+    { key = "E", mods = "Control|Alt", chars = "\u001b\u0005"               },  # Emit raw key            (M-C-e)
+    { key = "Space", mods = "Control|Alt", chars = "\u001b[32;7u"           }   # Emit raw key            (M-C-Space)
 ]

@@ -379,6 +379,11 @@ require("lazy").setup({
 						require("copilot.panel").setup()
 						require("copilot.suggestion").setup()
 						require("copilot").setup_done = true
+
+						vim.keymap.set({ "i" }, "<M-C-Space>", function()
+							require("copilot.suggestion").toggle_auto_trigger()
+						end, { silent = true })
+
 						return true -- Stop the autocmd from running again
 					end
 				end,
