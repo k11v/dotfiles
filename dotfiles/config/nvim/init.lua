@@ -498,3 +498,19 @@ require("lazy").setup({
 		end,
 	},
 })
+
+vim.opt.colorcolumn = { "80" }
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "python",
+	group = vim.api.nvim_create_augroup("UserPython", { clear = true }),
+	callback = function()
+		vim.opt_local.colorcolumn = { "88" }
+	end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "gitcommit",
+	group = vim.api.nvim_create_augroup("UserGitCommit", { clear = true }),
+	callback = function()
+		vim.opt_local.colorcolumn = { "50", "72" }
+	end,
+})
