@@ -297,6 +297,7 @@ require("lazy").setup({
 				capabilities = capabilities,
 				filetypes = { "css", "html", "javascript", "typescript", "vue" },
 			})
+			require("lspconfig").rust_analyzer.setup({ capabilities = capabilities })
 
 			vim.keymap.set({ "n" }, "<leader>e", vim.diagnostic.open_float)
 			vim.keymap.set({ "n" }, "[d", vim.diagnostic.goto_prev)
