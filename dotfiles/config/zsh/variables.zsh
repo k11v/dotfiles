@@ -66,6 +66,12 @@ export BAT_THEME="tokyonight_night"
 
 export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
 
+# Rust
+
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export PATH="$CARGO_HOME/bin:$PATH"
+
 # Skim
 
 # https://github.com/folke/tokyonight.nvim/blob/main/extras/fzf/tokyonight_night.zsh
