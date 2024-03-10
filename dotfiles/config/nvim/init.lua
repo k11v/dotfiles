@@ -297,7 +297,21 @@ require("lazy").setup({
 				capabilities = capabilities,
 				filetypes = { "css", "html", "javascript", "typescript", "vue" },
 			})
-			require("lspconfig").rust_analyzer.setup({ capabilities = capabilities })
+			require("lspconfig").rust_analyzer.setup({
+				capabilities = capabilities,
+				on_attach = function(client, bufnr)
+					-- TODO: Review
+					if client.supports_method("textDocument/formatting") then
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							group = vim.api.nvim_create_augroup("UserLspconfigFormatting", {}),
+							buffer = bufnr,
+							callback = function()
+								vim.lsp.buf.format({ bufnr = bufnr })
+							end,
+						})
+					end
+				end,
+			})
 
 			vim.keymap.set({ "n" }, "<leader>e", vim.diagnostic.open_float)
 			vim.keymap.set({ "n" }, "[d", vim.diagnostic.goto_prev)
@@ -363,7 +377,7 @@ require("lazy").setup({
 					enabled = false,
 				},
 				suggestion = {
-					auto_trigger = true,
+					auto_trigger = false,
 					keymap = {
 						accept = "<M-C-y>",
 						next = "<M-C-n>",
@@ -383,6 +397,11 @@ require("lazy").setup({
 						require("copilot.panel").setup()
 						require("copilot.suggestion").setup()
 						require("copilot").setup_done = true
+
+						if vim.bo.filetype == "rust" then
+						else
+							require("copilot.suggestion").toggle_auto_trigger()
+						end
 
 						vim.keymap.set({ "i" }, "<M-C-Space>", function()
 							require("copilot.suggestion").toggle_auto_trigger()
@@ -495,7 +514,7 @@ require("lazy").setup({
 					-- TODO: Review
 					if client.supports_method("textDocument/formatting") then
 						vim.api.nvim_create_autocmd("BufWritePre", {
-							group = vim.api.nvim_create_augroup("UserLspFormatting", {}),
+							group = vim.api.nvim_create_augroup("UserNullLSFormatting", {}),
 							buffer = bufnr,
 							callback = function()
 								vim.lsp.buf.format({ bufnr = bufnr })
@@ -511,15 +530,22 @@ require("lazy").setup({
 vim.opt.colorcolumn = { "80" }
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "python",
-	group = vim.api.nvim_create_augroup("UserPython", { clear = true }),
+	group = vim.api.nvim_create_augroup("UserFileTypePython", { clear = true }),
 	callback = function()
 		vim.opt_local.colorcolumn = { "88" }
 	end,
 })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "gitcommit",
-	group = vim.api.nvim_create_augroup("UserGitCommit", { clear = true }),
+	group = vim.api.nvim_create_augroup("UserFileTypeGitCommit", { clear = true }),
 	callback = function()
 		vim.opt_local.colorcolumn = { "50", "72" }
+	end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "rust",
+	group = vim.api.nvim_create_augroup("UserFileTypeRust", { clear = true }),
+	callback = function()
+		vim.opt_local.colorcolumn = { "100" }
 	end,
 })
