@@ -518,6 +518,44 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		url = "https://github.com/mfussenegger/nvim-dap-python",
+		lazy = false,
+		config = function()
+			require("dap-python").setup("~/.local/share/venv/venvs/debugpy/bin/python")
+			require("dap-python").test_runner = "pytest"
+
+			-- stylua: ignore start
+			vim.keymap.set({ "n" }, "<leader>adf", function() require("dap-python").test_method() end, { silent = true })
+			-- stylua: ignore end
+		end,
+	},
+	{
+		url = "https://github.com/mfussenegger/nvim-dap",
+		lazy = false,
+		config = function()
+			-- https://github.com/mfussenegger/nvim-dap/blob/fc880e82059eb21c0fa896be60146e5f17680648/doc/dap.txt#L468
+			-- https://neovim.io/doc/user/builtin.html#sign_define()
+			vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticInfo" })
+			vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticInfo" })
+			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticError" })
+			vim.fn.sign_define("DapLogPoint", { text = "L", texthl = "DiagnosticInfo" })
+			vim.fn.sign_define("DapStopped", { text = "󰁕", texthl = "DiagnosticWarn" })
+
+			-- stylua: ignore start
+			vim.keymap.set({ "n" }, "<leader>dr", function() require("dap").continue() end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>dR", function() require("dap").restart() end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>dq", function() require("dap").terminate() end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>db", function() require("dap").toggle_breakpoint() end, { silent = true })
+			-- vim.keymap.set({ "n" }, "<leader>adB", function() --[[ toggle breakpoint with condition ]] end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>de", function() require("dap").set_exception_breakpoints("default") end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>dc", function() require("dap").clear_breakpoints() end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>dj", function() require("dap").step_into() end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>dk", function() require("dap").step_out() end, { silent = true })
+			vim.keymap.set({ "n" }, "<leader>dl", function() require("dap").step_over() end, { silent = true })
+			-- stylua: ignore end
+		end,
+	},
 })
 
 vim.opt.colorcolumn = { "80" }
