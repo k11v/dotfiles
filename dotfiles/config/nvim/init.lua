@@ -72,14 +72,7 @@ vim.opt.timeout = false -- Disable mapped key sequence timeout
 
 vim.opt.signcolumn = "yes" -- Always show the sign column (used by LSP to show diagnostics)
 
-vim.keymap.set({ "n", "v" }, "<leader>c", '"+c', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>C", '"+C', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>P", '"+P', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>d", '"+d', { silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>D", '"+D', { silent = true })
+vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
 
 --
 -- Plugins
