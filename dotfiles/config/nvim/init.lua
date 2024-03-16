@@ -10,3 +10,8 @@ if not vim.loop.fs_stat(lazy_path) then
 	})
 end
 vim.opt.rtp:prepend(lazy_path)
+
+require("user.options")
+require("user.autos")
+require("user.plugins")
+require("user.mappings")
