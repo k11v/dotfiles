@@ -1,4 +1,4 @@
-require("user.plugins.utils").create_lazy_file_event()
+require("user.plugins.init_utils").create_lazy_file_event()
 
 require("lazy").setup({
 	{
@@ -9,19 +9,19 @@ require("lazy").setup({
 			vim.cmd.colorscheme("tokyonight-night")
 		end,
 	},
-	{
-		url = "https://github.com/nvim-treesitter/nvim-treesitter",
-		event = { "LazyFile" }, -- TODO: Consider `{ "BufReadPost", "BufNewFile" }` instead
-		build = function()
-			vim.cmd.TSUpdate()
-		end,
-		opts = function()
-			return require("user.plugins.configs.nvim-treesitter")
-		end,
-		config = function(_, opts)
-			require("nvim-treesitter.configs").setup(opts)
-		end,
-	},
+	-- {
+	-- 	url = "https://github.com/nvim-treesitter/nvim-treesitter",
+	-- 	event = { "LazyFile" }, -- TODO: Consider `{ "BufReadPost", "BufNewFile" }` instead
+	-- 	build = function()
+	-- 		vim.cmd.TSUpdate()
+	-- 	end,
+	-- 	opts = function()
+	-- 		return require("user.plugins.configs.nvim-treesitter")
+	-- 	end,
+	-- 	config = function(_, opts)
+	-- 		require("nvim-treesitter.configs").setup(opts)
+	-- 	end,
+	-- },
 	{
 		url = "https://github.com/nvim-tree/nvim-web-devicons",
 	},
