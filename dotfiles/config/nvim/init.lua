@@ -12,6 +12,6 @@ end
 vim.opt.rtp:prepend(lazy_path)
 
 require("user.options")
-require("user.autos")
+require("user.automatics")
 require("user.plugins")
 require("user.mappings")
