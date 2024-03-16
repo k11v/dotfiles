@@ -1,4 +1,4 @@
-import = ["~/.local/share/nvim/lazy/tokyonight.nvim/extras/alacritty/tokyonight_night.toml"]
+import = ["~/Repositories/tokyonight.nvim/extras/alacritty/tokyonight_night.toml"]
 
 [window]
 padding.x = 10
