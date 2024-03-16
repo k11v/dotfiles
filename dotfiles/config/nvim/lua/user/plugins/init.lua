@@ -1,3 +1,5 @@
+require("user.plugins.utils").create_lazy_file_event()
+
 require("lazy").setup({
 	{
 		url = "https://github.com/folke/tokyonight.nvim",
@@ -9,7 +11,7 @@ require("lazy").setup({
 	},
 	{
 		url = "https://github.com/nvim-treesitter/nvim-treesitter",
-		event = { "BufReadPost", "BufNewFile" },
+		event = { "LazyFile" }, -- TODO: Consider `{ "BufReadPost", "BufNewFile" }` instead
 		build = function()
 			vim.cmd.TSUpdate()
 		end,
