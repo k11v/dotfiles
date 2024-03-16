@@ -22,4 +22,10 @@ require("lazy").setup({
 			require("nvim-treesitter.configs").setup(opts)
 		end,
 	},
+	{
+		url = "https://github.com/nvim-tree/nvim-web-devicons",
+	},
+	{
+		url = "https://github.com/nvim-lua/plenary.nvim",
+	},
 })
