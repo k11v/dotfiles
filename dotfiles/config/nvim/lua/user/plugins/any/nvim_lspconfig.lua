@@ -11,46 +11,51 @@ local config_keymaps = function()
 
 	vim.keymap.set({ "n" }, "<leader>q", vim.diagnostic.setloclist, { silent = true })
 
-	vim.keymap.set({ "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf, silent = true })
+	vim.api.nvim_create_autocmd({ "LspAttach" }, {
+		group = vim.api.nvim_create_augroup("UserAnyLspAttach", {}),
+		callback = function(event)
+			vim.keymap.set({ "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf, silent = true })
 
-	-- TODO: Try code actions with `previewer=codeaction_native`
-	vim.keymap.set({ "n" }, "<leader>aa", function()
-		require("fzf-lua").lsp_code_actions()
-	end, { buffer = event.buf, silent = true })
+			-- TODO: Try code actions with `previewer=codeaction_native`
+			vim.keymap.set({ "n" }, "<leader>aa", function()
+				require("fzf-lua").lsp_code_actions()
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "<leader>af", vim.lsp.buf.format, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "<leader>af", vim.lsp.buf.format, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "<leader>ar", vim.lsp.buf.rename, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "<leader>ar", vim.lsp.buf.rename, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gD", function()
-		require("fzf-lua").lsp_declarations({ jump_to_single_result = true })
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gD", function()
+				require("fzf-lua").lsp_declarations({ jump_to_single_result = true })
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gd", function()
-		require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gd", function()
+				require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gi", function()
-		require("fzf-lua").lsp_implementations({ jump_to_single_result = true })
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gi", function()
+				require("fzf-lua").lsp_implementations({ jump_to_single_result = true })
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gr", function()
-		require("fzf-lua").lsp_references()
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gr", function()
+				require("fzf-lua").lsp_references()
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gt", function()
-		require("fzf-lua").lsp_typedefs({ jump_to_single_result = true })
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gt", function()
+				require("fzf-lua").lsp_typedefs({ jump_to_single_result = true })
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gs", function()
-		require("fzf-lua").lsp_document_symbols()
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gs", function()
+				require("fzf-lua").lsp_document_symbols()
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "gS", function()
-		require("fzf-lua").lsp_live_workspace_symbols()
-	end, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "gS", function()
+				require("fzf-lua").lsp_live_workspace_symbols()
+			end, { buffer = event.buf, silent = true })
 
-	vim.keymap.set({ "n" }, "K", vim.lsp.buf.hover, { buffer = event.buf, silent = true })
+			vim.keymap.set({ "n" }, "K", vim.lsp.buf.hover, { buffer = event.buf, silent = true })
+		end,
+	})
 end
 
 local config = function(_, opts)
@@ -58,7 +63,7 @@ local config = function(_, opts)
 		"force",
 		{},
 		vim.lsp.protocol.make_client_capabilities(),
-		cmp_nvim_lsp.default_capabilities()
+		require("cmp_nvim_lsp").default_capabilities()
 	)
 
 	for server, server_opts in pairs(opts.x_servers) do
