@@ -28,7 +28,7 @@ end
 
 local plugin = {
 	url = "https://github.com/nvim-treesitter/nvim-treesitter",
-	event = { "LazyFile" }, -- TODO: Consider `{ "BufReadPost", "BufNewFile" }` instead
+	event = { "BufReadPost", "BufNewFile" },
 	dependencies = { "nvim-treesitter-textobjects" },
 	build = build,
 	opts = opts,

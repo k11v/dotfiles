@@ -98,7 +98,7 @@ end
 
 local plugin = {
 	url = "https://github.com/hrsh7th/nvim-cmp",
-	dependencies = { "cmp-nvim-lsp", "LuaSnip" }, -- TODO: Consider removing `LuaSnip`
+	dependencies = { "cmp-nvim-lsp", "LuaSnip" },
 	event = { "VeryLazy" }, -- TODO: Consider using `InsertEnter` instead
 	opts = opts,
 	config = config,

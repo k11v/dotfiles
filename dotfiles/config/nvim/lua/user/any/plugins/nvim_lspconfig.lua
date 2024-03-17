@@ -79,7 +79,7 @@ end
 
 local plugin = {
 	url = "https://github.com/neovim/nvim-lspconfig",
-	dependencies = { "cmp-nvim-lsp", "fzf-lua" }, -- Consider removing `fzf-lua`
+	dependencies = { "cmp-nvim-lsp" }, -- Also depends on `fzf-lua`
 	event = { "LazyFile" },
 	opts = opts,
 	config = config,
