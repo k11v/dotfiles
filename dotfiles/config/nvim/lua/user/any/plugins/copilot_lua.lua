@@ -31,7 +31,7 @@ local config = function(_, opts)
 	require("copilot.highlight").setup()
 
 	vim.api.nvim_create_autocmd({ "LspAttach" }, {
-		group = vim.api.nvim_create_augroup("user_any_copilot_lua", {}),
+		group = vim.api.nvim_create_augroup("user_any_plugins_copilot_lua", {}),
 		once = true,
 		callback = function(event)
 			local client = vim.lsp.get_client_by_id(event.data.client_id)
