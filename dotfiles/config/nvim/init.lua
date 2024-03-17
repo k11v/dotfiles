@@ -5,7 +5,7 @@ if not vim.loop.fs_stat(lazy_path) then
 		"clone",
 		"--filter=blob:none",
 		"--branch=stable",
-		"https://github.com/folke/lazy.nvim",
+		"https://github.com/folke/lazy.nvim.git",
 		lazy_path,
 	})
 end
