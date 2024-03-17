@@ -24,12 +24,16 @@ local config_keymaps = function()
 		require("fzf-lua").buffers()
 	end, { silent = true })
 
+	vim.keymap.set({ "n" }, "<leader>sF", function()
+		require("fzf-lua").files()
+	end, { silent = true })
+
 	vim.keymap.set({ "n" }, "<leader>sL", function()
 		require("fzf-lua").live_grep_native()
 	end, { silent = true })
 
 	vim.keymap.set({ "n" }, "<leader>sf", function()
-		require("fzf-lua").files()
+		require("fzf-lua").git_files()
 	end, { silent = true })
 
 	vim.keymap.set({ "n" }, "<leader>sh", function()
