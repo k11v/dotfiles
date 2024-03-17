@@ -12,7 +12,7 @@ local config_keymaps = function()
 	vim.keymap.set({ "n" }, "<leader>q", vim.diagnostic.setloclist, { silent = true })
 
 	vim.api.nvim_create_autocmd({ "LspAttach" }, {
-		group = vim.api.nvim_create_augroup("UserAnyLspAttach", {}),
+		group = vim.api.nvim_create_augroup("user_any_nvim_lspconfig", {}),
 		callback = function(event)
 			vim.keymap.set({ "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf, silent = true })
 
