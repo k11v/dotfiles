@@ -29,6 +29,7 @@ local setup_options = function()
 	vim.opt.shiftwidth = 4
 	vim.opt.showmode = false
 	vim.opt.signcolumn = "yes"
+	vim.opt.shortmess:append({ I = true })
 	vim.opt.smartcase = true
 	vim.opt.softtabstop = 4
 	vim.opt.splitbelow = true
