@@ -1,0 +1,12 @@
+local opts = function(_, opts)
+	vim.list_extend(opts.sources, {
+		require("null-ls").builtins.formatting.stylua,
+	})
+end
+
+local plugin = {
+	url = "none-ls.nvim",
+	opts = opts,
+}
+
+return { plugin }
