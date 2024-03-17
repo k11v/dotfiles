@@ -7,7 +7,7 @@ local opts = {
 }
 
 local plugin = {
-	url = "nvim-lspconfig",
+	"nvim-lspconfig",
 	opts = opts,
 }
 

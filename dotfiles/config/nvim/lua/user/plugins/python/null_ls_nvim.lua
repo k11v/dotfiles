@@ -19,7 +19,7 @@ local opts = function(_, opts)
 end
 
 local plugin = {
-	url = "none-ls.nvim",
+	"none-ls.nvim",
 	opts = opts,
 }
 
