@@ -129,7 +129,10 @@ end
 -- Execute
 
 local enabled_modules = {
+	-- Should be first
 	"user.any",
+	-- Could be in any order
+	"user.git",
 	"user.javascript",
 	"user.lua",
 	"user.python",
