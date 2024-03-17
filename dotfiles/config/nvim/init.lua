@@ -29,7 +29,7 @@ local create_lazy_file_event = function()
 
 	local events = {}
 	local done = false
-	local function load()
+	local load = function()
 		if #events == 0 or done then
 			return
 		end
@@ -61,7 +61,7 @@ local create_lazy_file_event = function()
 		vim.api.nvim_exec_autocmds("CursorMoved", { modeline = false })
 		events = {}
 	end
-	load = vim.schedule_wrap(load) -- TODO: Consider `local`
+	load = vim.schedule_wrap(load)
 
 	vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "BufWritePre" }, {
 		group = vim.api.nvim_create_augroup("LazyFile", {}),
