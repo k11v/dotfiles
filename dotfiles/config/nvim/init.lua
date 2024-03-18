@@ -130,7 +130,7 @@ end
 
 local enabled_modules = {
 	-- Should be first
-	"user.any",
+	"user.base",
 	-- Could be in any order
 	"user.git",
 	"user.javascript",
