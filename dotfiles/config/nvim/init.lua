@@ -100,7 +100,7 @@ local load_plugins = function(modules)
 		},
 		checker = {
 			enabled = true,
-			-- frequency = 3600, -- TODO: Consider
+			frequency = 86400, -- Every day
 		},
 		performance = {
 			rtp = {
