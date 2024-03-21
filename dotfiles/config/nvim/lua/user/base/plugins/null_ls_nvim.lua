@@ -2,7 +2,7 @@ local opts = {
 	sources = {},
 	on_attach = function(client, bufnr)
 		if client.supports_method("textDocument/formatting") then
-			vim.api.nvim_create_autocmd("BufWritePre", {
+			vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 				group = vim.api.nvim_create_augroup("user_base_plugins_null_ls_nvim", {}),
 				buffer = bufnr,
 				callback = function()
