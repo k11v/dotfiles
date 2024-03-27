@@ -46,10 +46,11 @@ alias gd="git diff"
 alias gds="git diff --staged"
 alias gf="git fetch"
 alias gl="git --no-pager log --graph --oneline -n 20"
-alias glp="git log --patch -n 1"
+alias glp="git log --ext-diff --patch -n 1"
 alias gp="git push"
 alias gr="git reset HEAD"
 alias gs="git status -sb"
+alias gsh="git show --ext-diff"
 alias gu="git pull"
 
 # Docker
