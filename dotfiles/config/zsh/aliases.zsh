@@ -18,17 +18,18 @@ alias vim="nvim"
 
 # GNU utils
 
-alias ls="ls --color=auto"
 alias grep="grep --color=auto"
+alias ls="ls --color=auto"
 
 alias l="ls -1A --group-directories-first"
 alias ll="ls -lhFA --group-directories-first"
 
 # Other utils
 
-alias iconv-windows-1251-to-utf-8="iconv -f WINDOWS-1251 -t UTF-8"
-alias '??'="gh copilot suggest -t shell"
 alias bat="bat --paging=never"
+
+alias '??'="gh copilot suggest -t shell"
+alias iconv-windows-1251-to-utf-8="iconv -f WINDOWS-1251 -t UTF-8"
 
 # Git
 
@@ -38,9 +39,9 @@ alias gb="git branch"
 alias gc="git commit"
 alias gca="git commit --amend"
 alias gci='git commit --allow-empty -m "Initial commit"'
-alias gcw='git commit -m "wip"'
-alias gcu='git reset --soft HEAD~1'  # [U]ndo the last [c]ommit
 alias gco="git checkout"
+alias gcu='git reset --soft HEAD~1'  # [U]ndo the last [c]ommit
+alias gcw='git commit -m "wip"'
 alias gd="git diff"
 alias gds="git diff --staged"
 alias gf="git fetch"
@@ -55,12 +56,12 @@ alias gu="git pull"
 
 alias d="docker"
 alias dc="docker compose"
-alias dcu="docker compose up"
-alias dcud="docker compose up -d"
+alias dcb="docker compose build"
 alias dcd="docker compose down"
 alias dcdv="docker compose down -v"
+alias dce="docker compose exec"
 alias dcl="docker compose logs"
 alias dcr="docker compose run"
 alias dcrr="docker compose run --rm"
-alias dce="docker compose exec"
-alias dcb="docker compose build"
+alias dcu="docker compose up"
+alias dcud="docker compose up -d"
