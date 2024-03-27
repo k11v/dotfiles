@@ -20,12 +20,12 @@ local opts = {
 }
 
 local config_keymaps = function()
-	vim.keymap.set({ "n" }, "<leader><leader>", function()
-		require("fzf-lua").buffers()
-	end, { silent = true })
-
 	vim.keymap.set({ "n" }, "<leader>sL", function()
 		require("fzf-lua").live_grep_native()
+	end, { silent = true })
+
+	vim.keymap.set({ "n" }, "<leader>sb", function()
+		require("fzf-lua").buffers()
 	end, { silent = true })
 
 	vim.keymap.set({ "n" }, "<leader>sf", function()
