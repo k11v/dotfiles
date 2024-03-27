@@ -14,7 +14,7 @@
    xcode-select --install
    ```
 
-3. Install *your* SSH key (to be able to clone *your* Dotfiles repository):
+3. Install _your_ SSH key (to be able to clone _your_ Dotfiles repository):
 
    ```sh
    mkdir -p "$HOME/.ssh"
