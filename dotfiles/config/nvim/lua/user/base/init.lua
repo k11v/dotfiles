@@ -46,6 +46,14 @@ local setup_keymaps = function()
 	end, { silent = true })
 
 	vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
+
+	vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { silent = true })
+
+	vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { silent = true })
+
+	vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { silent = true })
+
+	vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { silent = true })
 end
 
 M.setup = function()

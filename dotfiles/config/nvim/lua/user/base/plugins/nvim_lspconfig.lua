@@ -14,7 +14,7 @@ local config_keymaps = function()
 	vim.api.nvim_create_autocmd({ "LspAttach" }, {
 		group = vim.api.nvim_create_augroup("user_base_plugins_nvim_lspconfig", {}),
 		callback = function(event)
-			vim.keymap.set({ "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf, silent = true })
+			-- vim.keymap.set({ "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf, silent = true })
 
 			-- TODO: Try code actions with `previewer=codeaction_native`
 			vim.keymap.set({ "n" }, "<leader>aa", function()
