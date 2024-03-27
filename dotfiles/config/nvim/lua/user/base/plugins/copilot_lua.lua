@@ -3,7 +3,7 @@ local opts = {
 		enabled = false,
 	},
 	suggestion = {
-		auto_trigger = false,
+		auto_trigger = true,
 		keymap = {
 			accept = "<M-C-y>",
 			next = "<M-C-n>",
@@ -39,11 +39,6 @@ local config = function(_, opts)
 				require("copilot.panel").setup()
 				require("copilot.suggestion").setup()
 				require("copilot").setup_done = true
-
-				if vim.bo.filetype == "rust" then
-				else
-					require("copilot.suggestion").toggle_auto_trigger()
-				end
 
 				vim.keymap.set({ "i" }, "<M-C-Space>", function()
 					require("copilot.suggestion").toggle_auto_trigger()
