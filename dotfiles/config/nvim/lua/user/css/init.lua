@@ -9,14 +9,14 @@ end
 
 M.setup = function()
 	vim.api.nvim_create_autocmd({ "FileType" }, {
-		group = vim.api.nvim_create_augroup("user_javascript_init", {}),
-		pattern = { "javascript" },
+		group = vim.api.nvim_create_augroup("user_css_init", {}),
+		pattern = { "css" },
 		callback = callback,
 	})
 end
 
 M.get_plugins = function(module)
-	return { { import = module .. ".plugins" } }
+	return {} -- TODO: Try returning `{ { import = module .. ".plugins" } }`
 end
 
 return M

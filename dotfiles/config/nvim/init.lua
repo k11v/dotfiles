@@ -132,12 +132,15 @@ local enabled_modules = {
 	-- Should be first
 	"user.base",
 	-- Could be in any order
+	"user.css",
 	"user.git",
+	"user.html",
 	"user.javascript",
 	"user.lua",
 	"user.python",
 	"user.rust",
 	"user.tailwind",
+	"user.typescript",
 	"user.vue",
 }
 
