@@ -1,7 +1,4 @@
 local opts = {
-	panel = {
-		enabled = false,
-	},
 	suggestion = {
 		auto_trigger = true,
 		keymap = {
@@ -32,7 +29,7 @@ local config = function(_, opts)
 
 	vim.api.nvim_create_autocmd({ "LspAttach" }, {
 		group = vim.api.nvim_create_augroup("user_base_plugins_copilot_lua", {}),
-		once = true,
+		-- once = true,
 		callback = function(event)
 			local client = vim.lsp.get_client_by_id(event.data.client_id)
 			if client and client.name == "copilot" then
@@ -43,6 +40,7 @@ local config = function(_, opts)
 				vim.keymap.set({ "i" }, "<M-C-Space>", function()
 					require("copilot.suggestion").toggle_auto_trigger()
 				end, { silent = true })
+				return true
 			end
 		end,
 	})
