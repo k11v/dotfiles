@@ -19,6 +19,24 @@ g++() { /usr/local/opt/gcc/bin/g++-13 "$@" }
 gcc() { /usr/local/opt/gcc/bin/gcc-13 "$@" }
 
 
+leetcode() {
+    if [[ -z "$1" ]]; then
+	echo "Error: Problem name not provided" >&2
+	return 1
+    fi
+    local name="$(echo "$1" | sed 's/\.//g' | sed 's/ /-/g')"
+    mkdir "$name" && cat <<EOF > "$name/README.md"
+---
+- understand: 0s
+- think: 0s
+- implement: 0s
+- fix: 0s
+- submit → accepted: 0s
+- study solutions: 0s
+---
+EOF
+}
+
 # Competitive programming utils
 
 gentest() {
