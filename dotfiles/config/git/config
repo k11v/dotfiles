@@ -1,6 +1,6 @@
 [user]
     name = Kirill Gashkov
-	email = k.e.gashkov@gmail.com
+    email = k.e.gashkov@gmail.com
 
 [pager]
     branch = false
@@ -32,7 +32,33 @@
     changed = yellow
     untracked = red
 
-; difftastic
+; delta
+
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[merge]
+    conflictstyle = diff3
 
 [diff]
-    external = difft
+    colorMoved = default
+
+[delta]
+    navigate = true
+
+; https://github.com/folke/tokyonight.nvim/blob/main/extras/delta/tokyonight_night.gitconfig
+[delta]
+    minus-style = syntax "#37222c"
+    minus-non-emph-style = syntax "#37222c"
+    minus-emph-style = syntax "#713137"
+    minus-empty-line-marker-style = syntax "#37222c"
+    line-numbers-minus-style = "#b2555b"
+    plus-style = syntax "#20303b"
+    plus-non-emph-style = syntax "#20303b"
+    plus-emph-style = syntax "#2c5a66"
+    plus-empty-line-marker-style = syntax "#20303b"
+    line-numbers-plus-style = "#266d6a"
+    line-numbers-zero-style = "#3b4261"
