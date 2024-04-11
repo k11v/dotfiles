@@ -22,7 +22,7 @@ require("lazy").setup({
       branch = "v2.5",
       import = "nvchad.plugins",
       opts = {
-        ensure_called = {},
+        ensure_called = {}, -- User-defined
       },
       config = function(_, opts)
         require("nvchad.options")
@@ -34,7 +34,7 @@ require("lazy").setup({
       end,
     },
     {
-      import = "user"
+      import = "user",
     },
   },
   defaults = { lazy = true },
