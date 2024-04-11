@@ -21,11 +21,20 @@ require("lazy").setup({
       lazy = false,
       branch = "v2.5",
       import = "nvchad.plugins",
-      config = function()
+      opts = {
+        ensure_called = {},
+      },
+      config = function(_, opts)
         require("nvchad.options")
         require("nvchad.autocmds")
         require("nvchad.mappings")
+        for _, f in ipairs(opts.ensure_called) do
+          f()
+        end
       end,
+    },
+    {
+      import = "user"
     },
   },
   defaults = { lazy = true },
