@@ -1,5 +1,21 @@
 return {
   {
+    "NvChad",
+    opts = {
+      inits_by_ft = {
+        go = {
+          function()
+            vim.opt_local.colorcolumn = "100"
+            vim.opt_local.expandtab = false
+            vim.opt_local.shiftwidth = 4
+            vim.opt_local.softtabstop = 4
+            vim.opt_local.tabstop = 4
+          end,
+        },
+      },
+    },
+  },
+  {
     "nvim-treesitter",
     opts = {
       ensure_installed = {
