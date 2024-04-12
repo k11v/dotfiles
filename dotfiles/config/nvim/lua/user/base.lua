@@ -1,14 +1,14 @@
 return {
   {
     "NvChad",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_called, {
+    opts = {
+      inits = {
         function()
           vim.opt.colorcolumn = { "80" }
           vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
         end,
-      })
-    end,
+      },
+    },
   },
   {
     "nvim-lspconfig",

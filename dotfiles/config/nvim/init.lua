@@ -22,14 +22,26 @@ require("lazy").setup({
       branch = "v2.5",
       import = "nvchad.plugins",
       opts = {
-        ensure_called = {}, -- User-defined
+        inits = {}, -- User-defined
+        inits_by_ft = {}, -- User-defined
       },
       config = function(_, opts)
         require("nvchad.options")
         require("nvchad.autocmds")
         require("nvchad.mappings")
-        for _, f in ipairs(opts.ensure_called) do
-          f()
+        for _, init in ipairs(opts.inits) do
+          init()
+        end
+        for ft, ft_inits in pairs(opts.inits_by_ft) do
+          vim.api.nvim_create_autocmd({ "FileType" }, {
+            group = vim.api.nvim_create_augroup("user_inits_by_ft_" .. ft, {}),
+            pattern = { ft },
+            callback = function()
+              for _, ft_init in ipairs(ft_inits) do
+                ft_init()
+              end
+            end,
+          })
         end
       end,
     },
