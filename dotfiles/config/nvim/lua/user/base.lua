@@ -33,6 +33,12 @@ return {
   {
     "conform.nvim",
     event = "BufWritePre",
+    opts = {
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+    },
     config = function(_, opts)
       require("conform").setup(opts)
     end,
