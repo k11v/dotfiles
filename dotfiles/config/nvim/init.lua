@@ -29,6 +29,7 @@ require("lazy").setup({
         require("nvchad.options")
         require("nvchad.autocmds")
         require("nvchad.mappings")
+        vim.keymap.del("n", "<leader>n")
         for _, init in ipairs(opts.inits) do
           init()
         end
