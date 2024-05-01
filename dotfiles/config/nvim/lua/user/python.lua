@@ -29,7 +29,7 @@ return {
     opts = {
       ensure_installed = {
         "debugpy",
-        "pyright",
+        "basedpyright",
         "ruff",
         "ruff-lsp",
       },
@@ -39,12 +39,12 @@ return {
     "nvim-lspconfig",
     opts = {
       ensure_configured = {
-        pyright = {},
+        basedpyright = {},
         ruff_lsp = {
           on_attach = function(client, _)
             require("nvchad.configs.lspconfig").on_attach(client, _)
             if client.name == "ruff_lsp" then
-              -- Disable hover in favor of Pyright
+              -- Disable hover in favor of BasedPyright.
               client.server_capabilities.hoverProvider = false
             end
           end,
