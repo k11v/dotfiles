@@ -63,7 +63,7 @@ return {
     "conform.nvim",
     opts = {
       formatters_by_ft = {
-        python = { "ruff" },
+        python = { "ruff_fix", "ruff_format" },
       },
     },
   },
