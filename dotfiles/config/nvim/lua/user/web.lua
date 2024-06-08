@@ -67,9 +67,10 @@ return {
     "mason.nvim",
     opts = {
       ensure_installed = {
-        "vue-language-server", -- For nvim-lspconfig's volar (nvim-lspconfig uses the legacy name of the Vue language server)
-        "vtsls", -- For nvim-lspconfig's vtsls
-        "tailwindcss-language-server", -- For nvim-lspconfig's tailwindcss
+        "prettier",
+        "tailwindcss-language-server",
+        "vtsls",
+        "vue-language-server",
       },
     },
   },
@@ -78,15 +79,10 @@ return {
     opts = function(_, opts)
       return vim.tbl_deep_extend("force", opts, {
         ensure_configured = {
-          volar = {
-            on_attach = function(client, buffer)
-              require("nvchad.configs.lspconfig").on_attach(client, buffer)
-              vim.keymap.set({ "n" }, "K", vim.lsp.buf.hover, { buffer = buffer, silent = true })
-            end,
-          },
-          -- https://github.com/mason-org/mason-registry/issues/5064#issuecomment-2016431978
+          volar = {},
           vtsls = {
             filetypes = { "javascript", "typescript", "vue" },
+            -- https://github.com/mason-org/mason-registry/issues/5064#issuecomment-2016431978
             settings = {
               vtsls = {
                 tsserver = {
@@ -105,17 +101,10 @@ return {
                 },
               },
             },
-            on_attach = function(client, buffer)
-              require("nvchad.configs.lspconfig").on_attach(client, buffer)
-              vim.keymap.set({ "n" }, "K", vim.lsp.buf.hover, { buffer = buffer, silent = true })
-            end,
           },
           tailwindcss = {
-            filetypes = { "html", "css", "javascript", "typescript", "vue" }, -- The default includes "markdown" which is undesired.
-            on_attach = function(client, buffer)
-              require("nvchad.configs.lspconfig").on_attach(client, buffer)
-              vim.keymap.set({ "n" }, "K", vim.lsp.buf.hover, { buffer = buffer, silent = true })
-            end,
+            -- The default includes "markdown" which is undesired.
+            filetypes = { "html", "css", "javascript", "typescript", "vue" },
           },
         },
       })
@@ -125,11 +114,21 @@ return {
     "conform.nvim",
     opts = {
       formatters_by_ft = {
-        html = { "prettier" },
-        css = { "prettier" },
-        javascript = { "prettier" },
-        typescript = { "prettier" },
-        vue = { "prettier" },
+        html = {
+          "prettier",
+        },
+        css = {
+          "prettier",
+        },
+        javascript = {
+          "prettier",
+        },
+        typescript = {
+          "prettier",
+        },
+        vue = {
+          "prettier",
+        },
       },
     },
   },
