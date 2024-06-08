@@ -40,8 +40,9 @@ return {
     "conform.nvim",
     event = "BufWritePre",
     opts = {
-      format_on_save = {
-        timeout_ms = 500,
+      format_after_save = {
+        async = true,
+        timeout_ms = 2000,
         lsp_fallback = true,
       },
     },
