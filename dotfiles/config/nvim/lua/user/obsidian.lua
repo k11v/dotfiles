@@ -233,8 +233,38 @@ return {
       },
     },
     config = function(_, opts)
-      vim.opt.conceallevel = 1
       require("obsidian").setup(opts)
     end,
+  },
+  {
+    "NvChad",
+    opts = {
+      inits_by_ft = {
+        markdown = {
+          function()
+            -- conceallevel is used by obsidian.nvim to hide markup.
+            vim.opt_local.conceallevel = 1
+
+            -- Disable conceallevel in insert mode.
+            vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+              group = vim.api.nvim_create_augroup("user_obsidian_inits_insert_enter", {}),
+              callback = function()
+                if vim.bo.filetype == "markdown" then
+                  vim.opt_local.conceallevel = 0
+                end
+              end,
+            })
+            vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+              group = vim.api.nvim_create_augroup("user_obsidian_inits_insert_leave", {}),
+              callback = function()
+                if vim.bo.filetype == "markdown" then
+                  vim.opt_local.conceallevel = 1
+                end
+              end,
+            })
+          end,
+        },
+      },
+    },
   },
 }
