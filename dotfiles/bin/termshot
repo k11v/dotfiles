@@ -121,7 +121,7 @@ main() {
     fi
 
     alacritty \
-        --config-file "${XDG_CONFIG_HOME:-$HOME/.config}/termshot/alacritty.yml" \
+        --config-file "${XDG_CONFIG_HOME:-$HOME/.config}/termshot/alacritty.toml" \
         --option window.dimensions.columns="$window_width" \
         --option window.dimensions.lines="$window_height" \
         --command \

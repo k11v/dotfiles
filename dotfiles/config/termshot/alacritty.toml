@@ -1,0 +1,13 @@
+import = ["~/Repositories/tokyonight.nvim/extras/alacritty/tokyonight_moon.toml"]
+
+[window]
+padding.x = 10
+padding.y = 10
+dynamic_padding = true
+decorations = "buttonless"
+
+[font]
+normal.family = "JetBrainsMono Nerd Font Mono"
+size = 13.0
+offset.y = 10
+glyph_offset.y = 5
