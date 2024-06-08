@@ -20,7 +20,6 @@ return {
     opts = {
       ensure_installed = {
         "python",
-        "toml",
       },
     },
   },
@@ -28,7 +27,6 @@ return {
     "mason.nvim",
     opts = {
       ensure_installed = {
-        "debugpy",
         "basedpyright",
         "ruff",
         "ruff-lsp",
@@ -39,31 +37,36 @@ return {
     "nvim-lspconfig",
     opts = {
       ensure_configured = {
-        basedpyright = {},
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                typeCheckingMode = "standard",
+              },
+            },
+          },
+        },
         ruff_lsp = {
-          on_attach = function(client, _)
-            require("nvchad.configs.lspconfig").on_attach(client, _)
-            if client.name == "ruff_lsp" then
-              -- Disable hover in favor of BasedPyright.
-              client.server_capabilities.hoverProvider = false
-            end
+          on_attach = function(client, buffer)
+            -- FIXME: Code duplication.
+            require("nvchad.configs.lspconfig").on_attach(client, buffer)
+            vim.keymap.set({ "n" }, "K", vim.lsp.buf.hover, { buffer = buffer, silent = true })
+
+            -- Disable hover in favor of BasedPyright.
+            client.server_capabilities.hoverProvider = false
           end,
         },
       },
     },
   },
   {
-    "mfussenegger/nvim-dap-python",
-    config = function()
-      local path = require("mason-registry").get_package("debugpy"):get_install_path()
-      require("dap-python").setup(path .. "/venv/bin/python")
-    end,
-  },
-  {
     "conform.nvim",
     opts = {
       formatters_by_ft = {
-        python = { "ruff_fix", "ruff_format" },
+        python = {
+          "ruff_fix",
+          "ruff_format",
+        },
       },
     },
   },
