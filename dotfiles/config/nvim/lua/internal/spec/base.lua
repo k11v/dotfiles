@@ -6,6 +6,11 @@ return {
 		opts = {
 			x_inits = {
 				["*"] = function()
+					vim.g.loaded_node_provider = 0
+					vim.g.loaded_perl_provider = 0
+					vim.g.loaded_python3_provider = 0
+					vim.g.loaded_ruby_provider = 0
+
 					vim.opt.breakindent = true
 					vim.opt.colorcolumn = { "80" }
 					vim.opt.cursorline = true
@@ -15,7 +20,6 @@ return {
 					vim.opt.inccommand = "split"
 					vim.opt.mouse = "a"
 					vim.opt.number = true
-					-- vim.opt.relativenumber = true
 					vim.opt.report = 0
 					vim.opt.scrolloff = 10
 					vim.opt.shiftwidth = 4
