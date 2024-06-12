@@ -25,7 +25,7 @@ vim.opt.rtp:prepend(lazyPath)
 
 -- Register events.
 
-util.RegisterLazyFile()
+util.register_lazyfile()
 
 -- Load plugins.
 
