@@ -30,6 +30,11 @@ return {
 							})
 					end,
 				},
+				efm = {
+					x_tools = {
+						{ "lua", require("efmls-configs.formatters.stylua") },
+					},
+				},
 			},
 		},
 	},
@@ -38,6 +43,7 @@ return {
 		opts = {
 			x_packages = {
 				"lua-language-server",
+				"stylua",
 			},
 		},
 	},

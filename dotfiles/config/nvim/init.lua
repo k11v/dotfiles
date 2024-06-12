@@ -33,7 +33,7 @@ require("lazy").setup({
 			lazy = false,
 			opts_extend = { "x_inits" },
 			opts = {
-				x_inits = {}, -- User-defined
+				x_inits = {},
 			},
 			config = function(_, opts)
 				local ft_to_inits = {}

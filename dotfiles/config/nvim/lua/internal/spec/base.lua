@@ -93,8 +93,20 @@ return {
 		url = "https://github.com/neovim/nvim-lspconfig",
 		dependencies = { "fzf-lua" },
 		event = "LazyFile",
+		opts_extend = { "x_servers.efm.x_tools" },
 		opts = {
-			x_servers = {}, -- User-defined
+			x_servers = {
+				efm = {
+					x_tools = {},
+					settings = {
+						rootMarkers = { ".git/" },
+						init_options = {
+							documentFormatting = true,
+							documentRangeFormatting = true,
+						},
+					},
+				},
+			},
 		},
 		config = function(_, opts)
 			local default_server_opts = {
@@ -108,6 +120,24 @@ return {
 
 			for server, server_opts in pairs(opts.x_servers) do
 				local server_opts = vim.tbl_deep_extend("force", default_server_opts, server_opts)
+
+				if server == "efm" then
+					local language_to_tools = {}
+					for _, language_and_tool in ipairs(server_opts.x_tools) do
+						local language, tool = language_and_tool[1], language_and_tool[2]
+						language_to_tools[language] = language_to_tools[language] or {}
+						table.insert(language_to_tools[language], tool)
+					end
+					server_opts.x_tools = nil
+
+					server_opts = vim.tbl_deep_extend("force", server_opts, {
+						filetypes = vim.tbl_keys(language_to_tools),
+						settings = {
+							languages = language_to_tools,
+						},
+					})
+				end
+
 				require("lspconfig")[server].setup(server_opts)
 			end
 
@@ -183,7 +213,9 @@ return {
 		event = "VeryLazy",
 		opts_extend = { "x_packages" },
 		opts = {
-			x_packages = {},
+			x_packages = {
+				"efm",
+			},
 			PATH = "skip",
 		},
 		init = function()
@@ -209,6 +241,12 @@ return {
 				end
 			end)
 		end,
+	},
+	{
+		url = "https://github.com/creativenull/efmls-configs-nvim",
+		version = "v1.x.x",
+		dependencies = {},
+		lazy = false,
 	},
 	{
 		url = "https://github.com/nvim-tree/nvim-web-devicons",
