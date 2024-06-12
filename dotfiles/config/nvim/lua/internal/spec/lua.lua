@@ -33,4 +33,12 @@ return {
 			},
 		},
 	},
+	{
+		"mason.nvim",
+		opts = {
+			x_packages = {
+				"lua-language-server",
+			},
+		},
+	},
 }
