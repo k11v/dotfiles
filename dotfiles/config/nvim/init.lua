@@ -17,7 +17,6 @@ if not vim.loop.fs_stat(lazyPath) then
 		"git",
 		"clone",
 		"--filter=blob:none",
-		"--branch=stable",
 		"https://github.com/folke/lazy.nvim.git",
 		lazyPath,
 	})
@@ -37,24 +36,20 @@ require("lazy").setup({
 			dir = vim.fn.stdpath("config"),
 			lazy = false,
 			opts = {
-				inits_by_ft = {},
+				x_inits = {}, -- User-defined
 			},
 			config = function(_, opts)
-				local non_ft_inits = opts.inits_by_ft["*"] or {}
-				opts.inits_by_ft["*"] = nil
+				local non_ft_init = opts.x_inits["*"] or function() end
+				opts.x_inits["*"] = nil
 
-				for _, i in ipairs(non_ft_inits) do
-					i()
-				end
+				non_ft_init()
 
-				for ft, ft_inits in pairs(opts.inits_by_ft) do
+				for ft, ft_init in pairs(opts.x_inits) do
 					vim.api.nvim_create_autocmd({ "FileType" }, {
-						group = vim.api.nvim_create_augroup("internal_nvim_inits_by_ft_" .. ft, {}),
+						group = vim.api.nvim_create_augroup("internal_nvim_x_inits_" .. ft, {}),
 						pattern = { ft },
 						callback = function()
-							for _, i in ipairs(ft_inits) do
-								i()
-							end
+							ft_init()
 						end,
 					})
 				end

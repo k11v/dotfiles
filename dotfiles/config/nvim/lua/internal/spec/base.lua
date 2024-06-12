@@ -1,45 +1,42 @@
 return {
 	{
 		"nvim",
-		opts = function(_, opts)
-			return vim.tbl_deep_extend("force", opts, {
-				inits_by_ft = {
-					["*"] = vim.list_extend(opts.inits_by_ft["*"] or {}, {
-						function()
-							vim.opt.breakindent = true
-							vim.opt.colorcolumn = { "80" }
-							vim.opt.cursorline = true
-							vim.opt.cursorlineopt = "number"
-							vim.opt.expandtab = true
-							vim.opt.ignorecase = true
-							vim.opt.inccommand = "split"
-							vim.opt.mouse = "a"
-							vim.opt.number = true
-							vim.opt.relativenumber = true
-							vim.opt.report = 0
-							vim.opt.scrolloff = 10
-							vim.opt.shiftwidth = 4
-							vim.opt.showmode = false
-							vim.opt.signcolumn = "yes"
-							vim.opt.shortmess:append({ I = true })
-							vim.opt.smartcase = true
-							vim.opt.softtabstop = 4
-							vim.opt.splitbelow = true
-							vim.opt.splitright = true
-							vim.opt.tabstop = 4
-							vim.opt.timeout = false
-							vim.opt.undofile = true
-							vim.opt.updatetime = 250
+		opts = {
+			x_inits = {
+				["*"] = function()
+					vim.opt.breakindent = true
+					vim.opt.colorcolumn = { "80" }
+					vim.opt.cursorline = true
+					vim.opt.cursorlineopt = "number"
+					vim.opt.expandtab = true
+					vim.opt.ignorecase = true
+					vim.opt.inccommand = "split"
+					vim.opt.mouse = "a"
+					vim.opt.number = true
+					vim.opt.relativenumber = true
+					vim.opt.report = 0
+					vim.opt.scrolloff = 10
+					vim.opt.shiftwidth = 4
+					vim.opt.showmode = false
+					vim.opt.signcolumn = "yes"
+					vim.opt.shortmess:append({ I = true })
+					vim.opt.smartcase = true
+					vim.opt.softtabstop = 4
+					vim.opt.splitbelow = true
+					vim.opt.splitright = true
+					vim.opt.tabstop = 4
+					vim.opt.timeout = false
+					vim.opt.undofile = true
+					vim.opt.updatetime = 250
 
-							vim.keymap.set({ "n" }, "<Esc>", function()
-								vim.cmd.nohlsearch()
-							end, { silent = true })
-							vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
-						end,
-					}),
-				},
-			})
-		end,
+					vim.keymap.set({ "n" }, "<Esc>", function()
+						vim.cmd.nohlsearch()
+					end, { silent = true })
+
+					vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
+				end,
+			},
+		},
 	},
 	{
 		url = "https://github.com/ibhagwan/fzf-lua",
@@ -84,6 +81,96 @@ return {
 		end,
 	},
 	{
+		url = "https://github.com/neovim/nvim-lspconfig",
+		dependencies = { "fzf-lua" },
+		event = "LazyFile",
+		opts = {
+			x_servers = {}, -- User-defined
+		},
+		config = function(_, opts)
+			local default_server_opts = {
+				capabilities = vim.tbl_deep_extend(
+					"force",
+					{},
+					vim.lsp.protocol.make_client_capabilities()
+					-- require("cmp_nvim_lsp").default_capabilities() -- TODO
+				),
+			}
+
+			for server, server_opts in pairs(opts.x_servers) do
+				local server_opts = vim.tbl_deep_extend("force", default_server_opts, server_opts)
+				require("lspconfig")[server].setup(server_opts)
+			end
+
+			vim.api.nvim_create_autocmd({ "LspAttach" }, {
+				group = vim.api.nvim_create_augroup("internal_lspconfig", {}),
+				callback = function(event)
+					vim.keymap.set({ "n" }, "<leader>e", function()
+						vim.diagnostic.open_float()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "[d", function()
+						vim.diagnostic.goto_prev()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "]d", function()
+						vim.diagnostic.goto_next()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "<leader>q", function()
+						vim.diagnostic.setloclist()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "K", function()
+						vim.lsp.buf.hover()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "<leader>aa", function()
+						require("fzf-lua").lsp_code_actions()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "<leader>af", function()
+						vim.lsp.buf.format()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "<leader>ar", function()
+						vim.lsp.buf.rename()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gD", function()
+						require("fzf-lua").lsp_declarations({ jump_to_single_result = true })
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gd", function()
+						require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gi", function()
+						require("fzf-lua").lsp_implementations({ jump_to_single_result = true })
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gr", function()
+						require("fzf-lua").lsp_references()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gt", function()
+						require("fzf-lua").lsp_typedefs({ jump_to_single_result = true })
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gs", function()
+						require("fzf-lua").lsp_document_symbols()
+					end, { buffer = event.buf, silent = true })
+
+					vim.keymap.set({ "n" }, "gS", function()
+						require("fzf-lua").lsp_live_workspace_symbols()
+					end, { buffer = event.buf, silent = true })
+				end,
+			})
+		end,
+	},
+	{
 		url = "https://github.com/nvim-tree/nvim-web-devicons",
+		dependencies = {},
+		event = nil,
 	},
 }
