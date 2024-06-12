@@ -13,7 +13,7 @@ return {
 					vim.opt.inccommand = "split"
 					vim.opt.mouse = "a"
 					vim.opt.number = true
-					vim.opt.relativenumber = true
+					-- vim.opt.relativenumber = true
 					vim.opt.report = 0
 					vim.opt.scrolloff = 10
 					vim.opt.shiftwidth = 4
