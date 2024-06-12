@@ -98,6 +98,9 @@ return {
 			x_servers = {
 				efm = {
 					x_tools = {},
+					-- x_on_attach = {
+					-- 	["*"] = function() end,
+					-- },
 					settings = {
 						rootMarkers = { ".git/" },
 						init_options = {
@@ -138,11 +141,23 @@ return {
 					})
 				end
 
+				if server_opts.x_on_attach then
+					local x_on_attach = server_opts.x_on_attach
+
+					server_opts = vim.tbl_deep_extend("force", server_opts, {
+						on_attach = function(client, bufnr)
+							local ft = vim.bo[bufnr].filetype
+							local handler = x_on_attach[ft] or x_on_attach["*"] or function() end
+							handler(client, bufnr)
+						end,
+					})
+				end
+
 				require("lspconfig")[server].setup(server_opts)
 			end
 
 			vim.api.nvim_create_autocmd({ "LspAttach" }, {
-				group = vim.api.nvim_create_augroup("internal_lspconfig", {}),
+				group = vim.api.nvim_create_augroup("internal_lspconfig_lspattach", {}),
 				callback = function(event)
 					vim.keymap.set({ "n" }, "<leader>e", function()
 						vim.diagnostic.open_float()
@@ -203,6 +218,21 @@ return {
 					vim.keymap.set({ "n" }, "gS", function()
 						require("fzf-lua").lsp_live_workspace_symbols()
 					end, { buffer = event.buf, silent = true })
+
+					local client = vim.lsp.get_client_by_id(event.data.client_id)
+					if client.supports_method("textDocument/formatting") then
+						vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+							group = vim.api.nvim_create_augroup(
+								"internal_lspconfig_bufwritepre",
+								{}
+							),
+							buffer = event.buf,
+							callback = function()
+								vim.lsp.buf.format({ bufnr = bufnr })
+								vim.diagnostic.show() -- HACK: https://github.com/neovim/neovim/issues/25014
+							end,
+						})
+					end
 				end,
 			})
 		end,
