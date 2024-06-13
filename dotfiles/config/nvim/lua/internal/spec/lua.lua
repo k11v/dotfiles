@@ -1,5 +1,23 @@
 return {
 	{
+		name = "nvim",
+		dir = vim.fn.stdpath("config"),
+		opts = {
+			x_inits = {
+				{
+					"lua",
+					function()
+						vim.opt_local.colorcolumn = "100"
+						vim.opt_local.expandtab = false
+						vim.opt_local.shiftwidth = 4
+						vim.opt_local.softtabstop = 4
+						vim.opt_local.tabstop = 4
+					end,
+				},
+			},
+		},
+	},
+	{
 		"nvim-lspconfig",
 		opts = {
 			x_servers = {

@@ -2,7 +2,8 @@ local util = require("internal.util")
 
 return {
 	{
-		"nvim",
+		name = "nvim",
+		dir = vim.fn.stdpath("config"),
 		opts = {
 			x_inits = {
 				{

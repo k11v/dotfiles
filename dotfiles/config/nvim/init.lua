@@ -31,6 +31,7 @@ require("lazy").setup({
 			name = "nvim",
 			dir = vim.fn.stdpath("config"),
 			lazy = false,
+			priority = 10,
 			opts_extend = { "x_inits" },
 			opts = {
 				x_inits = {},
