@@ -229,7 +229,7 @@ return {
 							),
 							buffer = event.buf,
 							callback = function()
-								vim.lsp.buf.format({ bufnr = bufnr })
+								vim.lsp.buf.format({ bufnr = event.buf })
 								vim.diagnostic.show() -- HACK: https://github.com/neovim/neovim/issues/25014
 							end,
 						})
