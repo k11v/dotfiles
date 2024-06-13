@@ -18,6 +18,23 @@ return {
 		},
 	},
 	{
+		"nvim-treesitter",
+		opts = {
+			x_parsers = {
+				"lua",
+			},
+		},
+	},
+	{
+		"mason.nvim",
+		opts = {
+			x_packages = {
+				"lua-language-server",
+				"stylua",
+			},
+		},
+	},
+	{
 		"nvim-lspconfig",
 		opts = {
 			x_servers = {
@@ -53,15 +70,6 @@ return {
 						{ "lua", require("efmls-configs.formatters.stylua") },
 					},
 				},
-			},
-		},
-	},
-	{
-		"mason.nvim",
-		opts = {
-			x_packages = {
-				"lua-language-server",
-				"stylua",
 			},
 		},
 	},
