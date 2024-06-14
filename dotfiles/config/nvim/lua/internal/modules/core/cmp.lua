@@ -46,68 +46,11 @@ local function maybe_scroll_docs(direction)
 	return true
 end
 
-local function make_border(hl)
-	return {
-		{ "┌", hl },
-		{ "─", hl },
-		{ "┐", hl },
-		{ "│", hl },
-		{ "┘", hl },
-		{ "─", hl },
-		{ "└", hl },
-		{ "│", hl },
-	}
-end
-
-local icons = {
-	Namespace = "󰌗",
-	Text = "󰉿",
-	Method = "󰆧",
-	Function = "󰆧",
-	Constructor = "",
-	Field = "󰜢",
-	Variable = "󰀫",
-	Class = "󰠱",
-	Interface = "",
-	Module = "",
-	Property = "󰜢",
-	Unit = "󰑭",
-	Value = "󰎠",
-	Enum = "",
-	Keyword = "󰌋",
-	Snippet = "",
-	Color = "󰏘",
-	File = "󰈚",
-	Reference = "󰈇",
-	Folder = "󰉋",
-	EnumMember = "",
-	Constant = "󰏿",
-	Struct = "󰙅",
-	Event = "",
-	Operator = "󰆕",
-	TypeParameter = "󰊄",
-	Table = "",
-	Object = "󰅩",
-	Tag = "",
-	Array = "[]",
-	Boolean = "",
-	Number = "",
-	Null = "󰟢",
-	String = "󰉿",
-	Calendar = "",
-	Watch = "󰥔",
-	Package = "",
-	Copilot = "",
-	Codeium = "",
-	TabNine = "",
-}
-
 return {
 	url = "https://github.com/hrsh7th/nvim-cmp",
 	dependencies = { "cmp-nvim-lsp" },
 	event = { "VeryLazy" },
 	opts = {
-		-- UX
 		completion = {
 			completeopt = "menu,menuone",
 		},
@@ -118,26 +61,6 @@ return {
 		},
 		sources = {
 			{ name = "nvim_lsp" },
-		},
-		window = {
-			completion = {
-				border = make_border(nil),
-				side_padding = 1,
-				winhighlight = "Normal:CmpPmenu,CursorLine:Visual",
-				scrollbar = false,
-			},
-			documentation = {
-				border = make_border(nil),
-				winhighlight = "Normal:CmpDoc",
-			},
-		},
-		formatting = {
-			fields = { "abbr", "kind", "menu" },
-			format = function(_, item)
-				local icon = icons[item.kind] or ""
-				item.kind = icon .. " " .. item.kind
-				return item
-			end,
 		},
 	},
 	config = function(_, opts)
