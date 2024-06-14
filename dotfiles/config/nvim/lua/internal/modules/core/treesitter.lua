@@ -4,7 +4,7 @@ return {
 	url = "https://github.com/nvim-treesitter/nvim-treesitter",
 	version = "v1.x.x",
 	dependencies = { "nvim-treesitter-textobjects" },
-	event = "LazyFile",
+	event = { "LazyFile", "VeryLazy" },
 	opts_extend = { "x_parsers" },
 	opts = {
 		x_parsers = { "c", "lua", "query", "vim", "vimdoc" },

@@ -2,7 +2,7 @@ local utils = require("internal.utils")
 
 return {
 	url = "https://github.com/williamboman/mason.nvim",
-	event = "VeryLazy",
+	event = { "VeryLazy" },
 	opts_extend = { "x_packages" },
 	opts = {
 		x_packages = {

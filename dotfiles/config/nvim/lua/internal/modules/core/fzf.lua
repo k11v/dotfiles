@@ -1,7 +1,7 @@
 return {
 	url = "https://github.com/ibhagwan/fzf-lua",
 	dependencies = { "nvim-web-devicons" },
-	event = "VeryLazy",
+	event = { "VeryLazy" },
 	opts = {
 		winopts = {
 			border = "single",

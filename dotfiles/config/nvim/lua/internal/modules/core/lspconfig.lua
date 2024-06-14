@@ -1,7 +1,7 @@
 return {
 	url = "https://github.com/neovim/nvim-lspconfig",
 	dependencies = { "fzf-lua" },
-	event = "LazyFile",
+	event = { "LazyFile", "VeryLazy" },
 	opts_extend = { "x_servers.efm.x_tools" },
 	opts = {
 		x_servers = {

@@ -1,6 +1,6 @@
 return {
 	url = "https://github.com/lewis6991/gitsigns.nvim",
-	event = "LazyFile",
+	event = { "LazyFile", "VeryLazy" },
 	opts = {
 		signs = {
 			add = { text = "│" },

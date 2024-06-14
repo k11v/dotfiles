@@ -105,7 +105,7 @@ local icons = {
 return {
 	url = "https://github.com/hrsh7th/nvim-cmp",
 	dependencies = { "cmp-nvim-lsp" },
-	event = "VeryLazy",
+	event = { "VeryLazy" },
 	opts = {
 		-- UX
 		completion = {

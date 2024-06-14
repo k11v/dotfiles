@@ -2,7 +2,7 @@ return {
 	name = "nvim",
 	dir = vim.fn.stdpath("config"),
 	lazy = false,
-	priority = 10,
+	priority = 1,
 	opts_extend = { "x_inits" },
 	opts = {
 		x_inits = {
