@@ -4,7 +4,7 @@
     "theme": "auto",
 
     // JetBrains Mono with recommended settings
-    "font_face": "JetBrains Mono",
+    "font_face": "JetBrainsMono Nerd Font Mono",
     "font_size": 13,
     "line_padding_top": 2,
     "line_padding_bottom": 2,
