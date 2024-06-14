@@ -1,4 +1,4 @@
-local util = require("internal.util")
+local utils = require("internal.utils")
 
 return {
 	{
@@ -255,7 +255,7 @@ return {
 		config = function(_, opts)
 			require("mason").setup(opts)
 
-			opts.x_packages = util.without_duplicates(opts.x_packages)
+			opts.x_packages = utils.without_duplicates(opts.x_packages)
 
 			local registry = require("mason-registry")
 			registry.refresh(function()
@@ -302,7 +302,7 @@ return {
 			vim.cmd.TSUpdate()
 		end,
 		config = function(_, opts)
-			opts.ensure_installed = util.without_duplicates(opts.x_parsers)
+			opts.ensure_installed = utils.without_duplicates(opts.x_parsers)
 			opts.x_parsers = nil
 
 			require("nvim-treesitter.configs").setup(opts)

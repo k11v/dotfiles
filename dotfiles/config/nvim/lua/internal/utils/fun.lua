@@ -1,6 +1,6 @@
-local util = {}
+local utils = {}
 
-function util.without_duplicates(a)
+function utils.without_duplicates(a)
 	local r = {}
 	local inserted = {}
 
@@ -14,4 +14,4 @@ function util.without_duplicates(a)
 	return r
 end
 
-return util
+return utils

@@ -1,7 +1,7 @@
-local util = {}
+local utils = {}
 
 -- https://github.com/LazyVim/LazyVim/blob/864c58cae6df28c602ecb4c94bc12a46206760aa/lua/lazyvim/util/plugin.lua#L60
-function util.register_lazyfile()
+function utils.register_lazyfile()
 	local lazy_event = require("lazy.core.handler.event")
 
 	lazy_event.mappings["LazyFile"] = {
@@ -55,4 +55,4 @@ function util.register_lazyfile()
 	})
 end
 
-return util
+return utils

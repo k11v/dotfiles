@@ -1,4 +1,4 @@
-local util = require("internal.util")
+local utils = require("internal.utils")
 
 -- Install lazy.
 
@@ -21,7 +21,7 @@ vim.g.maplocalleader = " "
 
 -- Register events.
 
-util.register_lazyfile()
+utils.register_lazyfile()
 
 -- Load plugins.
 
@@ -63,7 +63,7 @@ require("lazy").setup({
 				end
 			end,
 		},
-		{ import = "internal.spec" },
+		{ import = "internal.modules" },
 	},
 	defaults = {
 		lazy = true,
