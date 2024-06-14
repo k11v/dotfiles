@@ -2,8 +2,9 @@ return {
 	url = "https://github.com/neovim/nvim-lspconfig",
 	dependencies = { "fzf-lua" },
 	event = { "LazyFile", "VeryLazy" },
-	opts_extend = { "x_servers.efm.x_tools" },
+	opts_extend = { "x_inits", "x_servers.efm.x_tools" },
 	opts = {
+		x_inits = {},
 		x_servers = {
 			efm = {
 				x_tools = {},
@@ -141,5 +142,9 @@ return {
 				end
 			end,
 		})
+
+		for _, i in ipairs(opts.x_inits) do
+			i()
+		end
 	end,
 }
