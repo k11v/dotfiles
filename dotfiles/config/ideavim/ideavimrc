@@ -2,5 +2,13 @@ let mapleader = " "
 let maplocalleader = " "
 
 set number
+set norelativenumber
 
 noremap , "+
+noremap <leader>r :action RenameElement<CR>
+noremap <leader>f :action ReformatCode<CR>
+noremap <leader>a :action ShowIntentionActions<CR>
+noremap <leader>sf :action GotoFile<CR>
+noremap <leader>sc :action GotoSymbol<CR>
+
+set commentary
