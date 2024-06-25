@@ -9,6 +9,7 @@ Brewfile.lock.json
 !.hushlogin
 !.zshrc
 !.zshenv
+!.zprofile
 !.hammerspoon/
 !.inputrc
 
