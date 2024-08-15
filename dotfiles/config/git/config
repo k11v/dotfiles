@@ -1,64 +1,66 @@
-[user]
-    name = Kirill Gashkov
-    email = k.e.gashkov@gmail.com
+[includeIf "gitdir:/Users/kirill/Repositories/@kirillgashkov/"]
+	path = ~/.config/git/config-kirillgashkov
+
+[includeIf "gitdir:/Users/kirill/Repositories/@k11v/"]
+	path = ~/.config/git/config-k11v
 
 [pager]
-    branch = false
+	branch = false
 
 [push]
-    default = simple
+	default = simple
 
 [commit]
-    template = ~/.config/git/commit-template.txt
+	template = ~/.config/git/commit-template.txt
 
 [alias]
-    untrack = update-index --assume-unchanged
-    track = update-index --no-assume-unchanged
-    download = clone --depth=1
+	untrack = update-index --assume-unchanged
+	track = update-index --no-assume-unchanged
+	download = clone --depth=1
 
 [init]
-    defaultBranch = main
+	defaultBranch = main
 
 [color]
-    ui = auto
+	ui = auto
 
 [color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = cyan
+	current = yellow reverse
+	local = yellow
+	remote = cyan
 
 [color "status"]
-    added = green
-    changed = yellow
-    untracked = red
+	added = green
+	changed = yellow
+	untracked = red
 
 ; delta
 
 [core]
-    pager = delta
+	pager = delta
 
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
 
 [merge]
-    conflictstyle = diff3
+	conflictstyle = diff3
 
 [diff]
-    colorMoved = default
+	colorMoved = default
 
 [delta]
-    navigate = true
+	navigate = true
 
 ; https://github.com/folke/tokyonight.nvim/blob/main/extras/delta/tokyonight_night.gitconfig
 [delta]
-    minus-style = syntax "#37222c"
-    minus-non-emph-style = syntax "#37222c"
-    minus-emph-style = syntax "#713137"
-    minus-empty-line-marker-style = syntax "#37222c"
-    line-numbers-minus-style = "#b2555b"
-    plus-style = syntax "#20303b"
-    plus-non-emph-style = syntax "#20303b"
-    plus-emph-style = syntax "#2c5a66"
-    plus-empty-line-marker-style = syntax "#20303b"
-    line-numbers-plus-style = "#266d6a"
-    line-numbers-zero-style = "#3b4261"
+	minus-style = syntax "#37222c"
+	minus-non-emph-style = syntax "#37222c"
+	minus-emph-style = syntax "#713137"
+	minus-empty-line-marker-style = syntax "#37222c"
+	line-numbers-minus-style = "#b2555b"
+	plus-style = syntax "#20303b"
+	plus-non-emph-style = syntax "#20303b"
+	plus-emph-style = syntax "#2c5a66"
+	plus-empty-line-marker-style = syntax "#20303b"
+	line-numbers-plus-style = "#266d6a"
+	line-numbers-zero-style = "#3b4261"

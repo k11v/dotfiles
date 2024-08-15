@@ -1,4 +1,5 @@
 import = ["~/Repositories/tokyonight.nvim/extras/alacritty/tokyonight_night.toml"]
+# import = ["~/Repositories/tokyonight.nvim/extras/alacritty/tokyonight_day.toml"]
 
 [window]
 padding.x = 10
