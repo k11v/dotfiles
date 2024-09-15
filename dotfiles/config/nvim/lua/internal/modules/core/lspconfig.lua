@@ -89,15 +89,15 @@ return {
 					vim.lsp.buf.hover()
 				end, { buffer = event.buf, silent = true })
 
-				vim.keymap.set({ "n" }, "<leader>aa", function()
+				vim.keymap.set({ "n" }, "<leader>a", function()
 					require("fzf-lua").lsp_code_actions()
 				end, { buffer = event.buf, silent = true })
 
-				vim.keymap.set({ "n" }, "<leader>af", function()
+				vim.keymap.set({ "n" }, "<leader>f", function()
 					vim.lsp.buf.format()
 				end, { buffer = event.buf, silent = true })
 
-				vim.keymap.set({ "n" }, "<leader>ar", function()
+				vim.keymap.set({ "n" }, "<leader>r", function()
 					vim.lsp.buf.rename()
 				end, { buffer = event.buf, silent = true })
 
