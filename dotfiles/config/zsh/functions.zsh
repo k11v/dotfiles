@@ -25,15 +25,21 @@ leetcode() {
 	return 1
     fi
     local name="$(echo "$1" | sed 's/\.//g' | sed 's/ /-/g')"
-    mkdir "$name" && cat <<EOF > "$name/README.md"
+    mkdir "$name"
+    cat <<EOF > "$name/README.md"
 ---
-- understand: 0s
-- think: 0s
-- implement: 0s
-- fix: 0s
-- submit → accepted: 0s
-- study solutions: 0s
+- get problem: 0s
+- get solution: 0s
+- code: 0s
+- code to fix: 0s
 ---
+EOF
+    cat <<EOF > "$name/main_test.go"
+package main
+
+// LeetCode
+
+func foo() {}
 EOF
 }
 
