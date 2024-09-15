@@ -43,6 +43,50 @@ func foo() {}
 EOF
 }
 
+# awesomestars reads HTML from the standart input, extracts links,
+# retrieves stargazer count for each link to a GitHub repository,
+# and returns the links enriched with stargazer count.
+awesomestars() {
+    # Parse Pandoc Link objects from STDIN.
+    # cat is actually redundant but it shows intent.
+    items="$(cat | pandoc --from html --to json | jq -c '.. | if type == "object" and .t == "Link" then . else empty end' | while read l; do
+        # Parse link name and URL into n and u.
+        n="$(echo "$l" | jq '.c[1]' | jq '{
+          "pandoc-api-version": [1, 23, 1],
+          "meta": {},
+          "blocks": [
+            {
+              "t": "Plain",
+              "c": .
+            }
+          ]
+        }' | pandoc --from json --to plain)"
+        u="$(echo "$l" | jq -r '.c[2][0]')"
+
+        # Parse GitHub repository's owner/name from URL into repo, then fetch star count into s.
+        repo="$(echo "$u" | python3 -c '
+import sys, urllib.parse
+scheme, netloc, path, _, _ = urllib.parse.urlsplit(sys.stdin.readline())
+if not (scheme == "http" or scheme == "https"): exit()
+if not (netloc == "github.com"): exit()
+if not (len(path) > 0): exit()
+print(path[1:])
+        ')"
+        if [[ -n "$repo" ]]; then
+            s="$(gh repo view "$repo" --json stargazerCount | jq '.stargazerCount')"
+        else
+            s="0"
+        fi
+
+        # Output name, url, star_count.
+        jq -c -n --arg name "$n" --arg url "$u" --arg star_count "$s" '{"name": $name, "url": $url, "star_count": ($star_count | tonumber)}'
+        printf '.' >&2 # singal that we processed one URL
+    done)"
+    printf "\n" >&2
+
+    printf "%s" "$items" | jq -s -c 'sort_by(.star_count) | reverse | .[]'
+}
+
 # Competitive programming utils
 
 gentest() {
