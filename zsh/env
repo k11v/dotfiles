@@ -1,0 +1,9 @@
+export FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
+export PROMPT_EOL_MARK=""
+export PS2="%B…%b "
+export HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
+export HISTSIZE=10000
+export SAVEHIST=10000
+export KEYTIMEOUT=1
+export ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"  # User-defined
+export PROMPT_STYLE="regular"  # User-defined
