@@ -1,0 +1,53 @@
+[core]
+    pager = diff-so-fancy | less
+	quotepath = off
+
+[pager]
+    branch = false
+
+[push]
+    default = simple
+
+[commit]
+    template = ~/.config/git/commit-template.txt
+
+[alias]
+    untrack = update-index --assume-unchanged
+    track = update-index --no-assume-unchanged
+    download = clone --depth=1
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = cyan
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = red
+
+[color "diff"]
+    meta = 11
+    frag = magenta bold
+    func = 146 bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
