@@ -192,75 +192,59 @@ uuid4() {
     python3 -c "import uuid; print(uuid.uuid4())"
 }
 
-# Activate current directory's Python venv
+# venv [<path>] activates a Python venv.
 venv() {
-    local venv
-    if [[ -e "$PWD/venv" ]]; then
-        venv="$PWD/venv"
-    elif [[ -e "$PWD/.venv" ]]; then
-        venv="$PWD/.venv"
-    else
-        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
+    local venv="$1"
+    if [[ -z "$venv" ]]; then
+        venv=".venv"
     fi
-
     if [[ ! -e "$venv" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv doesn't exist: $venv"
+        echo >&2 "error: venv doesn't exist: $venv"
         return 1
     fi
-
-    source "$venv/bin/activate"
-}
-
-# Create current directory's Python venv (with optional version)
-mkvenv() {
-    local version="${1-$(pyenv versions --bare | grep -P '^\d+(\.\d+)*$' | tail -1)}"
-    local venv
-    if [[ -z "$2" ]]; then
-        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
-    else
-        venv="$PWD/$2"
-    fi
-
-    if [[ -z "$version" ]]; then
-        local last_version="$(pyenv install --list | grep -E '^[[:space:]]*[[:digit:]]+(\.[[:digit:]]+)*[[:space:]]*$' | tail -1 | xargs)"
-        pyenv install --skip-existing "$last_version"
-        [[ "$?" -ne 0 ]] && return 1
-        version="$last_version"
-    fi
-
-    if [[ -e "$venv" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv already exists: $venv"
-        return 1
-    fi
-
-    if ! pyenv versions --bare | grep -P -q "^$version\$"; then
-        pyenv install --skip-existing "$version"
-        [[ "$?" -ne 0 ]] && return 1
-    fi
-
-    echo "Making venv '$venv' with Python $version..."
-
-    PYENV_VERSION="$version" python -m venv "$venv"
+    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
     [[ "$?" -ne 0 ]] && return 1
 
     source "$venv/bin/activate"
 }
 
-# Delete current directory's Python venv
-rmvenv() {
-    local venv
-    if [[ -e "$PWD/venv" ]]; then
-        venv="$PWD/venv"
-    elif [[ -e "$PWD/.venv" ]]; then
-        venv="$PWD/.venv"
-    else
-        venv="${XDG_DATA_HOME:-$HOME/.local/share}/venv/venvs/$(basename "$PWD")"
-    fi
-
-    if [[ ! -e "$venv" ]]; then
-        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Venv doesn't exist: $venv"
+# mkvenv <version> [<path>] creates a Python venv.
+mkvenv() {
+    local version="$1"
+    if [[ -z "$version" ]]; then
+        echo >&2 "error: version is not specified"
         return 1
     fi
+
+    local venv="$2"
+    if [[ -z "$venv" ]]; then
+        venv=".venv"
+    fi
+    if [[ -e "$venv" ]]; then
+        echo >&2 "error: venv already exists"
+        return 1
+    fi
+    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
+    [[ "$?" -ne 0 ]] && return 1
+
+    mise x "python@$version" -- python -m venv "$venv"
+    [[ "$?" -ne 0 ]] && return 1
+
+    source "$venv/bin/activate"
+}
+
+# rmvenv [<path>] deactivates and removes a Python venv.
+rmvenv() {
+    local venv="$1"
+    if [[ -z "$venv" ]]; then
+        venv=".venv"
+    fi
+    if [[ ! -e "$venv" ]]; then
+        echo >&2 "error: venv doesn't exist: $venv"
+        return 1
+    fi
+    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
+    [[ "$?" -ne 0 ]] && return 1
 
     if [[ "$VIRTUAL_ENV" -ef "$venv" ]]; then
         deactivate
