@@ -49,7 +49,7 @@ export PIP_REQUIRE_VIRTUALENV=true
 # Pyenv
 
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
-export PATH="$PYENV_ROOT/shims:$PATH"
+# export PATH="$PYENV_ROOT/shims:$PATH"
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 # Go
