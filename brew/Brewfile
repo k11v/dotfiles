@@ -97,7 +97,6 @@ brew "volatility"
 brew "yara"
 
 
-cask "alacritty"
 cask "alfred"
 cask "appcleaner"
 cask "discord"
@@ -134,7 +133,6 @@ cask "vmware-fusion"
 cask "wireshark"
 
 
-mas "Amphetamine", id: 937984704
 mas "Bitwarden", id: 1352778147
 mas "Craft", id: 1487937127
 mas "Flow", id: 1423210932
