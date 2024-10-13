@@ -22,7 +22,6 @@ brew "inetutils"
 brew "make"
 brew "moreutils"
 
-brew "bat"
 brew "diff-so-fancy"
 brew "duf"
 brew "duti"
