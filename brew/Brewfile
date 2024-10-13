@@ -8,7 +8,6 @@ tap "owasp-amass/amass"
 brew "zsh"
 
 brew "binutils"
-brew "coreutils"
 brew "findutils"
 brew "gawk"
 brew "gnu-getopt"

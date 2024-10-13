@@ -1,3 +1,7 @@
+if [ "$INSTALL" -eq 1 ]; then
+    brew install less
+fi
+
 export LESS_TERMCAP_mb=$'\e[1;31m'
 export LESS_TERMCAP_md=$'\e[1;36m'
 export LESS_TERMCAP_me=$'\e[0m'
