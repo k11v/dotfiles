@@ -1,5 +1,5 @@
 if [ "$INSTALL" -eq 1 ]; then
-    # brew install font-jetbrains-mono
+    brew install --cask font-jetbrains-mono-nerd-font
     brew install sublime-text
-    install-link "$HOME/Library/Application Support/Sublime Text" config # https://www.sublimetext.com/docs/revert.html
+    install-file "$HOME/Library/Application Support/Sublime Text" config
 fi

@@ -1,4 +1,5 @@
 if [ "$INSTALL" -eq 1 ]; then
+    brew install --cask transmission
     defaults write org.m0k.transmission CheckRemoveDownloading   -bool true  # don't ask before removing a non-downloading transfer
     defaults write org.m0k.transmission DeleteOriginalTorrent    -bool true  # trash original torrent files
     defaults write org.m0k.transmission DownloadAsk              -bool false # don't ask before starting a download
