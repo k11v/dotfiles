@@ -1,0 +1,2 @@
+[directories]
+custom_pages_dir = "/Users/kirill/.config/tealdeer/pages"  # Tealdeer doesn't support variable expansions here (https://dbrgn.github.io/tealdeer/config_directories.html#custom_pages_dir)
