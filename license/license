@@ -1,0 +1,34 @@
+#!/bin/sh
+
+usage="$(cat << EOF
+Usage: $(basename "$0") <license-file> [<directory>]
+
+Copies a license file to a directory and renames it to LICENSE.md.
+EOF
+)"
+
+
+if [ "$#" -eq 1 ]; then
+    license_file="${XDG_CONFIG_HOME:-$HOME/.config}/license/files/$1"
+    directory="$PWD"
+elif [ "$#" -eq 2 ]; then
+    license_file="${XDG_CONFIG_HOME:-$HOME/.config}/license/files/$1"
+    directory="$2"
+else
+    echo "$usage" >&2
+    exit 1
+fi
+
+
+if [ ! -e "$license_file" ]; then
+    echo "Error: License file doesn't exist: $license_file" >&2
+    exit 1
+fi
+
+if [ -e "$directory/LICENSE.md" ]; then
+    echo "Error: License file already exists: $directory/LICENSE.md" >&2
+    exit 1
+fi
+
+
+cp "$license_file" "$directory/LICENSE.md"

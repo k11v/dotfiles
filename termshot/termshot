@@ -1,0 +1,204 @@
+#!/usr/bin/env zsh
+
+usage="$(cat << EOF
+Usage: $(basename "$0") [options]
+
+Generate a PNG screenshot of a terminal window.
+
+Options:
+  -W, --width <width>                       Set the width of the terminal window [integer | "auto"] [default: 80].
+  --min-width <min-width>                   Set the minimum width of the terminal window [integer] [not supported].
+  --max-width <max-width>                   Set the maximum width of the terminal window [integer].
+  -H, --height <height>                     Set the height of the terminal window [integer | "auto"] [default: auto].
+  --min-height <min-height>                 Set the minimum height of the terminal window [integer] [not supported].
+  --max-height <max-height>                 Set the maximum height of the terminal window [integer] [default: 33].
+  -i, --interactive / -n, --no-interactive  Enable/disable interaction with the terminal before taking the screenshot [default: false].
+  -h, --help                                Show this message.
+
+Examples:
+  $ cat output.txt | $(basename "$0") > screenshot.png
+  $ cat output.txt | $(basename "$0") --height 33 > screenshot.png
+  $ cat output.txt | $(basename "$0") --width auto --max-width 100 > screenshot.png
+  $ cat output.txt | $(basename "$0") --interactive > screenshot.png
+  $ cat output.txt | $(basename "$0") | base64 | pbcopy
+  $ tmux capture-pane -e -p -S - -E - |  $(basename "$0") > screenshot.png
+EOF
+)"
+
+width=80
+# min_width=
+max_width=80
+height="auto"
+# min_height=
+max_height=33
+interactive=0
+
+positional=()
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -W|--width)
+            width="$2"
+            shift 2
+            ;;
+        --min-width)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--min-width' not supported."
+            exit 1
+            ;;
+        --max-width)
+            max_width="$2"
+            shift 2
+            ;;
+        -H|--height)
+            height="$2"
+            shift 2
+            ;;
+        --min-height)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '--min-height' not supported."
+            exit 1
+            ;;
+        --max-height)
+            max_height="$2"
+            shift 2
+            ;;
+        -i|--interactive)
+            interactive=1
+            shift 1
+            ;;
+        -n|--no-interactive)
+            interactive=0
+            shift 1
+            ;;
+        -h|--help)
+            printf "%s" "$usage"
+            exit 0
+            ;;
+        -*)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unknown option: $1"
+            exit 1
+            ;;
+        *)
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Unexpected positional argument: $1"
+            exit 1
+            ;;
+    esac
+done
+
+on_exit() {}
+trap 'on_exit' EXIT
+trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
+trap 'on_exit; trap - INT; kill -INT "$$"' INT
+
+main() {
+    content_file="$(mktemp -t termshot.XXXXXXXXXX)"
+    cat > "$content_file"
+    on_exit() { rm -f -- "$content_file"; }
+
+    session_name="$(printf "%s" "$content_file" | sha256sum | cut -d " " -f 1)"
+
+    content_width="$(cat "$content_file" | sed 's/\x1b\[[0-9;]*m//g' | awk '{ print length }' | sort -n | tail -n 1)"
+    window_width=
+    if [[ "$width" == "auto" && "$content_width" -le "$max_width" ]]; then
+        window_width="$content_width"
+    elif [[ "$width" == "auto" ]]; then
+        window_width="$max_width"
+    else
+        window_width="$width"
+    fi
+
+    content_height="$(cat "$content_file" | sed 's/\x1b\[[0-9;]*m//g' | fold -w "$window_width" | grep -c ^)"
+    if [[ $(tail -c 1 "$content_file" | wc -l) -gt 0 ]]; then
+        # Add 1 to the height if content ends with a newline
+        content_height="$((content_height + 1))"
+    fi
+    window_height=
+    if [[ "$height" == "auto" && "$content_height" -le "$max_height" ]]; then
+        window_height="$content_height"
+    elif [[ "$height" == "auto" ]]; then
+        window_height="$max_height"
+    else
+        window_height="$height"
+    fi
+
+    alacritty \
+        --config-file "${XDG_CONFIG_HOME:-$HOME/.config}/termshot/alacritty.yml" \
+        --option window.dimensions.columns="$window_width" \
+        --option window.dimensions.lines="$window_height" \
+        --command \
+            "$(command -v tmux)" \
+            -L termshot \
+            -f "$XDG_CONFIG_HOME/termshot/tmux.conf" \
+                new-session \
+                -s "$session_name" \
+                    cat "$content_file" \
+    &
+    alacritty_pid="$!"
+    on_exit() { rm -f -- "$content_file"; kill -- "$alacritty_pid"; }
+
+    window_id="$(hs -A -q -t 10 << EOF
+local waitDuration = 5000000 -- 5 seconds
+local waitInterval = 100000 -- 0.1 seconds
+local app
+local window
+
+repeat
+    app = app or hs.application.applicationForPID($alacritty_pid)
+
+    if app then
+        window = app:mainWindow()
+
+        if window then
+            break
+        end
+    end
+
+    hs.timer.usleep(hs.math.min(waitDuration, waitInterval))
+    waitDuration = waitDuration - waitInterval
+until waitDuration <= 0
+
+if not app then
+    error("Couldn't find application for PID '$alacritty_pid'.")
+end
+
+if not window then
+    error("Couldn't find window for PID '$alacritty_pid'.")
+end
+
+return window:id()
+EOF
+    )"
+
+    if [[ "$?" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Failed to find terminal window."
+        exit 1
+    fi
+
+    if [[ "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{client_width}")" -ne "$window_width" || "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{client_height}")" -ne "$window_height" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Actual terminal window size does not match requested size."
+    fi
+
+    if [[ "$(tmux -L termshot display-message -t "=$session_name:0.0" -p "#{history_size}")" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 3)Warning:$(tput sgr0) Content is too large to fit in the terminal window."
+        tmux -L termshot copy-mode -t "=$session_name:0.0" -H ";" send-keys -t "=$session_name:0.0" -X history-top
+    fi
+
+    if [[ "$interactive" -eq 1 ]]; then
+        echo >&2 "Interactive mode enabled.\nPress any key to continue..."
+        read -s -k
+    fi
+
+    screenshot_file="$(mktemp -t termshot.XXXXXXXXXX)"
+    screencapture -x -o -l "$window_id" "$screenshot_file"
+    ret="$?"
+    on_exit() { rm -f -- "$content_file" "$screenshot_file"; kill -- "$alacritty_pid"; }
+    chmod 600 "$screenshot_file"
+
+    if [[ "$ret" -ne 0 ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Failed to capture screenshot."
+        exit 1
+    fi
+
+    cat "$screenshot_file"
+}
+
+main

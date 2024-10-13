@@ -1,0 +1,267 @@
+#!/usr/bin/env zsh
+
+redo=""
+
+allow_pane_capture=0
+target_pane=""
+remove_trailing_spaces_after_pane_capture=1
+remove_trailing_newlines_after_pane_capture=1
+remove_trailing_newline_before_shot_capture=1
+skip_edit=0
+
+output_file=
+
+termshot_args=()
+
+load_args() {
+    while [[ "$#" -gt 0 ]]; do
+        case "$1" in
+            -p|--redo-pane)
+                redo="pane"
+                shift
+                ;;
+            -e|--redo-edit)
+                redo="edit"
+                shift
+                ;;
+            -s|--redo-shot)
+                redo="shot"
+                shift
+                ;;
+            -a|--allow-pane-capture)
+                allow_pane_capture=1
+                shift
+                ;;
+            -t)
+                target_pane="$2"
+                shift 2
+                ;;
+            --skip-edit)
+                skip_edit=1
+                shift
+                ;;
+            --remove-trailing-spaces-after-pane-capture)
+                remove_trailing_spaces_after_pane_capture=1
+                shift
+                ;;
+            --no-remove-trailing-newlines-after-pane-capture)
+                remove_trailing_newlines_after_pane_capture=0
+                shift
+                ;;
+            --no-remove-trailing-newline-before-shot-capture)
+                remove_trailing_newline_before_shot_capture=0
+                shift
+                ;;
+            -o|--output)
+                output_file="$2"
+                shift 2
+                ;;
+            *)
+                termshot_args+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    if [[ -z "$output_file" ]]; then
+        echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Option '-o|--output' is required."
+        exit 1
+    fi
+}
+
+
+raw_pane_file=
+pane_file=
+shot_file=
+
+find_files_on_exit() {}
+find_files() {
+    raw_pane_file="$(mktemp -t autotermshot.XXXXXXXXXX)"
+    pane_file="${output_file}.autotermshot/pane.txt"
+    shot_file="$output_file"
+
+    find_files_on_exit() {
+        rm -f "$raw_pane_file";
+    }
+}
+
+
+pane_plan=""
+edit_plan=""
+shot_plan=""
+
+make_plan() {
+    if [[ "$redo" == "pane" ]]; then
+        pane_plan="redo"
+        edit_plan="redo"
+        shot_plan="redo"
+    elif [[ "$redo" == "edit" ]]; then
+        edit_plan="redo"
+        shot_plan="redo"
+
+        if [[ ! -e "$pane_file" ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Cannot redo pane edit without pane capture."
+            exit 1
+        fi
+    elif [[ "$redo" == "shot" ]]; then
+        shot_plan="redo"
+
+        if [[ ! -e "$pane_file" ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Cannot redo shot without pane capture."
+            exit 1
+        fi
+    fi
+
+    if [[ ! -e "$shot_file" ]]; then
+        shot_plan="do"
+
+        if [[ ! -e "$pane_file" ]]; then
+            pane_plan="do"
+            edit_plan="do"
+        fi
+    fi
+}
+
+
+execute_pane_plan() {
+    if [[ "$pane_plan" == "do" || "$pane_plan" == "redo" ]]; then
+        if [[ "$allow_pane_capture" -eq 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane capture not allowed."
+            exit 1
+        fi
+
+        if [[ "$pane_plan" == "redo" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) pane capture"
+        elif [[ "$pane_plan" == "do" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) pane capture"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected pane plan: $pane_plan"
+            exit 2
+        fi
+
+        if [[ -n "$target_pane" ]]; then
+            tmux capture-pane -e -J -p -S - -E - -t "$target_pane" \
+                | { [[ "$remove_trailing_spaces_after_pane_capture" -eq 1 ]] && gsed -E 's/ *$//' || cat; } \
+                | { [[ "$remove_trailing_newlines_after_pane_capture" -eq 1 ]] && gsed -Ez '$ s/\n+$//' || cat; } > "$raw_pane_file"
+        else
+            tmux capture-pane -e -J -p -S - -E - \
+                | { [[ "$remove_trailing_spaces_after_pane_capture" -eq 1 ]] && gsed -E 's/ *$//' || cat; } \
+                | { [[ "$remove_trailing_newlines_after_pane_capture" -eq 1 ]] && gsed -Ez '$ s/\n+$//' || cat; } > "$raw_pane_file"
+        fi
+
+        if [[ "$?" -ne 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane capture failed."
+            exit 1
+        fi
+    else
+        if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane capture $(tput bold)$pane_file$(tput sgr0)"
+                cat "$pane_file" > "$raw_pane_file"
+            else
+                echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
+                exit 2
+            fi
+        else
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane capture $(tput bold)$pane_file$(tput sgr0)"
+            else
+                echo "$(tput bold)$(tput setaf 1)Missing$(tput sgr0) pane capture $(tput bold)$pane_file$(tput sgr0)"
+            fi
+        fi
+    fi
+}
+
+execute_edit_plan() {
+    if [[ "$edit_plan" == "do" || "$edit_plan" == "redo" ]]; then
+        if [[ "$edit_plan" == "redo" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
+        elif [[ "$edit_plan" == "do" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected edit plan: $edit_plan"
+            exit 2
+        fi
+
+        if [[ "$skip_edit" -eq 1 ]]; then
+            mkdir -p "$(dirname "$pane_file")" && cat "$raw_pane_file" > "$pane_file"
+        else
+            mkdir -p "$(dirname "$pane_file")" && cat "$raw_pane_file" | vipe > "$pane_file"
+        fi
+
+        if [[ "$?" -ne 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Pane edit failed."
+            exit 1
+        fi
+    else
+        if [[ "$shot_plan" == "do" || "$shot_plan" == "redo" ]]; then
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
+            else
+                echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected pane file: $pane_file"
+                exit 2
+            fi
+        else
+            if [[ -e "$pane_file" ]]; then
+                echo "$(tput bold)$(tput setaf 4)Skipping$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
+            else
+                echo "$(tput bold)$(tput setaf 1)Missing$(tput sgr0) pane edit $(tput bold)$pane_file$(tput sgr0)"
+            fi
+        fi
+    fi
+}
+
+execute_shot_plan() {
+    if [[ "$shot_plan" == "do" || "$shot_plan" == "redo" ]]; then
+        if [[ "$shot_plan" == "redo" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Redoing$(tput sgr0) shot capture $(tput bold)$shot_file$(tput sgr0)"
+        elif [[ "$shot_plan" == "do" ]]; then
+            echo "$(tput bold)$(tput setaf 2)Doing$(tput sgr0) shot capture $(tput bold)$shot_file$(tput sgr0)"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Unexpected shot plan: $edit_plan"
+            exit 2
+        fi
+
+        mkdir -p "$(dirname "$shot_file")" \
+            && cat "$pane_file" \
+            | { [[ "$remove_trailing_newline_before_shot_capture" -eq 1 ]] && gsed -z '$ s/\n$//' || cat; } \
+            | termshot "${termshot_args[@]}" > "$shot_file"
+
+        if [[ "$?" -ne 0 ]]; then
+            echo >&2 "$(tput bold)$(tput setaf 1)Error:$(tput sgr0) Shot capture failed."
+            exit 1
+        fi
+    else
+        if [[ -e "$shot_file" ]]; then
+            echo "$(tput bold)$(tput setaf 3)Using$(tput sgr0) shot capture $(tput bold)$shot_file$(tput sgr0)"
+        else
+            echo >&2 "$(tput bold)$(tput setaf 1)AssertionError:$(tput sgr0) Expected shot file: $shot_file"
+            exit 2
+        fi
+    fi
+}
+
+execute_plan() {
+    execute_pane_plan
+    execute_edit_plan
+    execute_shot_plan
+}
+
+
+on_exit() {
+    find_files_on_exit;
+}
+
+trap 'on_exit' EXIT
+trap 'on_exit; trap - TERM; kill -TERM "$$"' TERM
+trap 'on_exit; trap - INT; kill -INT "$$"' INT
+
+
+main() {
+    load_args "$@"
+    find_files
+    make_plan
+    execute_plan
+}
+
+main "$@"
