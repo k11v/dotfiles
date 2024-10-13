@@ -1,0 +1,10 @@
+/*
+
+!/.gitignore
+!/Packages
+
+/Packages/*
+!/Packages/Language - Russian-English
+!/Packages/Markdown - Better Bracket Auto-Pairing
+!/Packages/Smart New File
+!/Packages/User
