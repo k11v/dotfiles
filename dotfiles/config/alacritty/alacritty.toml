@@ -59,6 +59,16 @@ bindings = [
     { key = "P", mods = "Command",       chars = "\u0002\u001b\u0053"       },  # Go to session           (C-b M-S) (User-defined)
     { key = "P", mods = "Command|Shift", chars = "\u0002\u001b\u0050"       },  # Command palette         (C-b M-P) (User-defined)
 
+    # In `\u001b[110;6u`:
+    # - `\u001b[` is a CSI (control sequence introducer), meaning `ESC+[`;
+    # - `110` is the decimal value of lowercase character `n`, see https://en.wikipedia.org/wiki/List_of_Unicode_characters;
+    # - `6` is the sum of the historically always added one (1) and bits for Ctrl (1), Shift (4);
+    # - `u` stands for Unicode.
+    #
+    # `78` (uppercase character `N`) with `6` (constant (1) + Ctrl (1) + Shift (4)) also worked.
+    # `78` (uppercase character `N`) with `5` (constant (1) + Shift (4)) didn't work.
+    # `78` (uppercase character `N`) with `2` (constant (1) + Ctrl (1)) didn't work.
+    { key = "N", mods = "Control|Shift", chars = "\u001b[78;6u"            },  # Emit raw key            (C-S-n)
     { key = "Y", mods = "Control|Alt", chars = "\u001b\u0019"               },  # Emit raw key            (M-C-y)
     { key = "N", mods = "Control|Alt", chars = "\u001b\u000e"               },  # Emit raw key            (M-C-n)
     { key = "P", mods = "Control|Alt", chars = "\u001b\u0010"               },  # Emit raw key            (M-C-p)
