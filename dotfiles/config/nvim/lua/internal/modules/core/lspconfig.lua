@@ -7,17 +7,23 @@ return {
 		x_inits = {},
 		x_servers = {
 			efm = {
+				-- init_options contains all (at the time of writing) six capabilities.
+				-- Whether efm will make them available or not is up to configured tools.
+				init_options = {
+					codeAction = true,
+					completion = true,
+					documentFormatting = true,
+					documentRangeFormatting = true,
+					documentSymbol = true,
+					hover = true,
+				},
+				settings = {
+					rootMarkers = { ".git/" },
+				},
 				x_tools = {},
 				-- x_on_attach = {
 				--  ["*"] = function() end,
 				-- },
-				settings = {
-					rootMarkers = { ".git/" },
-					init_options = {
-						documentFormatting = true,
-						documentRangeFormatting = true,
-					},
-				},
 			},
 		},
 	},
