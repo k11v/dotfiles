@@ -2,10 +2,19 @@
 local height_ratio = 0.85
 local width_ratio = 0.8
 
+local function abbreviated(path)
+	path = path:gsub(os.getenv("HOME"), "~", 1)
+	return path:gsub("([a-zA-Z])[a-z0-9]+", "%1") .. (path:match("[a-zA-Z]([a-z0-9]*)$") or "")
+end
+
 return {
 	url = "https://github.com/nvim-tree/nvim-tree.lua",
 	event = { "LazyFile", "VeryLazy" },
 	opts = {
+		renderer = {
+			root_folder_label = abbreviated,
+			group_empty = abbreviated,
+		},
 		view = {
 			float = {
 				enable = true,
