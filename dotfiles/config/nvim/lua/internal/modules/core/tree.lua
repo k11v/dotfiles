@@ -9,7 +9,7 @@ end
 
 return {
 	url = "https://github.com/nvim-tree/nvim-tree.lua",
-	event = { "LazyFile", "VeryLazy" },
+	event = { "VeryLazy" },
 	opts = {
 		renderer = {
 			root_folder_label = abbreviated,
