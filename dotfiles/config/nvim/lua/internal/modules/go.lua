@@ -32,11 +32,11 @@ return {
 		"mason.nvim",
 		opts = {
 			x_packages = {
-                "delve",
-                "gofumpt",
-                "goimports",
-                "gomodifytags",
-                "impl",
+				"delve",
+				"gofumpt",
+				"goimports",
+				"gomodifytags",
+				"impl",
 			},
 		},
 	},
@@ -104,12 +104,12 @@ return {
 						-- end workaround
 					end,
 				},
-                efm = {
-                    x_tools = {
-                        { "go", require("efmls-configs.formatters.gofumpt") },
-                        { "go", require("efmls-configs.formatters.goimports") },
-                    },
-                },
+				efm = {
+					x_tools = {
+						{ "go", require("efmls-configs.formatters.gofumpt") },
+						{ "go", require("efmls-configs.formatters.goimports") },
+					},
+				},
 			},
 		},
 	},
