@@ -5,7 +5,8 @@ local servers_with_formatting = {} --[[@type { [string]: true }]]
 local function on_attach(client, bufnr)
 	if client.supports_method("textDocument/formatting") and servers_with_formatting[client.name] ~= nil then
 		vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-			group = vim.api.nvim_create_augroup("internal_lspconfig_bufwritepre_client" .. tostring(client.id) .. "_formatting", {}),
+			group = vim.api.nvim_create_augroup(
+			"internal_lspconfig_bufwritepre_client" .. tostring(client.id) .. "_formatting", {}),
 			buffer = bufnr,
 			callback = function()
 				vim.lsp.buf.format({ id = client.id, bufnr = bufnr })
@@ -77,7 +78,7 @@ end
 
 return {
 	url = "https://github.com/neovim/nvim-lspconfig",
-	dependencies = { "fzf-lua" },
+	dependencies = { "cmp-nvim-lsp", "efmls-configs-nvim", "fzf-lua" },
 	event = { "LazyFile", "VeryLazy" },
 	opts_extend = { "x_inits", "x_servers.efm.x_tools" },
 	opts = {
