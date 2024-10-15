@@ -43,7 +43,16 @@ return {
 					-- 	vim.cmd.nohlsearch()
 					-- end, { silent = true })
 
-					vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",c", '"+c', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",C", '"+C', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",d", '"+d', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",D", '"+D', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",p", '"+p', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",P", '"+P', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",x", '"+x', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",X", '"+X', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",y", '"+y', { silent = true })
+					vim.keymap.set({ "n", "v" }, ",Y", '"+Y', { silent = true })
 				end,
 			},
 		},
