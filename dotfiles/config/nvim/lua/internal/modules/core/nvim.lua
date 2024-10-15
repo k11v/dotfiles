@@ -38,9 +38,10 @@ return {
 					vim.opt.undofile = true
 					vim.opt.updatetime = 250
 
-					vim.keymap.set({ "n" }, "<Esc>", function()
-						vim.cmd.nohlsearch()
-					end, { silent = true })
+					-- -- core/multicursor.lua owns this.
+					-- vim.keymap.set({ "n" }, "<Esc>", function()
+					-- 	vim.cmd.nohlsearch()
+					-- end, { silent = true })
 
 					vim.keymap.set({ "n", "v" }, ",", '"+', { silent = true })
 				end,
