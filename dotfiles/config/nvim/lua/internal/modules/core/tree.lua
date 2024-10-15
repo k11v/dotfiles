@@ -24,7 +24,8 @@ return {
 					local window_w = math.floor(screen_w * width_ratio)
 					local window_h = math.floor(screen_h * height_ratio)
 					local center_x = (screen_w - window_w) / 2
-					local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+					local center_y = ((vim.opt.lines:get() - window_h) / 2)
+						- vim.opt.cmdheight:get()
 					return {
 						border = "single",
 						relative = "editor",
@@ -48,11 +49,11 @@ return {
 		vim.api.nvim_create_autocmd({ "VimResized" }, {
 			group = vim.api.nvim_create_augroup("NvimTreeResize", {}),
 			callback = function()
-				if require('nvim-tree.view').is_visible() then
-					require('nvim-tree.view').close()
+				if require("nvim-tree.view").is_visible() then
+					require("nvim-tree.view").close()
 					require("nvim-tree.api").tree.open()
 				end
-			end
+			end,
 		})
 	end,
 }
