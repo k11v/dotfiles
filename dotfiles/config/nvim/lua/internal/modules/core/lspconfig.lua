@@ -78,7 +78,7 @@ end
 
 return {
 	url = "https://github.com/neovim/nvim-lspconfig",
-	dependencies = { "cmp-nvim-lsp", "efmls-configs-nvim", "fzf-lua" },
+	dependencies = { "cmp-nvim-lsp", "fzf-lua" },
 	event = { "LazyFile", "VeryLazy" },
 	opts_extend = { "x_inits", "x_servers.efm.x_tools" },
 	opts = {
@@ -107,9 +107,11 @@ return {
 				---@return nil
 				before_init = function(_, opts)
 					local tools_from_language = {}
-					for language, tool in pairs(opts.x_tools) do
-						tools_from_language[language] = tools_from_language[language] or {}
-						table.insert(tools_from_language[language], tool)
+					for _, tool_from_language in ipairs(opts.x_tools) do
+						for language, tool in pairs(tool_from_language) do
+							tools_from_language[language] = tools_from_language[language] or {}
+							table.insert(tools_from_language[language], tool)
+						end
 					end
 					opts.x_tools = nil
 
