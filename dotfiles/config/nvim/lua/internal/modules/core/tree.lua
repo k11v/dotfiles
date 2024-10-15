@@ -39,5 +39,20 @@ return {
 	},
 	config = function(_, opts)
 		require("nvim-tree").setup(opts)
+
+		vim.keymap.set({ "n" }, "<leader>f", function()
+			require("nvim-tree.api").tree.open()
+		end, { silent = true })
+
+		-- Resize file tree when Neovim is resized.
+		vim.api.nvim_create_autocmd({ "VimResized" }, {
+			group = vim.api.nvim_create_augroup("NvimTreeResize", {}),
+			callback = function()
+				if require('nvim-tree.view').is_visible() then
+					require('nvim-tree.view').close()
+					require("nvim-tree.api").tree.open()
+				end
+			end
+		})
 	end,
 }
