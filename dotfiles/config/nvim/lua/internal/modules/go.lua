@@ -45,6 +45,7 @@ return {
 		opts = {
 			x_servers = {
 				gopls = {
+					x_formatting = false,
 					settings = {
 						gopls = {
 							gofumpt = true,
@@ -87,21 +88,25 @@ return {
 							semanticTokens = true,
 						},
 					},
+					---@param client vim.lsp.Client
 					on_attach = function(client, _)
-						-- workaround for gopls not supporting semanticTokensProvider
-						-- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-						if not client.server_capabilities.semanticTokensProvider then
-							local semantic = client.config.capabilities.textDocument.semanticTokens
+						client.server_capabilities.documentFormattingProvider = false
+						client.server_capabilities.documentRangeFormattingProvider = false
+						client.server_capabilities.documentOnTypeFormattingProvider = nil
+
+						-- A workaround for gopls not supporting semanticTokensProvider.
+						-- See https://github.com/golang/go/issues/54531#issuecomment-1464982242.
+						local semanticTokens = client.config.capabilities.textDocument.semanticTokens
+						if not client.server_capabilities.semanticTokensProvider and semanticTokens ~= nil then
 							client.server_capabilities.semanticTokensProvider = {
 								full = true,
 								legend = {
-									tokenTypes = semantic.tokenTypes,
-									tokenModifiers = semantic.tokenModifiers,
+									tokenTypes = semanticTokens.tokenTypes,
+									tokenModifiers = semanticTokens.tokenModifiers,
 								},
 								range = true,
 							}
 						end
-						-- end workaround
 					end,
 				},
 				efm = {
