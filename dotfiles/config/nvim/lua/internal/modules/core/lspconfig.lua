@@ -77,7 +77,14 @@ return {
 			group = vim.api.nvim_create_augroup("internal_lspconfig_lspattach", {}),
 			callback = function(event)
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				if client == nil then
+					vim.notify("lspconfig: got nil client in LspAttach, want non-nil", vim.log.levels.ERROR)
+					return
+				end
+
+				vim.notify("lspconfig: client being loaded " .. client.name .. " " .. (client.initialized and "true" or "false"), vim.log.levels.INFO)
 				if client.supports_method("textDocument/formatting") then
+					vim.notify("lspconfig: client registers formatting " .. client.name, vim.log.levels.INFO)
 					vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 						group = vim.api.nvim_create_augroup("internal_lspconfig_bufwritepre", {}),
 						buffer = event.buf,
