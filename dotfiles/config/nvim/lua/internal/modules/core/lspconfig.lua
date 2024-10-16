@@ -20,7 +20,7 @@ local function on_attach(client, bufnr)
 		})
 	end
 
-	vim.keymap.set({ "n" }, "<leader>e", function()
+	vim.keymap.set({ "n" }, ",e", function()
 		vim.diagnostic.open_float()
 	end, { buffer = bufnr, silent = true })
 
@@ -32,7 +32,7 @@ local function on_attach(client, bufnr)
 		vim.diagnostic.jump({ count = 1 })
 	end, { buffer = bufnr, silent = true })
 
-	vim.keymap.set({ "n" }, "<leader>q", function()
+	vim.keymap.set({ "n" }, ",q", function()
 		vim.diagnostic.setloclist()
 	end, { buffer = bufnr, silent = true })
 
@@ -40,15 +40,15 @@ local function on_attach(client, bufnr)
 		vim.lsp.buf.hover()
 	end, { buffer = bufnr, silent = true })
 
-	vim.keymap.set({ "n" }, "<leader>a", function()
+	vim.keymap.set({ "n" }, ",a", function()
 		require("fzf-lua").lsp_code_actions()
 	end, { buffer = bufnr, silent = true })
 
-	vim.keymap.set({ "n" }, "<leader>f", function()
+	vim.keymap.set({ "n" }, ",f", function()
 		vim.lsp.buf.format()
 	end, { buffer = bufnr, silent = true })
 
-	vim.keymap.set({ "n" }, "<leader>r", function()
+	vim.keymap.set({ "n" }, ",r", function()
 		vim.lsp.buf.rename()
 	end, { buffer = bufnr, silent = true })
 
