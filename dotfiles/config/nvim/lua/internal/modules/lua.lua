@@ -68,7 +68,9 @@ return {
 				},
 				efm = {
 					x_tools = {
-						{ lua = require("efmls-configs.formatters.stylua") },
+						{
+							lua = { lua = require("efmls-configs.formatters.stylua") },
+						},
 					},
 				},
 			},
