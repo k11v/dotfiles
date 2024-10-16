@@ -13,7 +13,6 @@ return {
 	opts = {
 		renderer = {
 			root_folder_label = abbreviated,
-			group_empty = abbreviated,
 		},
 		view = {
 			float = {
