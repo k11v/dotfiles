@@ -1,3 +1,4 @@
+---@return nil
 local function maybe_complete()
 	if require("cmp").visible() then
 		return false
@@ -6,6 +7,7 @@ local function maybe_complete()
 	return true
 end
 
+---@return nil
 local function maybe_confirm()
 	if not require("cmp").visible() then
 		return false
@@ -14,6 +16,7 @@ local function maybe_confirm()
 	return true
 end
 
+---@return nil
 local function maybe_abort()
 	if not require("cmp").visible() then
 		return false
@@ -22,11 +25,13 @@ local function maybe_abort()
 	return true
 end
 
+---@param direction integer
+---@return nil
 local function maybe_select_item(direction)
 	if not require("cmp").visible() then
 		return false
 	end
-	if direction == 1 then
+	if direction > 0 then
 		require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })
 	else
 		require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })
@@ -34,11 +39,13 @@ local function maybe_select_item(direction)
 	return true
 end
 
+---@param direction integer
+---@return nil
 local function maybe_scroll_docs(direction)
 	if not require("cmp").visible() then
 		return false
 	end
-	if direction == 1 then
+	if direction > 0 then
 		require("cmp").scroll_docs(4)
 	else
 		require("cmp").scroll_docs(-4)
@@ -48,7 +55,7 @@ end
 
 return {
 	url = "https://github.com/hrsh7th/nvim-cmp",
-	dependencies = { "cmp-nvim-lsp" },
+	dependencies = { "cmp-nvim-lsp", "LuaSnip" },
 	event = { "VeryLazy" },
 	opts = {
 		completion = {
@@ -56,7 +63,7 @@ return {
 		},
 		snippet = {
 			expand = function(args)
-				vim.snippet.expand(args.body)
+				require("luasnip").lsp_expand(args.body)
 			end,
 		},
 		sources = {
