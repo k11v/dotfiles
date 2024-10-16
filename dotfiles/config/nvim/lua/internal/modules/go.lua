@@ -45,7 +45,6 @@ return {
 		opts = {
 			x_servers = {
 				gopls = {
-					x_formatting = false,
 					settings = {
 						gopls = {
 							gofumpt = true,
@@ -114,6 +113,7 @@ return {
 					end,
 				},
 				efm = {
+					x_formatting = true,
 					x_tools = {
 						{ go = require("efmls-configs.formatters.gofumpt") },
 						{ go = require("efmls-configs.formatters.goimports") },

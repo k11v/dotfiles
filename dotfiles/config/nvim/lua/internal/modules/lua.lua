@@ -39,14 +39,13 @@ return {
 		opts = {
 			x_servers = {
 				lua_ls = {
-					x_formatting = false,
 					settings = {
 						Lua = {},
 					},
 					on_init = function(client)
 						-- If .luarc.json exists, configure Lua LS using it.
 						for _, w in ipairs(client.workspace_folders) do
-							if vim.loop.fs_stat(w.name .. "/.luarc.json") then
+							if vim.uv.fs_stat(w.name .. "/.luarc.json") then
 								return
 							end
 						end
@@ -61,12 +60,14 @@ return {
 									checkThirdParty = false,
 									library = {
 										vim.env.VIMRUNTIME,
+										"${3rd}/luv/library", -- provides types for vim.uv
 									},
 								},
 							})
 					end,
 				},
 				efm = {
+					x_formatting = true,
 					x_tools = {
 						{
 							lua = { lua = require("efmls-configs.formatters.stylua") },

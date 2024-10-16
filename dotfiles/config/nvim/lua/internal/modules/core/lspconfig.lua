@@ -145,7 +145,7 @@ return {
 				if formatting ~= nil then
 					vim.notify("lspconfig: x_formatting is not boolean", vim.log.levels.ERROR)
 				end
-				formatting = true
+				formatting = false
 			end
 			if formatting then
 				servers_with_formatting[server] = true
