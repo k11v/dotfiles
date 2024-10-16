@@ -39,6 +39,7 @@ return {
 		opts = {
 			x_servers = {
 				lua_ls = {
+					x_formatting = false,
 					settings = {
 						Lua = {},
 					},
