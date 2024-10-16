@@ -5,10 +5,10 @@ return {
 	priority = 1,
 	opts_extend = { "x_inits" },
 	opts = {
+		---@type { [string]: fun() }[]
 		x_inits = {
 			{
-				"*",
-				function()
+				["*"] = function()
 					vim.g.loaded_node_provider = 0
 					vim.g.loaded_perl_provider = 0
 					vim.g.loaded_python3_provider = 0
@@ -58,20 +58,21 @@ return {
 		},
 	},
 	config = function(_, opts)
-		local ft_to_inits = {}
-		for _, ft_and_init in ipairs(opts.x_inits) do
-			local ft, init = ft_and_init[1], ft_and_init[2]
-			ft_to_inits[ft] = ft_to_inits[ft] or {}
-			table.insert(ft_to_inits[ft], init)
+		local inits_from_ft = {}
+		for _, init_from_ft in ipairs(opts.x_inits) do
+			for ft, init in pairs(init_from_ft) do
+				inits_from_ft[ft] = inits_from_ft[ft] or {}
+				table.insert(inits_from_ft[ft], init)
+			end
 		end
 
-		local non_ft_inits = ft_to_inits["*"] or {}
-		ft_to_inits["*"] = nil
+		local non_ft_inits = inits_from_ft["*"] or {}
+		inits_from_ft["*"] = nil
 		for _, non_ft_init in ipairs(non_ft_inits) do
 			non_ft_init()
 		end
 
-		for ft, ft_inits in pairs(ft_to_inits) do
+		for ft, ft_inits in pairs(inits_from_ft) do
 			vim.api.nvim_create_autocmd({ "FileType" }, {
 				group = vim.api.nvim_create_augroup("internal_nvim_x_inits_" .. ft, {}),
 				pattern = { ft },

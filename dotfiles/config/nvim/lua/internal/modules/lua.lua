@@ -5,8 +5,7 @@ return {
 		opts = {
 			x_inits = {
 				{
-					"lua",
-					function()
+					lua = function()
 						vim.opt_local.colorcolumn = "100"
 						vim.opt_local.expandtab = false
 						vim.opt_local.shiftwidth = 4

@@ -5,8 +5,7 @@ return {
 		opts = {
 			x_inits = {
 				{
-					"gitcommit",
-					function()
+					gitcommit = function()
 						vim.opt_local.colorcolumn = { "50", "72" }
 					end,
 				},

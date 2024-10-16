@@ -5,8 +5,7 @@ return {
 		opts = {
 			x_inits = {
 				{
-					"go",
-					function()
+					go = function()
 						vim.opt_local.colorcolumn = "120"
 						vim.opt_local.expandtab = false
 						vim.opt_local.shiftwidth = 4

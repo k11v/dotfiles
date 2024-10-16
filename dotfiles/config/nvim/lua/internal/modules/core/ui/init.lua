@@ -61,8 +61,7 @@ return {
 		opts = {
 			x_inits = {
 				{
-					"*",
-					function()
+					["*"] = function()
 						vim.diagnostic.config({ float = { border = "single" } })
 						vim.lsp.handlers["textDocument/hover"] = (
 							vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })

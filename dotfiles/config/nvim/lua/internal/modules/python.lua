@@ -5,8 +5,7 @@ return {
 		opts = {
 			x_inits = {
 				{
-					"python",
-					function()
+					python = function()
 						vim.opt_local.colorcolumn = "88"
 						vim.opt_local.expandtab = true
 						vim.opt_local.shiftwidth = 4
