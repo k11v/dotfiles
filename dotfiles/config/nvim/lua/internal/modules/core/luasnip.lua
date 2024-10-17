@@ -27,6 +27,13 @@ local function maybe_choose(direction)
 	return true
 end
 
+---@param keys string e.g. "<Tab>"
+---@return nil
+local function feedkeys(keys)
+	local keys_with_replaced_termcodes = vim.api.nvim_replace_termcodes(keys, true, false, true)
+	vim.api.nvim_feedkeys(keys_with_replaced_termcodes, "n", false)
+end
+
 return {
 	url = "https://github.com/L3MON4D3/LuaSnip",
 	version = "v2.*",
@@ -39,7 +46,9 @@ return {
 
 		vim.keymap.set({ "i", "s" }, "<Tab>", function()
 			if not maybe_expand() then
-				maybe_jump(1)
+				if not maybe_jump(1) then
+					feedkeys("<Tab>")
+				end
 			end
 		end, { silent = true })
 
