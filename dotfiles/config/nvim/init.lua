@@ -35,6 +35,9 @@ require("lazy").setup({
 		enabled = true,
 		frequency = 14 * 86400, -- Every 14 days
 	},
+	change_detection = {
+		enabled = false, -- TODO: enable when notifications are less intrusive
+	},
 	performance = {
 		rtp = {
 			disabled_plugins = {
