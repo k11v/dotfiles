@@ -161,7 +161,7 @@ return {
 				end
 
 				if #lsps == 0 then
-					return "None"
+					return "-"
 				end
 				return lsps
 			end,
