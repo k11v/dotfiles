@@ -36,6 +36,18 @@ return {
 				end,
 			},
 		},
+		---@param bufnr integer
+		---@return nil
+		on_attach = function(bufnr)
+			require("nvim-tree.api").config.mappings.default_on_attach(bufnr)
+
+			vim.keymap.set(
+				{ "n" },
+				"<Esc>",
+				require("nvim-tree.view").close,
+				{ buffer = bufnr, desc = "tree: close", silent = true }
+			)
+		end,
 	},
 	config = function(_, opts)
 		require("nvim-tree").setup(opts)
