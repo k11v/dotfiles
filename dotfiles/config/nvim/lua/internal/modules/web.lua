@@ -44,7 +44,7 @@ return {
 		"mason.nvim",
 		opts = {
 			x_packages = {
-				"prettier",
+				"prettierd",
 			},
 		},
 	},
@@ -55,9 +55,9 @@ return {
 				efm = {
 					x_formatting = true,
 					x_tools = {
-						{ css = require("efmls-configs.formatters.prettier") },
-						{ html = require("efmls-configs.formatters.prettier") },
-						{ javascript = require("efmls-configs.formatters.prettier") },
+						{ css = require("efmls-configs.formatters.prettier_d") },
+						{ html = require("efmls-configs.formatters.prettier_d") },
+						{ javascript = require("efmls-configs.formatters.prettier_d") },
 					},
 				},
 			},
