@@ -1,5 +1,9 @@
-export GOPATH="$XDG_DATA_HOME/go"
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
-if [ "$INSTALL" -eq 1 ]; then
-    brew install go
-fi
+cat << EOF >> env.sh
+export GOPATH="\$XDG_DATA_HOME/go"
+EOF
+
+cat << EOF >> Brewfile
+brew "go"
+EOF

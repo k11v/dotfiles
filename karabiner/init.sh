@@ -1,4 +1,9 @@
-if [ "$INSTALL" -eq 1 ]; then
-    brew install --cask karabiner-elements
-    install-file "$XDG_CONFIG_HOME/karabiner" config
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> Brewfile
+cask "karabiner-elements"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/karabiner" "$module/config"
+EOF

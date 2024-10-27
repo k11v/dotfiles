@@ -1,7 +1,14 @@
-export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
-if [ "$INSTALL" -eq 1 ]; then
-    brew install tealdeer
-    install-file "$XDG_CONFIG_HOME/tealdeer" config
-    tldr --update # implementation specific, works for tealdeer
-fi
+cat << EOF >> env.sh
+export TEALDEER_CONFIG_DIR="\$XDG_CONFIG_HOME/tealdeer"
+EOF
+
+cat << EOF >> Brewfile
+brew "tealdeer"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/tealdeer" "$module/config"
+tldr --update
+EOF

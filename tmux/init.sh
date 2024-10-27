@@ -1,4 +1,9 @@
-if [ "$INSTALL" -eq 1 ]; then
-    brew install tmux
-    install-file "$XDG_CONFIG_HOME/tmux" config
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> Brewfile
+brew "tmux"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/tmux" "$module/config"
+EOF

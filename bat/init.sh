@@ -1,6 +1,10 @@
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> env.sh
 export BAT_PAGER=""
 export BAT_THEME="TwoDark"
+EOF
 
-if [ "$INSTALL" -eq 1 ]; then
-    brew install bat
-fi
+cat << EOF >> Brewfile
+brew "bat"
+EOF

@@ -1,4 +1,9 @@
-if [ "$INSTALL" -eq 1 ]; then
-    brew install --cask telegram
-    defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true # hide archived chats from All Chats
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> Brewfile
+cask "telegram"
+EOF
+
+cat << EOF >> install.sh
+defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true
+EOF

@@ -1,4 +1,9 @@
-if [ "$INSTALL" -eq 1 ]; then
-    brew install --cask neovim
-    install-file "$XDG_CONFIG_HOME/nvim" config
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> Brewfile
+cask "neovim"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/nvim" "$module/config"
+EOF

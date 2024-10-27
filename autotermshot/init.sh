@@ -1,3 +1,5 @@
-if [ "$INSTALL" -eq 1 ]; then
-    install-file "$HOME/.local/bin/autotermshot" autotermshot
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> install.sh
+install-file "\$HOME/.local/bin/autotermshot" "$module/autotermshot"
+EOF

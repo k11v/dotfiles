@@ -1,3 +1,5 @@
-if [ "$INSTALL" -eq 1 ]; then
-    defaults write com.apple.Safari IncludeDevelopMenu -bool true # show the Develop menu in Safari
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> install.sh
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+EOF

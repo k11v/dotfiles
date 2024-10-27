@@ -1,5 +1,9 @@
-export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
-if [ "$INSTALL" -eq 1 ]; then
-    install-file "$XDG_CONFIG_HOME/readline" config
-fi
+cat << EOF >> env.sh
+export INPUTRC="\$XDG_CONFIG_HOME/readline/inputrc"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/readline" "$module/config"
+EOF

@@ -1,4 +1,9 @@
-if [ "$INSTALL" -eq 1 ]; then
-    brew install --cask jetbrains-toolbox
-    install-file "$XDG_CONFIG_HOME/ideavim" config/ideavim
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> Brewfile
+cask "jetbrains-toolbox"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/ideavim" "$module/config/ideavim"
+EOF

@@ -1,4 +1,9 @@
-if [ "$INSTALL" -eq 1 ]; then
-    brew install git
-    install-file "$XDG_CONFIG_HOME/git" config
-fi
+module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+cat << EOF >> Brewfile
+brew "git"
+EOF
+
+cat << EOF >> install.sh
+install-file "\$XDG_CONFIG_HOME/git" "$module/config"
+EOF
