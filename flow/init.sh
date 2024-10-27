@@ -5,5 +5,5 @@ mas "Flow", id: 1423210932
 EOF
 
 cat << EOF >> install.sh
-defaults write design.yugen.Flow showWelcomeWindow -bool false
+defaults write design.yugen.Flow showWelcomeWindow -bool false # don't show welcome window
 EOF

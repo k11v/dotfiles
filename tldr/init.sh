@@ -10,5 +10,5 @@ EOF
 
 cat << EOF >> install.sh
 install-file "\$XDG_CONFIG_HOME/tealdeer" "$module/config"
-tldr --update
+tldr --update # implementation specific, works for tealdeer
 EOF

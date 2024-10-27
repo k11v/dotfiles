@@ -5,5 +5,5 @@ cask "telegram"
 EOF
 
 cat << EOF >> install.sh
-defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true
+defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true # hide archived chats from All Chats
 EOF

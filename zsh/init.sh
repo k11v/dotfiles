@@ -6,10 +6,11 @@ export HISTFILE="\$XDG_DATA_HOME/zsh/.zhistory"
 export HISTSIZE=10000
 export KEYTIMEOUT=1
 export PROMPT_EOL_MARK=""
-export PROMPT_STYLE="regular"
 export PS2="%B…%b "
 export SAVEHIST=10000
-export ZCOMPDUMP="\$XDG_CACHE_HOME/zsh/.zcompdump"
+
+export PROMPT_STYLE="regular"                      # user-defined
+export ZCOMPDUMP="\$XDG_CACHE_HOME/zsh/.zcompdump" # user-defined
 EOF
 
 cat << EOF >> Brewfile
