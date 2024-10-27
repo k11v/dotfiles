@@ -28,9 +28,9 @@
    git clone git@github.com:k11v/dotfiles.git "$HOME/.dotfiles"
    ```
 
-5. Run the up script (via caffeinate to prevent Mac from sleeping):
+5. Run the setup script (via caffeinate to prevent Mac from sleeping):
 
    ```sh
    cd "$HOME/.dotfiles"
-   caffeinate -d ./up.sh
+   caffeinate -d ./setup.sh
    ```
