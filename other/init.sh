@@ -1,3 +1,5 @@
+#/bin/sh
+
 module="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
 cat << EOF >> Brewfile

@@ -1,3 +1,5 @@
+#/bin/sh
+
 if [ -e "$DOTFILES_HOME" ]; then
     init_cwd="$(pwd)"
 
