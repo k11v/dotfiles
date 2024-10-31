@@ -9,7 +9,10 @@ local function on_attach(client, bufnr)
 	then
 		vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 			group = vim.api.nvim_create_augroup(
-				"internal_lspconfig_bufwritepre_client" .. tostring(client.id) .. "_formatting",
+				"internal_lspconfig_formatting_client"
+					.. tostring(client.id)
+					.. "_buffer"
+					.. tostring(bufnr),
 				{}
 			),
 			buffer = bufnr,
