@@ -32,7 +32,7 @@ local function on_attach(client, bufnr)
 		vim.diagnostic.jump({ count = 1 })
 	end, { buffer = bufnr, silent = true })
 
-	vim.keymap.set({ "n" }, ",q", function()
+	vim.keymap.set({ "n" }, "<leader>q", function()
 		vim.diagnostic.setloclist()
 	end, { buffer = bufnr, silent = true })
 

@@ -49,10 +49,69 @@ return {
 					vim.keymap.set({ "n", "v" }, ",D", '"+D', { silent = true })
 					vim.keymap.set({ "n", "v" }, ",p", '"+p', { silent = true })
 					vim.keymap.set({ "n", "v" }, ",P", '"+P', { silent = true })
-					vim.keymap.set({ "n", "v" }, ",x", '"+x', { silent = true })
-					vim.keymap.set({ "n", "v" }, ",X", '"+X', { silent = true })
 					vim.keymap.set({ "n", "v" }, ",y", '"+y', { silent = true })
 					vim.keymap.set({ "n", "v" }, ",Y", '"+Y', { silent = true })
+
+					vim.keymap.set({ "n" }, ",w", function()
+						if not vim.bo.modified then
+							vim.notify('buffer has no unsaved changes', vim.log.levels.info)
+							return
+						end
+						vim.cmd("w")
+					end, { silent = true })
+
+					vim.keymap.set({ "n" }, ",W", function()
+						local modified_bufs = vim.fn.getbufinfo({ bufmodified = 1 })
+						if #modified_bufs == 0 then
+							vim.notify('buffers have no unsaved changes', vim.log.levels.info)
+							return
+						end
+						vim.cmd("wa")
+					end, { silent = true })
+
+					vim.keymap.set({ "n" }, ",q", function()
+						local modified_bufs = vim.fn.getbufinfo({ bufmodified = 1 })
+						if #modified_bufs ~= 0 then
+							if #modified_bufs == 1 then
+								vim.notify(tostring(#modified_bufs) .. ' buffer has unsaved changes', vim.log.levels
+								.warn)
+							else
+								vim.notify(tostring(#modified_bufs) .. ' buffers have unsaved changes',
+									vim.log.levels.warn)
+							end
+							return
+						end
+						vim.cmd("qa")
+					end, { silent = true })
+
+					vim.keymap.set({ "n" }, ",Q", function()
+						vim.cmd("qa!")
+					end, { silent = true })
+
+					vim.keymap.set('n', ',x', function()
+						local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+						if #bufs ~= 0 and vim.bo.modified then
+							vim.notify('buffer has unsaved changes', vim.log.levels.WARN)
+							return
+						end
+						if #bufs > 1 then
+							vim.cmd("bd")
+						else
+							vim.cmd("q")
+						end
+					end, { silent = true })
+
+					vim.keymap.set('n', ',X', function()
+						local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+						if #bufs ~= 0 then
+							vim.cmd("w")
+						end
+						if #bufs > 1 then
+							vim.cmd("bd")
+						else
+							vim.cmd("q")
+						end
+					end, { silent = true })
 				end,
 			},
 		},
