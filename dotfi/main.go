@@ -1,35 +1,50 @@
 package main
 
 import (
-	"errors"
-	"flag"
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/goccy/go-yaml"
+	"github.com/google/shlex"
 )
 
-var errFlagParse = errors.New("failed flag parse")
+type Command struct {
+	Env  *Args `yaml:"env"`
+	Brew *Args `yaml:"brew"`
+	Run  *Args `yaml:"run"`
+	Link *Args `yaml:"link"`
+}
+
+type Args []string
+
+func (args *Args) UnmarshalText(text []byte) error {
+	splitArgs, err := shlex.Split(string(text))
+	if err != nil {
+		return err
+	}
+	*args = append(*args, splitArgs...)
+	return nil
+}
 
 func main() {
-	if err := run(os.Args, os.Stdout, os.Stderr); err != nil {
-		if !errors.Is(err, errFlagParse) {
-			fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		}
+	if err := run(os.Args, os.Stdin, os.Stdout, os.Stderr); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
 	os.Exit(0)
 }
 
-func run(args []string, stdout io.Writer, stderr io.Writer) error {
-	fs := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	fs.SetOutput(stderr)
+func run(args []string, stdin io.Reader, stdout io.Writer, stderr io.Writer) error {
+	moduleFile := stdin
 
-	if err := fs.Parse(args[1:]); err != nil {
-		if errors.Is(err, flag.ErrHelp) {
-			return nil
-		}
-		return errors.Join(errFlagParse, err)
+	var commands []Command
+	dec := yaml.NewDecoder(moduleFile, yaml.DisallowUnknownField())
+	if err := dec.Decode(&commands); err != nil {
+		return err
 	}
+
+	fmt.Fprintf(stdout, "%#v", commands)
 
 	return nil
 }
