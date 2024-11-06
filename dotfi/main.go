@@ -9,11 +9,11 @@ import (
 	"github.com/google/shlex"
 )
 
-type Command struct {
-	Env  *Args `yaml:"env"`
-	Brew *Args `yaml:"brew"`
-	Run  *Args `yaml:"run"`
-	Link *Args `yaml:"link"`
+type Module struct {
+	Env  []Args `yaml:"env"`
+	Brew []Args `yaml:"brew"`
+	Run  []Args `yaml:"run"`
+	Link []Args `yaml:"link"`
 }
 
 type Args []string
@@ -38,13 +38,13 @@ func main() {
 func run(args []string, stdin io.Reader, stdout io.Writer, stderr io.Writer) error {
 	moduleFile := stdin
 
-	var commands []Command
+	var module Module
 	dec := yaml.NewDecoder(moduleFile, yaml.DisallowUnknownField())
-	if err := dec.Decode(&commands); err != nil {
+	if err := dec.Decode(&module); err != nil {
 		return err
 	}
 
-	fmt.Fprintf(stdout, "%#v", commands)
+	fmt.Fprintf(stdout, "%#v", module)
 
 	return nil
 }

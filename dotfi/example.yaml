@@ -1,4 +1,8 @@
-- brew: tealdeer
-- env: export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
-- link: config "$XDG_CONFIG_HOME/tealdeer"
-- run: tldr --update
+brew:
+  - tealdeer
+env:
+  - export TEALDEER_CONFIG_DIR="$XDG_CONFIG_HOME/tealdeer"
+link:
+  - config "$XDG_CONFIG_HOME/tealdeer"
+run:
+  - tldr --update
