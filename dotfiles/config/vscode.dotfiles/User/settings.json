@@ -1,0 +1,101 @@
+{
+  // Font
+  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 13,
+  "editor.lineHeight": 1.7,
+
+  // Color Scheme
+  "window.autoDetectColorScheme": true,
+  "workbench.preferredDarkColorTheme": "Default Dark Modern",
+  "workbench.preferredLightColorTheme": "Default Light Modern",
+
+  // Spell Check
+  "cSpell.enabled": false,
+  "cSpell.language": "en,ru",
+
+  // Unicode Highlight
+  "editor.unicodeHighlight.allowedLocales": { "en": true, "ru": true },
+  "editor.unicodeHighlight.nonBasicASCII": false,
+
+  // Copilot
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": false,
+    "scminput": false
+  },
+  "http.proxy": "http://127.0.0.1:1081",
+  "github.copilot.editor.enableAutoCompletions": true,
+
+  // Editing
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": false,
+  "editor.rulers": [80],
+  "[jsonc]": {
+    "editor.formatOnSave": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+  },
+  "[markdown]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+  },
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [88],
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.rulers": [100],
+  },
+  "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.rulers": [100],
+  },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.rulers": [100],
+  },
+  "[vue]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.rulers": [100],
+  },
+  "[go]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.rulers": [100],
+  },
+
+  // Other
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.find.seedSearchStringFromSelection": "never",
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.defaultLanguage": "${activeEditorLanguage}",
+  "files.simpleDialog.enable": true,
+  "terminal.integrated.scrollback": 10000,
+  "window.dialogStyle": "custom",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.settings.editor": "json",
+  "workbench.startupEditor": "none",
+  "extensions.ignoreRecommendations": true,
+  "editor.lightbulb.enabled": "off",
+  "cSpell.enableFiletypes": [
+    "markdown"
+  ],
+  "workbench.colorTheme": "Default Light Modern",
+  "jupyter.askForKernelRestart": false
+}

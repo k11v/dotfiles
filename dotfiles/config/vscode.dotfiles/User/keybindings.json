@@ -1,0 +1,24 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+alt+space",
+        "command": "toggle",
+        "when": "editorTextFocus",
+        "args": {
+            "id": "copilot-enabled",
+            "value": [
+                {
+                    "github.copilot.editor.enableAutoCompletions": true
+                },
+                {
+                    "github.copilot.editor.enableAutoCompletions": false
+                },
+            ]
+        }
+    },
+    {
+        "key": "alt+space",
+        "command": "editor.action.inlineSuggest.trigger",
+        "when": "config.github.copilot.inlineSuggest.enable && editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
+    },
+]
