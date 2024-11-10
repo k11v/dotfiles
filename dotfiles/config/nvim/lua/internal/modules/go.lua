@@ -5,6 +5,11 @@ return {
 		opts = {
 			x_inits = {
 				{
+					["*"] = function()
+						-- gotmpl filetype LIKELY isn't used by the built-in runtime
+						-- but it is used by nvim-lspconfig's gopls.
+						vim.filetype.add({ extension = { ["tmpl"] = "gotmpl" } })
+					end,
 					go = function()
 						vim.opt_local.colorcolumn = "120"
 						vim.opt_local.expandtab = false
@@ -24,6 +29,7 @@ return {
 				"gomod",
 				"gosum",
 				"gowork",
+				"gotmpl",
 			},
 		},
 	},
@@ -46,6 +52,9 @@ return {
 				gopls = {
 					settings = {
 						gopls = {
+							-- Enable template file support for *.tmpl files.
+							-- gopls must be enabled for these files separately.
+							templateExtensions = { "tmpl" },
 							gofumpt = true,
 							codelenses = {
 								gc_details = false,
