@@ -31,7 +31,7 @@ func Apply(packages []string, stdout io.Writer) error {
 	fmt.Fprintf(logFile, "$ %s\n", brewUpdate)
 	if err := brewUpdate.Run(); err != nil {
 		var exitErr *exec.ExitError
-		if errors.As(err, exitErr) {
+		if errors.As(err, &exitErr) {
 			fmt.Fprintf(logFile, "exit code %d\n", exitErr.ExitCode())
 		}
 		fmt.Fprint(stdout, "failed to update the repository\n")
@@ -60,7 +60,7 @@ func Apply(packages []string, stdout io.Writer) error {
 		fmt.Fprintf(logFile, "$ %s\n", brewInstall)
 		if err := brewInstall.Run(); err != nil {
 			var exitErr *exec.ExitError
-			if errors.As(err, exitErr) {
+			if errors.As(err, &exitErr) {
 				fmt.Fprintf(logFile, "exit code %d\n", exitErr.ExitCode())
 			}
 			fmt.Fprintf(stdout, "failed to install %s\n", p)
