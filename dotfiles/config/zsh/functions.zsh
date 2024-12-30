@@ -391,3 +391,13 @@ printcolors() {
 lspypi() {
     curl -fsSL -H "Accept: application/vnd.pypi.simple.v1+json" "https://pypi.org/simple/$1/" | jq --raw-output ".versions[]" | sort --version-sort
 }
+
+dataurl() {
+    if [ -z "$1" ]; then
+        echo "Usage: dataurl <file>" >&2
+        exit 2
+    fi
+    mimetype="$(file -bN --mime-type "$1")"
+    content="$(base64 < "$1")"
+    echo "data:$mimetype;base64,$content"
+}
