@@ -1,12 +1,12 @@
-[includeIf "gitdir:/Users/kirill/Repositories@kirillgashkov/"]
-	path = ~/.config/git/config-kirillgashkov
-
 [user]
 	name = Kirill Gashkov
 	email = 66561526+k11v@users.noreply.github.com
 
 [core]
 	sshCommand = ssh -i ~/.ssh/id_ed25519_k11v
+
+[includeIf "gitdir:/Users/kirill/Repositories@kirillgashkov/"]
+	path = ~/.config/git/config-kirillgashkov
 
 [pager]
 	branch = false
