@@ -27,6 +27,8 @@ alias ll="ls -lhFA --group-directories-first"
 # Other utils
 
 alias bat="bat --paging=never"
+alias go-build-with-debug='go build -gcflags=all="-N -l"' # see https://github.com/golang/vscode-go/wiki/debugging#attach
+alias go-run-with-debug='go run -gcflags=all="-N -l"'     # see https://github.com/golang/vscode-go/wiki/debugging#attach
 
 alias '??'="gh copilot suggest -t shell"
 alias iconv-windows-1251-to-utf-8="iconv -f WINDOWS-1251 -t UTF-8"
