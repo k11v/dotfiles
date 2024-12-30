@@ -18,28 +18,58 @@ grep() { /usr/local/opt/grep/libexec/gnubin/grep "$@"; }
 g++() { /usr/local/opt/gcc/bin/g++-13 "$@" }
 gcc() { /usr/local/opt/gcc/bin/gcc-13 "$@" }
 
+dsa() {
+    local problem_name subproblem_name main_path repo_root current_dir module_path
 
-leetcode() {
-    if [[ -z "$1" ]]; then
-	echo "Error: Problem name not provided" >&2
-	return 1
+    problem_name="$(slugify "$1")"
+    subproblem_name="$(slugify "$2")"
+
+    if [[ -z "$problem_name" ]]; then
+        echo "error: missing problem name" >&2
+        return 1
     fi
-    local name="$(echo "$1" | sed 's/\.//g' | sed 's/ /-/g')"
-    mkdir "$name"
-    cat <<EOF > "$name/README.md"
----
-- get problem: 0s
-- get solution: 0s
-- code: 0s
-- code to fix: 0s
----
+    
+    if [[ -z "$subproblem_name" ]]; then
+        main_path="$problem_name"
+    else
+        main_path="$problem_name/$subproblem_name"
+    fi
+
+    repo_root="$(git rev-parse --show-toplevel)"
+    current_dir="$(pwd)"
+    if [[ "$current_dir" == "$repo_root" ]]; then
+        module_path="github.com/k11v/dsa/$problem_name"
+    else
+        module_path="github.com/k11v/dsa/${current_dir#$repo_root/}/$problem_name"
+    fi
+
+    mkdir -p "$problem_name"
+    cat <<EOF > "$problem_name/go.mod"
+module $module_path
+
+go 1.23.4
 EOF
-    cat <<EOF > "$name/main_test.go"
+    cat <<EOF > "$problem_name/README.md"
+Time to solve:
+
+- read: 0s
+- think: 0s
+- implement: 0s
+- check and fix: 0s
+- run and fix: 0s
+- success: 0s
+- read: 0s
+- solve: 0s
+- success: 0s
+- _total: 0s_
+EOF
+
+    mkdir -p "$main_path"
+    cat <<EOF > "$main_path/main.go"
 package main
 
-// LeetCode
-
-func foo() {}
+func main() {
+}
 EOF
 }
 
