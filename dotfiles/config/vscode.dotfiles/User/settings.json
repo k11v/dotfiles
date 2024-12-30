@@ -5,17 +5,42 @@
   "editor.fontSize": 13,
   "editor.lineHeight": 1.7,
 
-  // Color Scheme
+  // Color scheme
   "window.autoDetectColorScheme": true,
   "workbench.preferredDarkColorTheme": "Default Dark Modern",
   "workbench.preferredLightColorTheme": "Default Light Modern",
 
-  // Spell Check
+  // Spell check
   "cSpell.enabled": false,
   "cSpell.language": "en,ru",
 
   // Proxy
   "http.proxy": "http://127.0.0.1:1081",
+
+  // Auto save
+  "files.autoSave": "onFocusChange",
+
+  // Go
+  "go.lintTool": "golangci-lint",
+  "go.testFlags": ["-count=1"],
+  "gopls": {
+    // See https://github.com/golang/vscode-go/wiki/features#syntax-highlighting.
+    "ui.semanticTokens": true,
+    "ui.noSemanticString": true,
+    "ui.noSemanticNumber": true,
+    // See https://github.com/golang/vscode-go/wiki/features#organizing-imports.
+    "formatting.local": "github.com/k11v",
+    // See https://github.com/golang/vscode-go/wiki/features#custom-formatter.
+    "fomatting.gofumpt": true,
+  },
+  "[go]": {
+    "editor.rulers": [80, 120],
+    "editor.defaultFormatter": "golang.go",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always",
+    },
+  },
 
   // Other
   "diffEditor.ignoreTrimWhitespace": false,
@@ -32,4 +57,12 @@
   "workbench.settings.editor": "json",
   "workbench.startupEditor": "none",
   "telemetry.telemetryLevel": "off",
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "jupyter.askForKernelRestart": false,
+  "go.toolsManagement.autoUpdate": true,
 }
