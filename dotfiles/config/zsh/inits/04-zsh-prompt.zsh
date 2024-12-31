@@ -5,7 +5,7 @@ _prompt_builders=()
 
 _prompt_builders["regular"]="_make_regular_prompt"
 _make_regular_prompt() {
-    local exit_status="$1" git_ref git_commit
+    local exit_status="$1" git_ref git_commit git_tag
     local username hostname branch venv workdir symbol
     
     workdir="%B%F{cyan}%~%f%b"
@@ -13,6 +13,7 @@ _make_regular_prompt() {
 
     git_ref="$(git symbolic-ref --quiet HEAD 2> /dev/null)"
     [[ "$?" -eq 1 ]] && git_commit="$(git rev-parse --short HEAD 2> /dev/null)"
+    [[ -n "$git_commit" ]] && git_tag="$(git describe --exact-match --tags "$git_commit" 2> /dev/null)"
 
     if [[ -d ".git" ]]; then
         workdir="%B%F{cyan}${PWD:t}%f%b"
@@ -20,6 +21,8 @@ _make_regular_prompt() {
 
     if [[ -n "$git_ref" ]]; then
         branch=" on %B%F{magenta}${git_ref#refs/heads/}%f%b"
+    elif [[ -n "$git_tag" ]]; then
+        branch=" on %B%F{magenta}HEAD%f%b %B%F{green}($git_tag)%b%f"
     elif [[ -n "$git_commit" ]]; then
         branch=" on %B%F{magenta}HEAD%f%b %B%F{green}($git_commit)%b%f"
     fi
