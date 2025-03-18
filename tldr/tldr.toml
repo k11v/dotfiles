@@ -1,0 +1,15 @@
+Env = [
+  ["TEALDEER_CONFIG_DIR", "$XDG_CONFIG_HOME/tealdeer"],
+]
+
+BrewFormula = [
+  ["tealdeer"],
+]
+
+File = [
+  ["$XDG_CONFIG_HOME/tealdeer", "config"],
+]
+
+Run = [
+  ["tldr --update"], # implementation specific, works for tealdeer
+]

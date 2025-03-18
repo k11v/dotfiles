@@ -1,0 +1,7 @@
+BrewCask = [
+  ["jetbrains-toolbox"],
+]
+
+File = [
+  ["$XDG_CONFIG_HOME/ideavim", "config/ideavim"],
+]

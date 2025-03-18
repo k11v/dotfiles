@@ -1,0 +1,8 @@
+Env = [
+  ["PYENV_ROOT", "$XDG_DATA_HOME/pyenv"],
+  ["PYENV_VIRTUALENV_DISABLE_PROMPT", "1"],
+]
+
+BrewFormula = [
+  ["pyenv"],
+]

@@ -1,0 +1,7 @@
+Env = [
+  ["INPUTRC", "$XDG_CONFIG_HOME/readline/inputrc"],
+]
+
+File = [
+  ["$XDG_CONFIG_HOME/readline", "config"],
+]

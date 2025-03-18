@@ -1,0 +1,8 @@
+Env = [
+  ["BAT_PAGER", ""],
+  ["BAT_THEME", "TwoDark"],
+]
+
+BrewFormula = [
+  ["bat"],
+]

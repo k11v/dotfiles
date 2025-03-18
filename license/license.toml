@@ -1,0 +1,4 @@
+File = [
+  ["$HOME/.local/bin/license", "license"],
+  ["$XDG_CONFIG_HOME/license", "config"],
+]

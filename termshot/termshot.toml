@@ -1,0 +1,4 @@
+File = [
+  ["$HOME/.local/bin/termshot", "termshot"],
+  ["$XDG_CONFIG_HOME/termshot", "config"],
+]

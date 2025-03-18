@@ -1,0 +1,7 @@
+BrewCask = [
+  ["neovim"],
+]
+
+File = [
+  ["$XDG_CONFIG_HOME/nvim", "config"],
+]

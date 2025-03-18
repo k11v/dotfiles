@@ -1,0 +1,13 @@
+BrewCask = [
+  ["hammerspoon"],
+]
+
+File = [
+  ["$XDG_CONFIG_HOME/hammerspoon", "config"],
+]
+
+Default = [
+  ["org.hammerspoon.Hammerspoon", "MJConfigFile", "$XDG_CONFIG_HOME/hammerspoon/init.lua"], # follow XDG Base Directory, see https://github.com/Hammerspoon/hammerspoon/issues/2175
+  ["org.hammerspoon.Hammerspoon", "MJShowDockIconKey", false],                              # hide the Dock icon
+  ["org.hammerspoon.Hammerspoon", "MJShowMenuIconKey", false],                              # hide the menu bar icon
+]

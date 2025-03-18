@@ -1,0 +1,11 @@
+BrewCask = [
+  ["font-jetbrains-mono-nerd-font"],
+]
+
+BrewFormula = [
+  ["sublime-text"],
+]
+
+File = [
+  ["$HOME/Library/Application Support/Sublime Text", "config"],
+]

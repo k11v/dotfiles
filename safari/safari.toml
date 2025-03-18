@@ -1,0 +1,3 @@
+Default = [
+  ["com.apple.Safari", "IncludeDevelopMenu", true], # show the Develop menu in Safari
+]

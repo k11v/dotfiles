@@ -15,6 +15,14 @@ type Maser interface {
 }
 
 type Defaulter interface {
+	// float, int
+	// -array "one" "two"
+	// -dict 0 -string "." 1 -string "," 10 -string "." 17 -string ","
+	// -int 1
+	// -bool false
+	// -bool true
+	// -int 2
+	// -int 2
 	Default(domain string, k string, v any) error
 }
 
