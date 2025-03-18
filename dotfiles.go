@@ -1,6 +1,9 @@
 package dotfiles
 
-import "os/exec"
+import (
+	"io/fs"
+	"os/exec"
+)
 
 type Brewer interface {
 	BrewFormula(p string) error
@@ -12,7 +15,7 @@ type Enver interface {
 }
 
 type Filer interface {
-	File(dst, src string) error
+	File(dst, src string, srcFS fs.FS) error
 }
 
 type Runner interface {
