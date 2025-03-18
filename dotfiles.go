@@ -3,7 +3,8 @@ package dotfiles
 import "os/exec"
 
 type Brewer interface {
-	Brew(p string) error
+	BrewFormula(p string) error
+	BrewCask(p string) error
 }
 
 type Enver interface {
