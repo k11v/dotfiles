@@ -10,6 +10,14 @@ type Brewer interface {
 	BrewCask(p string) error
 }
 
+type Maser interface {
+	Mas(p string) error
+}
+
+type Defaulter interface {
+	Default(domain string, k string, v any) error
+}
+
 type Enver interface {
 	Env(k, v string) error
 }
