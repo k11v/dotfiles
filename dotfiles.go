@@ -1,4 +1,4 @@
-package main
+package dotfiles
 
 import "os/exec"
 
@@ -24,7 +24,4 @@ type Runner struct{}
 
 func (e *Runner) Run(c *exec.Cmd) error {
 	return nil
-}
-
-func main() {
 }
