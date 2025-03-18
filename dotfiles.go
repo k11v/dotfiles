@@ -8,13 +8,13 @@ type Brewer interface {
 }
 
 type Enver interface {
-	Env(k, v string)
+	Env(k, v string) error
 }
 
 type Filer interface {
-	File(dst, src string)
+	File(dst, src string) error
 }
 
 type Runner interface {
-	Run(c *exec.Cmd)
+	Run(c *exec.Cmd) error
 }
