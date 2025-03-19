@@ -1,4 +1,4 @@
-package dotfiles
+package main
 
 import (
 	"io/fs"
