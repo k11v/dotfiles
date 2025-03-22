@@ -1,100 +1,113 @@
 package main
 
 import (
+	"errors"
 	"flag"
+	"fmt"
 	"os"
-
-	"github.com/pelletier/go-toml/v2"
+	"os/exec"
 )
 
-type Module struct {
-	Alias       [][]any
-	BrewCask    [][]any
-	BrewFormula [][]any
-	Default     [][]any
-	Env         [][]any
-	File        [][]any
-	Mas         [][]any
-	Run         [][]any
-	RunSudo     [][]any
+type Decl struct {
+	Type string
+	Args []string
 }
-
-type Command struct {
-	Name   CommandName
-	Params any
-}
-
-type CommandName string
-
-const (
-	CommandNameAlias       CommandName = "alias"
-	CommandNameBrewCask    CommandName = "brew-cask"
-	CommandNameBrewFormula CommandName = "brew-formula"
-	CommandNameDefault     CommandName = "default"
-	CommandNameEnv         CommandName = "env"
-	CommandNameFile        CommandName = "file"
-	CommandNameMas         CommandName = "mas"
-	CommandNameRun         CommandName = "run"
-	CommandNameRunSudo     CommandName = "run-sudo"
-)
 
 func main() {
 	flag.Parse()
 
-	moduleFiles := flag.Args()
-	modules := make(map[string]*Module, len(moduleFiles))
-
-	for _, moduleFile := range moduleFiles {
-		err := func() error {
-			modules[moduleFile] = new(Module)
-
-			f, err := os.Open(moduleFile)
-			if err != nil {
-				return err
-			}
-
-			dec := toml.NewDecoder(f)
-			dec.DisallowUnknownFields()
-			err = dec.Decode(modules[moduleFile])
-			if err != nil {
-				return err
-			}
-
-			return nil
-		}()
-		if err != nil {
-			panic(err)
-		}
+	// Provided via args.
+	// Specified as paths to directories containing dot.yaml files.
+	// Direct paths to dot.yaml files are not resolved.
+	// "path/to/..." resolves to all nested modules discovered by the presence of dot.yaml file.
+	// Avoid naming configuration files as dot.yaml since ignoring false positives is not supported.
+	mods := []string{
+		"alacritty",
+		"hammerspoon",
+		"safari",
+		"tldr",
 	}
 
-	commandsFromModule := make(map[string][]Command, len(modules))
-	for name, module := range modules {
-		for _, params := range module.Alias {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameAlias, Params: params})
-		}
-		for _, params := range module.BrewCask {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameBrewCask, Params: params})
-		}
-		for _, params := range module.BrewFormula {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameBrewFormula, Params: params})
-		}
-		for _, params := range module.Default {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameDefault, Params: params})
-		}
-		for _, params := range module.Env {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameEnv, Params: params})
-		}
-		for _, params := range module.File {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameFile, Params: params})
-		}
-		for _, params := range module.Mas {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameMas, Params: params})
-		}
-		for _, params := range module.Run {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameRun, Params: params})
-		}
-		for _, params := range module.RunSudo {
-			commandsFromModule[name] = append(commandsFromModule[name], Command{Name: CommandNameRunSudo, Params: params})
+	// Loaded from */dot.yaml files.
+	declsFromMod := map[string][]Decl{
+		"alacritty": {
+			{Type: "brew-cask", Args: []string{"alacritty"}},
+			{Type: "link", Args: []string{"$XDG_CONFIG_HOME/alacritty", "config"}},
+		},
+		"hammerspoon": {
+			{Type: "brew-cask", Args: []string{"hammerspoon"}},
+			{Type: "link", Args: []string{"$XDG_CONFIG_HOME/hammerspoon", "config"}},
+			{Type: "default", Args: []string{"org.hammerspoon.Hammerspoon", "MJConfigFile", "$XDG_CONFIG_HOME/hammerspoon/init.lua"}},
+			{Type: "default", Args: []string{"org.hammerspoon.Hammerspoon", "MJShowDockIconKey", "-bool", "false"}},
+			{Type: "default", Args: []string{"org.hammerspoon.Hammerspoon", "MJShowMenuIconKey", "-bool", "false"}},
+		},
+		"safari": {
+			{Type: "default", Args: []string{"com.apple.Safari", "IncludeDevelopMenu", "-bool", "true"}},
+		},
+		"tldr": {
+			{Type: "env", Args: []string{"TEALDEER_CONFIG_DIR", "$XDG_CONFIG_HOME/tealdeer"}},
+			{Type: "brew-formula", Args: []string{"tealdeer"}},
+			{Type: "link", Args: []string{"$XDG_CONFIG_HOME/tealdeer", "config"}},
+			{Type: "run", Args: []string{"tldr --update"}},
+		},
+	}
+
+ModLoop:
+	for modIndex, mod := range mods {
+		decls := declsFromMod[mod]
+		for declIndex, decl := range decls {
+			_, _ = fmt.Printf("[%d/%d] %s\t[%d/%d] %s\n", modIndex+1, len(mods), mod, declIndex+1, len(decls), decl)
+
+			switch decl.Type {
+			case "brew-cask":
+				p := decl.Args[0]
+				if len(decl.Args) > 1 {
+					panic("extra args")
+				}
+
+				// TODO: Check what happens when brew needs stdin and stdin is not attached.
+				// TODO: Change command to not use stdin.
+				c := exec.Command("brew", "install", "--cask", p)
+				// c.Stdin = os.Stdin
+				c.Stdout = os.Stdout
+				c.Stderr = os.Stderr
+
+				err := c.Run()
+				if err != nil {
+					var exitErr *exec.ExitError
+					if errors.As(err, &exitErr) {
+						_, _ = fmt.Printf("[%d/%d] %s\t[%d/%d] %s\t[!] ERROR\n", modIndex+1, len(mods), mod, declIndex+1, len(decls), decl)
+						continue ModLoop
+					}
+				}
+			case "brew-formula":
+				p := decl.Args[0]
+				if len(decl.Args) > 1 {
+					panic("extra args")
+				}
+
+				// TODO: Check what happens when brew needs stdin and stdin is not attached.
+				// TODO: Change command to not use stdin.
+				c := exec.Command("brew", "install", "--formula", p)
+				// c.Stdin = os.Stdin
+				c.Stdout = os.Stdout
+				c.Stderr = os.Stderr
+
+				err := c.Run()
+				if err != nil {
+					var exitErr *exec.ExitError
+					if errors.As(err, &exitErr) {
+						_, _ = fmt.Printf("[%d/%d] %s\t[%d/%d] %s\t[!] ERROR\n", modIndex+1, len(mods), mod, declIndex+1, len(decls), decl)
+						continue ModLoop
+					}
+				}
+			case "link":
+			case "default":
+			case "env":
+			case "run":
+			default:
+				panic("unknown decl type")
+			}
 		}
 	}
 }
