@@ -12,17 +12,8 @@ import (
 )
 
 type Setupper struct {
-	aliasBuf bytes.Buffer
-	envBuf   bytes.Buffer
-}
-
-func (s *Setupper) SetupAlias(d Alias) error {
-	_, _ = s.aliasBuf.WriteString("alias ")
-	_, _ = s.aliasBuf.WriteString(d.Key)
-	_, _ = s.aliasBuf.WriteString("=")
-	_, _ = s.aliasBuf.WriteString(escape(d.Value))
-	_, _ = s.aliasBuf.WriteString("\n")
-	return nil
+	envAliasBuf bytes.Buffer
+	envVarBuf   bytes.Buffer
 }
 
 func (s *Setupper) SetupBrewCask(d BrewCask) error {
@@ -81,12 +72,21 @@ func (s *Setupper) SetupDefault(d Default) error {
 	return c.Run()
 }
 
-func (s *Setupper) SetupEnv(d Env) error {
-	_, _ = s.envBuf.WriteString("export ")
-	_, _ = s.envBuf.WriteString(d.Key)
-	_, _ = s.envBuf.WriteString("=")
-	_, _ = s.envBuf.WriteString(escape(d.Value))
-	_, _ = s.envBuf.WriteString("\n")
+func (s *Setupper) SetupEnvAlias(d EnvAlias) error {
+	_, _ = s.envAliasBuf.WriteString("alias ")
+	_, _ = s.envAliasBuf.WriteString(d.Key)
+	_, _ = s.envAliasBuf.WriteString("=")
+	_, _ = s.envAliasBuf.WriteString(escape(d.Value))
+	_, _ = s.envAliasBuf.WriteString("\n")
+	return nil
+}
+
+func (s *Setupper) SetupEnvVar(d EnvVar) error {
+	_, _ = s.envVarBuf.WriteString("export ")
+	_, _ = s.envVarBuf.WriteString(d.Key)
+	_, _ = s.envVarBuf.WriteString("=")
+	_, _ = s.envVarBuf.WriteString(escape(d.Value))
+	_, _ = s.envVarBuf.WriteString("\n")
 	return nil
 }
 

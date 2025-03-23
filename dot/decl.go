@@ -1,10 +1,5 @@
 package main
 
-type Alias struct {
-	Key   string
-	Value string
-}
-
 type BrewCask struct {
 	Name string
 }
@@ -30,7 +25,12 @@ type Default struct {
 	Value  any
 }
 
-type Env struct {
+type EnvAlias struct {
+	Key   string
+	Value string
+}
+
+type EnvVar struct {
 	Key   string
 	Value string
 }
