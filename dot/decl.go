@@ -15,14 +15,15 @@ type BrewFormula struct {
 
 // Value's type is one of:
 //
-//	string         // -string <string_value>
-//	[]byte         // -data <hex_digits>
-//	int            // -int <integer_value>
-//	float          // -float  <floating-point_value>
-//	bool           // -bool (true | false | yes | no)
-//	time.Time      // -date <date_rep>
-//	[]any          // -array <value1> <value2> ...
-//	map[string]any // -dict <key1> <value1> <key2> <value2> ...
+//	string         // writes -string <string_value>
+//	[]byte         // writes -data <hex_digits>
+//	int            // writes -int <integer_value>
+//	float64        // writes -float <floating-point_value>
+//	bool           // writes -bool (true | false | yes | no)
+//	time.Time      // writes -date <date_rep>
+//	[]any          // writes -array <value1> <value2> ...
+//	map[string]any // writes -dict <key1> <value1> <key2> <value2> ...
+//	nil            // deletes
 type Default struct {
 	Domain string
 	Key    string
@@ -40,7 +41,7 @@ type File struct {
 }
 
 type Mas struct {
-	Name string
+	ID string
 }
 
 type Run struct {
