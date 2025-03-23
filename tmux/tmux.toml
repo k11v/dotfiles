@@ -1,7 +1,0 @@
-BrewFormula = [
-  ["tmux"],
-]
-
-File = [
-  ["$XDG_CONFIG_HOME/tmux", "config"],
-]
