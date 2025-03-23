@@ -12,6 +12,8 @@ import (
 	"strings"
 )
 
+// TODO: Add variable expansion (e.g. "$XDG_CONFIG_HOME").
+
 type Setupper struct {
 	envFile string
 }
