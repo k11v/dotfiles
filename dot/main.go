@@ -4,8 +4,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
+
+	"github.com/goccy/go-yaml"
+	"github.com/google/shlex"
 )
 
 type Decl struct {
@@ -16,40 +20,57 @@ type Decl struct {
 func main() {
 	flag.Parse()
 
-	// Provided via args.
-	// Specified as paths to directories containing dot.yaml files.
-	// Direct paths to dot.yaml files are not resolved.
-	// "path/to/..." resolves to all nested modules discovered by the presence of dot.yaml file.
-	// Avoid naming configuration files as dot.yaml since ignoring false positives is not supported.
-	mods := []string{
-		"alacritty",
-		"hammerspoon",
-		"safari",
-		"tldr",
-	}
+	// TODO: Handle "./...".
+	mods := flag.Args()
 
-	// Loaded from */dot.yaml files.
-	declsFromMod := map[string][]Decl{
-		"alacritty": {
-			{Type: "brew-cask", Args: []string{"alacritty"}},
-			{Type: "link", Args: []string{"$XDG_CONFIG_HOME/alacritty", "config"}},
-		},
-		"hammerspoon": {
-			{Type: "brew-cask", Args: []string{"hammerspoon"}},
-			{Type: "link", Args: []string{"$XDG_CONFIG_HOME/hammerspoon", "config"}},
-			{Type: "default", Args: []string{"org.hammerspoon.Hammerspoon", "MJConfigFile", "$XDG_CONFIG_HOME/hammerspoon/init.lua"}},
-			{Type: "default", Args: []string{"org.hammerspoon.Hammerspoon", "MJShowDockIconKey", "-bool", "false"}},
-			{Type: "default", Args: []string{"org.hammerspoon.Hammerspoon", "MJShowMenuIconKey", "-bool", "false"}},
-		},
-		"safari": {
-			{Type: "default", Args: []string{"com.apple.Safari", "IncludeDevelopMenu", "-bool", "true"}},
-		},
-		"tldr": {
-			{Type: "env", Args: []string{"TEALDEER_CONFIG_DIR", "$XDG_CONFIG_HOME/tealdeer"}},
-			{Type: "brew-formula", Args: []string{"tealdeer"}},
-			{Type: "link", Args: []string{"$XDG_CONFIG_HOME/tealdeer", "config"}},
-			{Type: "run", Args: []string{"tldr --update"}},
-		},
+	declsFromMod := make(map[string][]Decl, len(mods))
+	for _, mod := range mods {
+		err := func() error {
+			f, err := os.Open(mod)
+			if err != nil {
+				return err
+			}
+			defer func() {
+				deferErr := f.Close()
+				if deferErr != nil {
+					slog.Error("didn't close file", "error", deferErr)
+				}
+			}()
+
+			var declMaps []map[string]string
+			dec := yaml.NewDecoder(f)
+			err = dec.Decode(&declMaps)
+			if err != nil {
+				return err
+			}
+
+			decls := make([]Decl, 0)
+			for _, declMap := range declMaps {
+				if len(declMap) != 1 {
+					return errors.New("decl map should have 1 key")
+				}
+
+				var typ string
+				for key := range declMap {
+					typ = key
+				}
+
+				args, err := shlex.Split(declMap[typ])
+				if err != nil {
+					return err
+				}
+
+				decls = append(decls, Decl{Type: typ, Args: args})
+			}
+
+			declsFromMod[mod] = decls
+
+			return nil
+		}()
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(1)
+		}
 	}
 
 ModLoop:
