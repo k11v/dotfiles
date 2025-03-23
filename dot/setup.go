@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,8 +13,7 @@ import (
 )
 
 type Setupper struct {
-	envAliasBuf bytes.Buffer
-	envVarBuf   bytes.Buffer
+	envFile string
 }
 
 func (s *Setupper) SetupBrewCask(d BrewCask) error {
@@ -73,21 +73,49 @@ func (s *Setupper) SetupDefault(d Default) error {
 }
 
 func (s *Setupper) SetupEnvAlias(d EnvAlias) error {
-	_, _ = s.envAliasBuf.WriteString("alias ")
-	_, _ = s.envAliasBuf.WriteString(d.Key)
-	_, _ = s.envAliasBuf.WriteString("=")
-	_, _ = s.envAliasBuf.WriteString(escape(d.Value))
-	_, _ = s.envAliasBuf.WriteString("\n")
-	return nil
+	err := os.MkdirAll(filepath.Dir(s.envFile), 0o777)
+	if err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(s.envFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0o666)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	var buf bytes.Buffer
+	_, _ = buf.WriteString("alias ")
+	_, _ = buf.WriteString(d.Key)
+	_, _ = buf.WriteString("=")
+	_, _ = buf.WriteString(escape(d.Value))
+	_, _ = buf.WriteString("\n")
+
+	_, err = io.Copy(f, &buf)
+	return err
 }
 
 func (s *Setupper) SetupEnvVar(d EnvVar) error {
-	_, _ = s.envVarBuf.WriteString("export ")
-	_, _ = s.envVarBuf.WriteString(d.Key)
-	_, _ = s.envVarBuf.WriteString("=")
-	_, _ = s.envVarBuf.WriteString(escape(d.Value))
-	_, _ = s.envVarBuf.WriteString("\n")
-	return nil
+	err := os.MkdirAll(filepath.Dir(s.envFile), 0o777)
+	if err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(s.envFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0o666)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	var buf bytes.Buffer
+	_, _ = buf.WriteString("export ")
+	_, _ = buf.WriteString(d.Key)
+	_, _ = buf.WriteString("=")
+	_, _ = buf.WriteString(escape(d.Value))
+	_, _ = buf.WriteString("\n")
+
+	_, err = io.Copy(f, &buf)
+	return err
 }
 
 func (s *Setupper) SetupFile(d File) error {
