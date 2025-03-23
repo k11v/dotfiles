@@ -35,7 +35,7 @@ type EnvVar struct {
 	Value string
 }
 
-type File struct {
+type Link struct {
 	Dst string
 	Src string
 }

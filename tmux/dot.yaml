@@ -1,2 +1,2 @@
 - brew-formula: ["tmux"]
-- file: ["$XDG_CONFIG_HOME/tmux", "config"]
+- link: ["$XDG_CONFIG_HOME/tmux", "config"]

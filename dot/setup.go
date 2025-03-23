@@ -120,7 +120,7 @@ func (s *Setupper) SetupEnvVar(d EnvVar) error {
 	return err
 }
 
-func (s *Setupper) SetupFile(d File) error {
+func (s *Setupper) SetupLink(d Link) error {
 	err := os.MkdirAll(filepath.Dir(d.Dst), 0o777)
 	if err != nil {
 		return err
