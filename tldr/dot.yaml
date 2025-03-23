@@ -1,4 +1,4 @@
-- env: ["TEALDEER_CONFIG_DIR", "$XDG_CONFIG_HOME/tealdeer"]
+- env-var: ["TEALDEER_CONFIG_DIR", "$XDG_CONFIG_HOME/tealdeer"]
 - brew-formula: ["tealdeer"]
 - file: ["$XDG_CONFIG_HOME/tealdeer", "config"]
 - run: ["tldr --update"] # implementation specific, works for tealdeer
