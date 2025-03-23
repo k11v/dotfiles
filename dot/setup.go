@@ -39,7 +39,7 @@ func (s *Setupper) SetupDefault(d Default) error {
 		args = append(args, "defaults", "write", d.Domain, d.Key)
 		switch value := d.Value.(type) {
 		case string:
-			args = []string{"-string", escape(value)}
+			args = []string{"-string", value}
 		case []byte:
 			args = []string{"-data", hex.EncodeToString(value)}
 		case int:
@@ -51,12 +51,12 @@ func (s *Setupper) SetupDefault(d Default) error {
 		case []string:
 			args = append(args, "-array")
 			for _, v := range value {
-				args = append(args, "-string", escape(v))
+				args = append(args, "-string", v)
 			}
 		case map[string]string:
 			args = append(args, "-dict")
 			for k, v := range value {
-				args = append(args, "-string", escape(k), "-string", escape(v))
+				args = append(args, "-string", k, "-string", v)
 			}
 		default:
 			return fmt.Errorf("unsupported value type: %T", value)
