@@ -3,4 +3,4 @@
 	email = k.e.gashkov@gmail.com
 
 [core]
-	sshCommand = ssh -i ~/.ssh/id_ed25519
+	sshCommand = ssh -i ~/.ssh/id_ed25519_kirillgashkov
