@@ -18,6 +18,31 @@ grep() { /usr/local/opt/grep/libexec/gnubin/grep "$@"; }
 g++() { /usr/local/opt/gcc/bin/g++-13 "$@" }
 gcc() { /usr/local/opt/gcc/bin/gcc-13 "$@" }
 
+# Backup volumes.
+docker-compose-volume-backup() {
+    local bak="$1"
+    if [ -z "$bak" ]; then
+        echo "empty bak" 2>&1
+        return 1
+    fi
+    mkdir -p "$bak"
+    docker compose config --format json \
+      | jq --raw-output0 '.volumes[] | .name' \
+      | xargs -0 sh -c 'bak="$1"; volume="$2"; docker run --rm --volume "$volume:/data:ro" --workdir "/data" alpine tar vc . > "$bak/$volume.tar"' sh "$bak"
+}
+
+# Restore volumes.
+docker-compose-volume-restore() {
+    local bak="$1"
+    if [ -z "$bak" ]; then
+        echo "empty bak" 2>&1
+        return 1
+    fi
+    docker compose --file compose.yaml config --format json \
+      | jq --raw-output0 '.volumes[] | .name' \
+      | xargs -0 sh -c 'bak="$1"; volume="$2"; docker run --rm --volume "$volume:/data" --workdir "/data" -i alpine sh -c "find . -mindepth 1 -delete && tar vx" < "$bak/$volume.tar"' sh "$bak"
+}
+
 dsa() {
     local problem_name subproblem_name main_path repo_root current_dir module_path
 
