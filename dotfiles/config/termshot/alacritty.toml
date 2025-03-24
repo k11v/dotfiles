@@ -1,4 +1,4 @@
-import = ["~/Repositories/tokyonight.nvim/extras/alacritty/tokyonight_moon.toml"]
+import = ["~/Repositories@kirillgashkov/dotfiles/dotfiles/config/alacritty/tokyonight/tokyonight_night.toml"]
 
 [window]
 padding.x = 10
