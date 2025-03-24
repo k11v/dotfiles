@@ -26,8 +26,6 @@
   "gopls": {
     // See https://github.com/golang/vscode-go/wiki/features#syntax-highlighting.
     "ui.semanticTokens": true,
-    "ui.noSemanticString": true,
-    "ui.noSemanticNumber": true,
     // See https://github.com/golang/vscode-go/wiki/features#organizing-imports.
     "formatting.local": "github.com/k11v",
     // See https://github.com/golang/vscode-go/wiki/features#custom-formatter.
@@ -40,6 +38,45 @@
     "editor.codeActionsOnSave": {
         "source.organizeImports": "always",
     },
+  },
+  "files.associations": {
+    "*.html.tmpl": "html",
+  },
+
+  // Web
+  "[html]": {
+    "editor.rulers": [80, 120],
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.rulers": [80, 120],
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.rulers": [80, 120],
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // Typst
+  "tinymist.formatterMode": "typstyle",
+  "[typst]": {
+    "editor.rulers": [80, 120],
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "myriad-dreamin.tinymist",
+    "editor.formatOnSave": true
+  },
+
+  // PlantUML
+  "plantuml.server": "http://localhost:1000",
+  "plantuml.render": "PlantUMLServer",
+  "[plantuml]": {
+      "editor.bracketPairColorization.enabled": false,
   },
 
   // Other

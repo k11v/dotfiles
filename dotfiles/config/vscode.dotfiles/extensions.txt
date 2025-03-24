@@ -1,6 +1,13 @@
+bierner.markdown-mermaid
+bradlc.vscode-tailwindcss
+esbenp.prettier-vscode
 github.copilot
 github.copilot-chat
 golang.go
+jebbs.plantuml
+juggernautjp.less-toml
+justusadam.language-haskell
+k6.k6
 ms-python.debugpy
 ms-python.python
 ms-python.vscode-pylance
@@ -9,5 +16,6 @@ ms-toolsai.jupyter-keymap
 ms-toolsai.jupyter-renderers
 ms-toolsai.vscode-jupyter-cell-tags
 ms-toolsai.vscode-jupyter-slideshow
+myriad-dreamin.tinymist
 streetsidesoftware.code-spell-checker
 streetsidesoftware.code-spell-checker-russian
