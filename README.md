@@ -33,5 +33,5 @@
 
    ```sh
    cd "$HOME/Repositories/dotfiles"
-   caffeinate -d dot setup ./... -brew ./brew -mas ./mas
+   caffeinate -d dot setup ./brew ./mas ./...
    ```
