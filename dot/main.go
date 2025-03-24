@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/goccy/go-yaml"
@@ -58,7 +59,7 @@ func main() {
 func SearchMods(patterns []string) ([]string, error) {
 	mods := make([]string, 0)
 
-	q := append([]string(nil), patterns...)
+	q := slices.Clone(patterns)
 	for len(q) > 0 {
 		var p string
 		p, q = q[0], q[1:]
@@ -144,7 +145,7 @@ func LoadMods(mods []string) (map[string][]Decl, error) {
 			decls := make([]Decl, 0)
 			for _, declMap := range declMaps {
 				if len(declMap) != 1 {
-					return errors.New("decl map should have 1 key")
+					return errors.New("want 1 key in decl map")
 				}
 
 				var typ string
@@ -172,9 +173,9 @@ func LoadMods(mods []string) (map[string][]Decl, error) {
 					if len(args) != 3 {
 						return fmt.Errorf("%s: want 3 arguments", "default")
 					}
-					domain := args[1].(string)
-					key := args[2].(string)
-					value := args[3]
+					domain := args[0].(string)
+					key := args[1].(string)
+					value := args[2]
 					decl = Default{Domain: domain, Key: key, Value: value}
 				case "env-alias":
 					if len(args) != 2 {
