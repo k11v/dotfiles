@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 
 	"github.com/goccy/go-yaml"
 	"github.com/google/shlex"
@@ -17,8 +19,53 @@ type Decl struct {
 	Args []string
 }
 
+func SearchMods(patterns []string) ([]string, error) {
+	mods := make([]string, 0)
+	for _, pattern := range patterns {
+		i := strings.Index(pattern, "...")
+		if i == -1 {
+			mods = append(mods, pattern)
+			continue
+		}
+
+		if i+len("...") < len(pattern) {
+			return nil, errors.New(`pattern has characters after "..."`)
+		}
+
+		dir, file := filepath.Split(pattern[:i])
+		if file != "" {
+			return nil, errors.New(`pattern has "..." in file name`)
+		}
+
+		subpatterns := make([]string, 0)
+
+		subpatterns = append(subpatterns, strings.TrimRight(dir, "/"))
+
+		entries, err := os.ReadDir(dir)
+		if err != nil {
+			return nil, err
+		}
+		for _, entry := range entries {
+			subpatterns = append(subpatterns, dir+entry.Name()+"/...")
+		}
+
+		submods, err := SearchMods(subpatterns)
+		if err != nil {
+			return nil, err
+		}
+		mods = append(mods, submods...)
+	}
+	return mods, nil
+}
+
 func main() {
 	flag.Parse()
+
+	mods, err := SearchMods(flag.Args())
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
 
 	// TODO: Handle "./...".
 	mods := flag.Args()
