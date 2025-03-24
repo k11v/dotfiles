@@ -185,37 +185,41 @@ func LoadMods(mods []string) (map[string][]Decl, error) {
 	return declsFromMod, nil
 }
 
+func SetupMods(declsFromMod map[string][]Decl) error {
+	return nil
+}
+
 func main() {
 	flag.Parse()
 
-	mods, err := SearchMods(flag.Args())
+	if flag.NArg() < 1 {
+		_, _ = fmt.Fprint(os.Stderr, "error: missing command arg\n")
+		os.Exit(1)
+	}
+
+	command := flag.Arg(0)
+	if command != "setup" {
+		_, _ = fmt.Fprintf(os.Stderr, "error: unknown command arg: %s\n", command)
+		os.Exit(1)
+	}
+
+	patterns := flag.Args()[1:]
+
+	mods, err := SearchMods(patterns)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "error: can't search mods: %v\n", err)
 		os.Exit(1)
 	}
 
 	declsFromMod, err := LoadMods(mods)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "error: can't load mods: %v\n", err)
 		os.Exit(1)
 	}
 
-ModLoop:
-	for modIndex, mod := range mods {
-		decls := declsFromMod[mod]
-		for declIndex, decl := range decls {
-			_, _ = fmt.Printf("[%d/%d] %s\t[%d/%d] %s\n", modIndex+1, len(mods), mod, declIndex+1, len(decls), decl)
-
-			switch decl.Type {
-			case "brew-cask":
-			case "brew-formula":
-			case "link":
-			case "default":
-			case "env":
-			case "run":
-			default:
-				panic("unknown decl type")
-			}
-		}
+	err = SetupMods(declsFromMod)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: can't setup mods: %v\n", err)
+		os.Exit(1)
 	}
 }
