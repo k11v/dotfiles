@@ -118,7 +118,7 @@ func (s *Setupper) SetupEnvAlias(d EnvAlias) error {
 	return err
 }
 
-// TODO: Change SetupEnvAlias to be idempotent.
+// TODO: Change SetupEnvVar to be idempotent.
 func (s *Setupper) SetupEnvVar(d EnvVar) error {
 	err := os.MkdirAll(filepath.Dir(s.envFile), 0o777)
 	if err != nil {
@@ -142,7 +142,7 @@ func (s *Setupper) SetupEnvVar(d EnvVar) error {
 	return err
 }
 
-// TODO: Change SetupEnvAlias to be idempotent.
+// TODO: Change SetupLink to be idempotent.
 func (s *Setupper) SetupLink(d Link) error {
 	err := os.MkdirAll(filepath.Dir(d.Dst), 0o777)
 	if err != nil {
