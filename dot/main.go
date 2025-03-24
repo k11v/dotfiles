@@ -28,6 +28,12 @@ func main() {
 
 	patterns := flag.Args()[1:]
 
+	dataDir, err := DataDir()
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: data dir: %v\n", err)
+		os.Exit(1)
+	}
+
 	mods, err := SearchMods(patterns)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: can't search mods: %v\n", err)
@@ -40,7 +46,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = SetupMods(declsFromMod)
+	envFile := filepath.Join(dataDir, "env.sh")
+	setupper := NewSetupper(envFile)
+	err = SetupMods(setupper, mods, declsFromMod)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: can't setup mods: %v\n", err)
 		os.Exit(1)
@@ -219,6 +227,52 @@ func LoadMods(mods []string) (map[string][]Decl, error) {
 	return declsFromMod, nil
 }
 
-func SetupMods(declsFromMod map[string][]Decl) error {
+func SetupMods(setupper *Setupper, mods []string, declsFromMod map[string][]Decl) error {
+	for mi, mod := range mods {
+		fmt.Printf("=== %s (%d/%d)\n", mod, mi, len(mods))
+		decls := declsFromMod[mod]
+	DeclLoop:
+		for di, decl := range decls {
+			fmt.Printf("--- %T (%d/%d)\n", decl, di, len(decls))
+			var err error
+			switch d := decl.(type) {
+			case BrewCask:
+				err = setupper.SetupBrewCask(d)
+			case BrewFormula:
+				err = setupper.SetupBrewFormula(d)
+			case Default:
+				err = setupper.SetupDefault(d)
+			case EnvAlias:
+				err = setupper.SetupEnvAlias(d)
+			case EnvVar:
+				err = setupper.SetupEnvVar(d)
+			case Link:
+				err = setupper.SetupLink(d)
+			case Mas:
+				err = setupper.SetupMas(d)
+			case Run:
+				err = setupper.SetupRun(d)
+			default:
+				err = errors.New("unknown decl type")
+			}
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "error: can't setup %T: %v\n", decl, err)
+				break DeclLoop
+			}
+		}
+	}
 	return nil
+}
+
+func DataDir() (string, error) {
+	userDataDir := os.Getenv("XDG_DATA_HOME")
+	if userDataDir == "" {
+		userHomeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		userDataDir = filepath.Join(userHomeDir, ".local", "share")
+	}
+
+	return filepath.Join(userDataDir, "dot"), nil
 }

@@ -20,6 +20,10 @@ type Setupper struct {
 	envFile string
 }
 
+func NewSetupper(envFile string) *Setupper {
+	return &Setupper{envFile: envFile}
+}
+
 // "brew install --cask -- alacritty" is idempotent.
 // "..." automatically updates Homebrew.
 // "..." upgrades cask if already installed.
