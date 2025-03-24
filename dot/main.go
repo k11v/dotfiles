@@ -6,18 +6,11 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/goccy/go-yaml"
-	"github.com/google/shlex"
 )
-
-type Decl struct {
-	Type string
-	Args []string
-}
 
 func SearchMods(patterns []string) ([]string, error) {
 	mods := make([]string, 0)
@@ -82,16 +75,9 @@ func SearchMods(patterns []string) ([]string, error) {
 	return mods, nil
 }
 
-func main() {
-	flag.Parse()
+func LoadMods(mods []string) (map[string][]Decl, error) {
+	declsFromMod := make(map[string][]Decl)
 
-	mods, err := SearchMods(flag.Args())
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
-
-	declsFromMod := make(map[string][]Decl, len(mods))
 	for _, mod := range mods {
 		err := func() error {
 			f, err := os.Open(mod)
@@ -105,7 +91,7 @@ func main() {
 				}
 			}()
 
-			var declMaps []map[string]string
+			var declMaps []map[string][]any
 			dec := yaml.NewDecoder(f)
 			err = dec.Decode(&declMaps)
 			if err != nil {
@@ -119,26 +105,99 @@ func main() {
 				}
 
 				var typ string
+				var args []any
 				for key := range declMap {
 					typ = key
 				}
+				args = declMap[typ]
 
-				args, err := shlex.Split(declMap[typ])
-				if err != nil {
-					return err
+				var decl Decl
+				switch typ {
+				case "brew-cask":
+					if len(args) != 1 {
+						return fmt.Errorf("%s: want 1 argument", "brew-cask")
+					}
+					name := args[0].(string)
+					decl = BrewCask{Name: name}
+				case "brew-formula":
+					if len(args) != 1 {
+						return fmt.Errorf("%s: want 1 argument", "brew-formula")
+					}
+					name := args[0].(string)
+					decl = BrewFormula{Name: name}
+				case "default":
+					if len(args) != 3 {
+						return fmt.Errorf("%s: want 3 arguments", "default")
+					}
+					domain := args[1].(string)
+					key := args[2].(string)
+					value := args[3]
+					decl = Default{Domain: domain, Key: key, Value: value}
+				case "env-alias":
+					if len(args) != 2 {
+						return fmt.Errorf("%s: want 2 arguments", "env-alias")
+					}
+					key := args[0].(string)
+					value := args[1].(string)
+					decl = EnvAlias{Key: key, Value: value}
+				case "env-var":
+					if len(args) != 2 {
+						return fmt.Errorf("%s: want 2 arguments", "env-var")
+					}
+					key := args[0].(string)
+					value := args[1].(string)
+					decl = EnvVar{Key: key, Value: value}
+				case "link":
+					if len(args) != 2 {
+						return fmt.Errorf("%s: want 2 arguments", "link")
+					}
+					dst := args[0].(string)
+					src := args[1].(string)
+					decl = Link{Dst: dst, Src: src}
+				case "mas":
+					if len(args) != 1 {
+						return fmt.Errorf("%s: want 1 argument", "mas")
+					}
+					id := args[0].(string)
+					decl = Mas{ID: id}
+				case "run":
+					if len(args) != 1 {
+						return fmt.Errorf("%s: want 1 argument", "run")
+					}
+					command := args[0].(string)
+					decl = Run{Command: command}
+				default:
+					return fmt.Errorf("unknown decl type: %s", typ)
 				}
 
-				decls = append(decls, Decl{Type: typ, Args: args})
+				decls = append(decls, decl)
 			}
 
 			declsFromMod[mod] = decls
-
 			return nil
 		}()
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
 		}
+	}
+
+	return declsFromMod, nil
+}
+
+func main() {
+	flag.Parse()
+
+	mods, err := SearchMods(flag.Args())
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	declsFromMod, err := LoadMods(mods)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
 	}
 
 ModLoop:
@@ -149,47 +208,7 @@ ModLoop:
 
 			switch decl.Type {
 			case "brew-cask":
-				p := decl.Args[0]
-				if len(decl.Args) > 1 {
-					panic("extra args")
-				}
-
-				// TODO: Check what happens when brew needs stdin and stdin is not attached.
-				// TODO: Change command to not use stdin.
-				c := exec.Command("brew", "install", "--cask", p)
-				// c.Stdin = os.Stdin
-				c.Stdout = os.Stdout
-				c.Stderr = os.Stderr
-
-				err := c.Run()
-				if err != nil {
-					var exitErr *exec.ExitError
-					if errors.As(err, &exitErr) {
-						_, _ = fmt.Printf("[%d/%d] %s\t[%d/%d] %s\t[!] ERROR\n", modIndex+1, len(mods), mod, declIndex+1, len(decls), decl)
-						continue ModLoop
-					}
-				}
 			case "brew-formula":
-				p := decl.Args[0]
-				if len(decl.Args) > 1 {
-					panic("extra args")
-				}
-
-				// TODO: Check what happens when brew needs stdin and stdin is not attached.
-				// TODO: Change command to not use stdin.
-				c := exec.Command("brew", "install", "--formula", p)
-				// c.Stdin = os.Stdin
-				c.Stdout = os.Stdout
-				c.Stderr = os.Stderr
-
-				err := c.Run()
-				if err != nil {
-					var exitErr *exec.ExitError
-					if errors.As(err, &exitErr) {
-						_, _ = fmt.Printf("[%d/%d] %s\t[%d/%d] %s\t[!] ERROR\n", modIndex+1, len(mods), mod, declIndex+1, len(decls), decl)
-						continue ModLoop
-					}
-				}
 			case "link":
 			case "default":
 			case "env":
