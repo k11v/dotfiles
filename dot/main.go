@@ -12,6 +12,41 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
+func main() {
+	flag.Parse()
+
+	if flag.NArg() < 1 {
+		_, _ = fmt.Fprint(os.Stderr, "error: missing command arg\n")
+		os.Exit(1)
+	}
+
+	command := flag.Arg(0)
+	if command != "setup" {
+		_, _ = fmt.Fprintf(os.Stderr, "error: unknown command arg: %s\n", command)
+		os.Exit(1)
+	}
+
+	patterns := flag.Args()[1:]
+
+	mods, err := SearchMods(patterns)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: can't search mods: %v\n", err)
+		os.Exit(1)
+	}
+
+	declsFromMod, err := LoadMods(mods)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: can't load mods: %v\n", err)
+		os.Exit(1)
+	}
+
+	err = SetupMods(declsFromMod)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: can't setup mods: %v\n", err)
+		os.Exit(1)
+	}
+}
+
 func SearchMods(patterns []string) ([]string, error) {
 	mods := make([]string, 0)
 
@@ -187,39 +222,4 @@ func LoadMods(mods []string) (map[string][]Decl, error) {
 
 func SetupMods(declsFromMod map[string][]Decl) error {
 	return nil
-}
-
-func main() {
-	flag.Parse()
-
-	if flag.NArg() < 1 {
-		_, _ = fmt.Fprint(os.Stderr, "error: missing command arg\n")
-		os.Exit(1)
-	}
-
-	command := flag.Arg(0)
-	if command != "setup" {
-		_, _ = fmt.Fprintf(os.Stderr, "error: unknown command arg: %s\n", command)
-		os.Exit(1)
-	}
-
-	patterns := flag.Args()[1:]
-
-	mods, err := SearchMods(patterns)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: can't search mods: %v\n", err)
-		os.Exit(1)
-	}
-
-	declsFromMod, err := LoadMods(mods)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: can't load mods: %v\n", err)
-		os.Exit(1)
-	}
-
-	err = SetupMods(declsFromMod)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: can't setup mods: %v\n", err)
-		os.Exit(1)
-	}
 }
