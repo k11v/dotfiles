@@ -21,40 +21,64 @@ type Decl struct {
 
 func SearchMods(patterns []string) ([]string, error) {
 	mods := make([]string, 0)
-	for _, pattern := range patterns {
-		i := strings.Index(pattern, "...")
-		if i == -1 {
-			mods = append(mods, pattern)
+
+	q := append([]string(nil), patterns...)
+	for len(q) > 0 {
+		var p string
+		p, q = q[0], q[1:]
+
+		i := strings.Index(p, "...")
+		if i != -1 {
+			if i+len("...") < len(p) {
+				return nil, errors.New(`pattern has characters after "..."`)
+			}
+
+			dir, file := filepath.Split(p[:i])
+			if file != "" {
+				return nil, errors.New(`pattern has "..." in file name`)
+			}
+
+			if dir == "" {
+				dir = "." + string(filepath.Separator)
+			}
+
+			// FIXME: Likely fails if dir is not a directory.
+			entries, err := os.ReadDir(dir)
+			if err != nil {
+				return nil, err
+			}
+
+			q = append(q, dir)
+			for _, entry := range entries {
+				q = append(q, dir+entry.Name()+"/...")
+			}
+
 			continue
 		}
 
-		if i+len("...") < len(pattern) {
-			return nil, errors.New(`pattern has characters after "..."`)
-		}
-
-		dir, file := filepath.Split(pattern[:i])
-		if file != "" {
-			return nil, errors.New(`pattern has "..." in file name`)
-		}
-
-		subpatterns := make([]string, 0)
-
-		subpatterns = append(subpatterns, strings.TrimRight(dir, "/"))
-
-		entries, err := os.ReadDir(dir)
+		pfi, err := os.Stat(p)
 		if err != nil {
 			return nil, err
 		}
-		for _, entry := range entries {
-			subpatterns = append(subpatterns, dir+entry.Name()+"/...")
+		if !pfi.IsDir() {
+			continue
 		}
 
-		submods, err := SearchMods(subpatterns)
+		mfi, err := os.Stat(filepath.Join(p, "dot.yaml"))
 		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			}
 			return nil, err
 		}
-		mods = append(mods, submods...)
+		if mfi.IsDir() {
+			return nil, errors.New("dot.yaml is a directory")
+		}
+
+		mod := strings.TrimRight(p, string(filepath.Separator))
+		mods = append(mods, mod)
 	}
+
 	return mods, nil
 }
 
@@ -66,9 +90,6 @@ func main() {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
-
-	// TODO: Handle "./...".
-	mods := flag.Args()
 
 	declsFromMod := make(map[string][]Decl, len(mods))
 	for _, mod := range mods {
