@@ -1,0 +1,2 @@
+- brew-cask: ["telegram"]
+- default: ["ru.keepcoder.Telegram", "kArchiveIsHidden", true] # hide archived chats from All Chats

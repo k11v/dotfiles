@@ -1,0 +1,9 @@
+- brew-cask: ["transmission"]
+- default: ["org.m0k.transmission", "CheckRemoveDownloading", true]   # don't ask before removing a non-downloading transfer
+- default: ["org.m0k.transmission", "DeleteOriginalTorrent", true]    # trash original torrent files
+- default: ["org.m0k.transmission", "DownloadAsk", false]             # don't ask before starting a download
+- default: ["org.m0k.transmission", "DownloadLocationConstant", true] # download torrents to the ~/Downloads folder
+- default: ["org.m0k.transmission", "MagnetOpenAsk", false]           # don't ask before opening a magnet link
+- default: ["org.m0k.transmission", "RandomPort", true]               # randomize port on launch
+- default: ["org.m0k.transmission", "WarningDonate", false]           # hide the donate message
+- default: ["org.m0k.transmission", "WarningLegal", false]            # hide the legal disclaimer

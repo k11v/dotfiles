@@ -1,7 +1,0 @@
-BrewCask = [
-  ["karabiner-elements"],
-]
-
-File = [
-  ["$XDG_CONFIG_HOME/karabiner", "config"],
-]

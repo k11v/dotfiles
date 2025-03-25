@@ -1,0 +1,2 @@
+- brew-cask: ["karabiner-elements"]
+- file-link: ["$XDG_CONFIG_HOME/karabiner", "config"]

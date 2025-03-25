@@ -1,0 +1,2 @@
+- env-var: ["GOPATH", "$XDG_DATA_HOME/go"]
+- brew-formula: ["go"]

@@ -1,3 +1,0 @@
-Env = [
-  ["PIP_REQUIRE_VIRTUALENV", "true"],
-]

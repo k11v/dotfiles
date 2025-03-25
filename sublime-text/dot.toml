@@ -1,0 +1,3 @@
+- brew-cask: ["font-jetbrains-mono-nerd-font"]
+- brew-formula: ["sublime-text"]
+- file-link: ["$HOME/Library/Application Support/Sublime Text", "config"]

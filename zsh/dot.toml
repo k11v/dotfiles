@@ -1,0 +1,12 @@
+- env-var: ["FPATH", "$XDG_CONFIG_HOME/zsh/completions:$FPATH"]
+- env-var: ["HISTFILE", "$XDG_DATA_HOME/zsh/.zhistory"]
+- env-var: ["HISTSIZE", "10000"]
+- env-var: ["KEYTIMEOUT", "1"]
+- env-var: ["PROMPT_EOL_MARK", ""]
+- env-var: ["PS2", "%B…%b "]
+- env-var: ["SAVEHIST", "10000"]
+- env-var: ["PROMPT_STYLE", "regular"]                     # user-defined
+- env-var: ["ZCOMPDUMP", "$XDG_CACHE_HOME/zsh/.zcompdump"] # user-defined
+- brew-formula: ["zsh"]
+- file-link: ["$HOME/.zshenv", ".zshenv"]
+- file-link: ["$XDG_CONFIG_HOME/zsh", "config"]

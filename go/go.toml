@@ -1,7 +1,0 @@
-Env = [
-  ["GOPATH", "$XDG_DATA_HOME/go"],
-]
-
-BrewFormula = [
-  ["go"],
-]

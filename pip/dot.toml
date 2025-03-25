@@ -1,0 +1,1 @@
+- env-var: ["PIP_REQUIRE_VIRTUALENV", "true"]

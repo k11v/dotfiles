@@ -1,0 +1,4 @@
+- env-var: ["PYENV_ROOT", "$XDG_DATA_HOME/pyenv"]
+- env-var: ["PYENV_VIRTUALENV_DISABLE_PROMPT", "1"]
+
+- brew-formula: ["pyenv"]

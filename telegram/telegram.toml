@@ -1,7 +1,0 @@
-BrewCask = [
-  ["telegram"],
-]
-
-Default = [
-  ["ru.keepcoder.Telegram", "kArchiveIsHidden", true], # hide archived chats from All Chats
-]

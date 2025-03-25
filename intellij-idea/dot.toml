@@ -1,0 +1,2 @@
+- brew-cask: ["jetbrains-toolbox"]
+- file-link: ["$XDG_CONFIG_HOME/ideavim", "config/ideavim"]

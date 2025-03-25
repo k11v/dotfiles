@@ -1,0 +1,7 @@
+- brew-cask: ["rectangle"]
+
+- default: ["com.knollsoft.Rectangle", "alternateDefaultShortcuts", 1] # set shortcuts to Rectangle defaults
+- default: ["com.knollsoft.Rectangle", "launchOnLogin", false]         # don't launch Rectangle on login
+- default: ["com.knollsoft.Rectangle", "hideMenubarIcon", true]        # hide menu bar icon
+- default: ["com.knollsoft.Rectangle", "subsequentExecutionMode", 2]   # do nothing
+- default: ["com.knollsoft.Rectangle", "windowSnapping", 2]            # turn off window snapping
