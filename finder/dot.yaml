@@ -1,0 +1,13 @@
+- default: ["com.apple.finder", "FXDefaultSearchScope", "SCcf"]          # search the current folder when performing a search
+- default: ["com.apple.finder", "FXEnableExtensionChangeWarning", false] # don't show warning before changing an extension
+- default: ["com.apple.finder", "FXPreferredViewStyle", "Nlsv"]          # use list view in all Finder windows
+- default: ["com.apple.finder", "NewWindowTarget", "PfHm"]               # show home for new Finder windows
+- default: ["com.apple.finder", "NewWindowTargetPath", "file://$HOME/"]  # show home for new Finder windows
+- default: ["com.apple.finder", "ShowExternalHardDrivesOnDesktop", true] # show external disks on the desktop
+- default: ["com.apple.finder", "ShowHardDrivesOnDesktop", false]        # don't show hard drives on the desktop
+- default: ["com.apple.finder", "ShowMountedServersOnDesktop", false]    # don't show connected servers on the desktop
+- default: ["com.apple.finder", "ShowRemovableMediaOnDesktop", true]     # show removable media on the desktop
+- default: ["com.apple.finder", "_FXSortFoldersFirst", true]             # keep folders on top when sorting by name
+- run: ['/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"']  # snap-to-grid for icons on the desktop
+- run: ['/usr/libexec/PlistBuddy -c "Set :ICloudViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"']   # snap-to-grid for icons in iCloud Drive
+- run: ['/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" "$HOME/Library/Preferences/com.apple.finder.plist"'] # snap-to-grid for icons in other icon views

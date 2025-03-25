@@ -1,0 +1,2 @@
+- mas: ["1423210932"] # Flow
+- default: ["design.yugen.Flow", "showWelcomeWindow", false] # don't show welcome window

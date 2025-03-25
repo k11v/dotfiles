@@ -1,7 +1,0 @@
-Mas = [
-  ["1423210932"], # Flow
-]
-
-Default = [
-  ["design.yugen.Flow", "showWelcomeWindow", false], # don't show welcome window
-]

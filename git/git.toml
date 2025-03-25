@@ -1,7 +1,0 @@
-BrewFormula = [
-  ["git"],
-]
-
-File = [
-  ["$XDG_CONFIG_HOME/git", "config"],
-]

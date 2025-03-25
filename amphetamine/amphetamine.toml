@@ -1,9 +1,0 @@
-Mas = [
-  ["937984704"], # Amphetamine
-]
-
-Default = [
-  ["com.if.Amphetamine", "Enable Session State Sound", false], # don't play sound when any session starts or ends
-  ["com.if.Amphetamine", "Icon Style", 5],                     # set menu bar icon to a coffee cup
-  ["com.if.Amphetamine", "Show Welcome Window", false],        # don't show welcome window
-]

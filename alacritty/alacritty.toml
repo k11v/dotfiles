@@ -1,7 +1,0 @@
-BrewCask = [
-  ["alacritty"],
-]
-
-File = [
-  ["$XDG_CONFIG_HOME/alacritty", "config"],
-]

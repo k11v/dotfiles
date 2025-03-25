@@ -1,0 +1,2 @@
+- brew-cask: ["alacritty"]
+- link: ["$XDG_CONFIG_HOME/alacritty", "config"]

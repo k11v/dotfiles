@@ -1,0 +1,2 @@
+- brew-formula: ["git"]
+- link: ["$XDG_CONFIG_HOME/git", "config"]

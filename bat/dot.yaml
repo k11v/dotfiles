@@ -1,0 +1,3 @@
+- env-var: ["BAT_PAGER", ""]
+- env-var: ["BAT_THEME", "TwoDark"]
+- brew-formula: ["bat"]
