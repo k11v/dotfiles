@@ -30,3 +30,5 @@ mkdir -p "$(dirname "$dst")"
 
 # Create link.
 ln -s "$src" "$dst"
+
+echo "linked: $dst"
