@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 cd "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
 for file in *; do
