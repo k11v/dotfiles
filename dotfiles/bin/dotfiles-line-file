@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+dst="$1"
+src="$2"
+
+# TODO: Ensure that the destination file contains all lines from the source file.
