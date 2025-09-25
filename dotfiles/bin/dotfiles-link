@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -e
+
+dst="$1"
+src="$2"
+
+# Get absolute path.
+src="$(readlink -f "$src" || :)"
+
+# Exit with error if file does not exist.
+if [ ! -e "$src" ]; then
+    echo "error: src does not exist: $src" 2>&1
+    exit 1
+fi
+
+# Exit if wanted file exists.
+if [ "$(readlink "$dst" || :)" = "$src" ]; then
+    exit 0
+fi
+
+# Exit with error if destination file exists.
+if [ -e "$dst" ]; then
+    echo "error: dst already exists: $dst" 2>&1
+    exit 1
+fi
+
+# Create parent dirs.
+mkdir -p "$(dirname "$dst")"
+
+# Create link.
+ln -s "$src" "$dst"
