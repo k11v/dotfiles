@@ -2,5 +2,5 @@
 
 cd "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
-dotfiles-link "$HOME"/.config/zsh config
-dotfiles-link "$HOME"/.zshenv .zshenv
+dotfiles-file "$HOME"/.config/zsh config
+dotfiles-file "$HOME"/.zshenv .zshenv
