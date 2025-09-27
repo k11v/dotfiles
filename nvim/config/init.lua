@@ -60,6 +60,11 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
+-- Finding
+
+add({ source = "https://github.com/ibhagwan/fzf-lua" })
+add({ source = "https://github.com/nvim-tree/nvim-web-devicons" })
+
 -- Highlighting, folding, indenting
 
 vim.opt.foldlevelstart = 99
@@ -119,11 +124,13 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 -- Editing
 
+add({ source = "nvim-treesitter/nvim-treesitter-textobjects", checkout = "main" })
+add({ source = "nvim-mini/mini.ai" })
+require("mini.ai").setup({})
+
 add({ source = "nvim-mini/mini.pairs" })
 
 require("mini.pairs").setup()
-
-add({ source = "nvim-treesitter/nvim-treesitter-textobjects", checkout = "main" })
 
 require("nvim-treesitter-textobjects").setup({
 	select = {
@@ -203,3 +210,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 add({ source = "neovim/nvim-lspconfig" })
 
 vim.lsp.enable("gopls")
+
+-- Other
+
+add({ source = "https://github.com/nvim-mini/mini.files" })
+require("mini.files").setup()
+
+add({ source = "https://github.com/nvim-mini/mini.pick" })
+require("mini.pick").setup()
