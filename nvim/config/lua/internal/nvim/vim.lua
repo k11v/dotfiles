@@ -66,5 +66,7 @@ return {
 				vim.notify("Executable not found: " .. executable, vim.log.levels.ERROR)
 			end
 		end
+
+		vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 	end,
 }
