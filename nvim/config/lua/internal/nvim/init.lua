@@ -1,3 +1,5 @@
+local executables = {}
+
 local setups_from_filetype = {}
 
 local treesitter_parsers = {}
@@ -10,9 +12,12 @@ local treesitter_indenting_filetypes = {}
 
 local lsp_servers = {}
 
-local executables = {}
-
 return {
+	executables = function(es)
+		for _, e in ipairs(es) do
+			table.insert(executables, e)
+		end
+	end,
 	setup_filetypes = function(filetypes, setup)
 		for _, filetype in ipairs(filetypes) do
 			setups_from_filetype[filetype] = setups_from_filetype[filetype] or {}
@@ -44,12 +49,15 @@ return {
 			table.insert(lsp_servers, server)
 		end
 	end,
-	executables = function(es)
-		for _, e in ipairs(es) do
-			table.insert(executables, e)
-		end
-	end,
 	setup = function()
+		-- Environment
+
+		for _, executable in ipairs(executables) do
+			if vim.fn.executable(executable) ~= 1 then
+				vim.notify("Executable not found: " .. executable, vim.log.levels.ERROR)
+			end
+		end
+
 		-- Nvim
 
 		vim.g.mapleader = " "
@@ -153,13 +161,5 @@ return {
 		require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
 
 		vim.lsp.enable(lsp_servers)
-
-		-- Executables
-
-		for _, executable in ipairs(executables) do
-			if vim.fn.executable(executable) ~= 1 then
-				vim.notify("Executable not found: " .. executable, vim.log.levels.ERROR)
-			end
-		end
 	end,
 }
