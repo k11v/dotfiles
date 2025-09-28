@@ -8,6 +8,8 @@ local treesitter_folding_filetypes = {}
 
 local treesitter_indenting_filetypes = {}
 
+local lsp_servers = {}
+
 return {
 	setup_filetypes = function(filetypes, setup)
 		for _, filetype in ipairs(filetypes) do
@@ -33,6 +35,11 @@ return {
 	treesitter_indenting_filetypes = function(filetypes)
 		for _, filetype in ipairs(filetypes) do
 			table.insert(treesitter_indenting_filetypes, filetype)
+		end
+	end,
+	lsp_servers = function(servers)
+		for _, server in ipairs(servers) do
+			table.insert(lsp_servers, server)
 		end
 	end,
 	setup = function()
@@ -133,5 +140,11 @@ return {
 				end,
 			})
 		end
+
+		-- LSP
+
+		require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
+
+		vim.lsp.enable(lsp_servers)
 	end,
 }

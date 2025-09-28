@@ -11,5 +11,6 @@ return {
 		require("internal.nvim").treesitter_highlighting_filetypes({ "go", "gomod", "gowork", "gosum" })
 		require("internal.nvim").treesitter_folding_filetypes({ "go", "gomod", "gowork", "gosum" })
 		require("internal.nvim").treesitter_indenting_filetypes({ "go", "gomod", "gowork", "gosum" })
+		require("internal.nvim").lsp_servers({ "gopls" })
 	end,
 }
