@@ -7,5 +7,6 @@ return {
 			vim.opt.softtabstop = 4
 			vim.opt.tabstop = 4
 		end)
+		require("internal.nvim").treesitter_parsers({ "go", "gomod", "gowork", "gosum" })
 	end,
 }

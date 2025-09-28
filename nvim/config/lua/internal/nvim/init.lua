@@ -1,11 +1,21 @@
 local setups_from_filetype = {}
 
+local treesitter_parsers = {}
+
 return {
 	filetype_setup = function(filetype, setup)
 		setups_from_filetype[filetype] = setups_from_filetype[filetype] or {}
 		table.insert(setups_from_filetype[filetype], setup)
 	end,
+	treesitter_parsers = function(parsers)
+		for _, parser in ipairs(parsers) do
+			-- TODO: Insert if not exists
+			table.insert(treesitter_parsers, parser)
+		end
+	end,
 	setup = function()
+		-- Nvim
+
 		vim.g.mapleader = " "
 		vim.g.maplocalleader = " "
 
@@ -51,5 +61,24 @@ return {
 				end,
 			})
 		end
+
+		-- Treesitter
+
+		require("mini.deps").add({
+			source = "https://github.com/nvim-treesitter/nvim-treesitter",
+			checkout = "main",
+			hooks = {
+				post_checkout = function()
+					vim.cmd("TSUpdate")
+				end,
+			},
+		})
+
+		require("mini.deps").add({
+			source = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
+			checkout = "main",
+		})
+
+		require("nvim-treesitter").install(treesitter_parsers):wait(10 * 60 * 1000)
 	end,
 }
