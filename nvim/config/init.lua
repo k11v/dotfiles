@@ -20,4 +20,6 @@ require("mini.deps").setup()
 -- Setup modules, order matters.
 
 require("internal.nvim-go").setup()
+require("internal.nvim-markdown").setup()
+
 require("internal.nvim").setup()

@@ -2,15 +2,23 @@ local setups_from_filetype = {}
 
 local treesitter_parsers = {}
 
+local treesitter_highlighting_filetypes = {}
+
 return {
-	filetype_setup = function(filetype, setup)
-		setups_from_filetype[filetype] = setups_from_filetype[filetype] or {}
-		table.insert(setups_from_filetype[filetype], setup)
+	setup_filetypes = function(filetypes, setup)
+		for _, filetype in ipairs(filetypes) do
+			setups_from_filetype[filetype] = setups_from_filetype[filetype] or {}
+			table.insert(setups_from_filetype[filetype], setup)
+		end
 	end,
 	treesitter_parsers = function(parsers)
 		for _, parser in ipairs(parsers) do
-			-- TODO: Insert if not exists
 			table.insert(treesitter_parsers, parser)
+		end
+	end,
+	treesitter_highlighting_filetypes = function(filetypes)
+		for _, filetype in ipairs(filetypes) do
+			table.insert(treesitter_highlighting_filetypes, filetype)
 		end
 	end,
 	setup = function()
@@ -80,5 +88,15 @@ return {
 		})
 
 		require("nvim-treesitter").install(treesitter_parsers):wait(10 * 60 * 1000)
+
+		for _, filetype in ipairs(treesitter_highlighting_filetypes) do
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("internal_nvim_treesitter_highlighting_" .. filetype, {}),
+				pattern = filetype,
+				callback = function()
+					pcall(vim.treesitter.start)
+				end,
+			})
+		end
 	end,
 }

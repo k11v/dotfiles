@@ -1,6 +1,6 @@
 return {
 	setup = function()
-		require("internal.nvim").filetype_setup("go", function()
+		require("internal.nvim").setup_filetypes({ "go" }, function()
 			vim.opt.colorcolumn = { "120" }
 			vim.opt.expandtab = false
 			vim.opt.shiftwidth = 4
@@ -8,5 +8,6 @@ return {
 			vim.opt.tabstop = 4
 		end)
 		require("internal.nvim").treesitter_parsers({ "go", "gomod", "gowork", "gosum" })
+		require("internal.nvim").treesitter_highlighting_filetypes({ "go", "gomod", "gowork", "gosum" })
 	end,
 }
