@@ -1,6 +1,6 @@
 return {
 	setup = function()
-		require("internal.nvim").setup_filetypes({ "go", "gomod", "gowork", "gosum", "gotmpl" }, function()
+		require("internal.nvim").filetypes_setup({ "go", "gomod", "gowork", "gosum", "gotmpl" }, function()
 			vim.opt.colorcolumn = { "120" }
 			vim.opt.expandtab = false
 			vim.opt.shiftwidth = 4

@@ -1,6 +1,6 @@
 return {
 	setup = function()
-		require("internal.nvim").setup_filetypes({ "markdown" }, function()
+		require("internal.nvim").filetypes_setup({ "markdown" }, function()
 			vim.opt.colorcolumn = { "80" }
 			vim.opt.expandtab = false
 			vim.opt.shiftwidth = 4
