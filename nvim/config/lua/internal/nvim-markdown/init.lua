@@ -9,5 +9,7 @@ return {
 		end)
 		require("internal.nvim").treesitter_parsers({ "markdown", "markdown_inline" })
 		require("internal.nvim").treesitter_highlighting_filetypes({ "markdown" })
+		require("internal.nvim").treesitter_folding_filetypes({ "markdown" })
+		require("internal.nvim").treesitter_indenting_filetypes({ "markdown" })
 	end,
 }

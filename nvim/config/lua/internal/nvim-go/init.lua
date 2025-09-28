@@ -9,5 +9,7 @@ return {
 		end)
 		require("internal.nvim").treesitter_parsers({ "go", "gomod", "gowork", "gosum" })
 		require("internal.nvim").treesitter_highlighting_filetypes({ "go", "gomod", "gowork", "gosum" })
+		require("internal.nvim").treesitter_folding_filetypes({ "go", "gomod", "gowork", "gosum" })
+		require("internal.nvim").treesitter_indenting_filetypes({ "go", "gomod", "gowork", "gosum" })
 	end,
 }

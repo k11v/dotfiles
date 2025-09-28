@@ -4,6 +4,10 @@ local treesitter_parsers = {}
 
 local treesitter_highlighting_filetypes = {}
 
+local treesitter_folding_filetypes = {}
+
+local treesitter_indenting_filetypes = {}
+
 return {
 	setup_filetypes = function(filetypes, setup)
 		for _, filetype in ipairs(filetypes) do
@@ -19,6 +23,16 @@ return {
 	treesitter_highlighting_filetypes = function(filetypes)
 		for _, filetype in ipairs(filetypes) do
 			table.insert(treesitter_highlighting_filetypes, filetype)
+		end
+	end,
+	treesitter_folding_filetypes = function(filetypes)
+		for _, filetype in ipairs(filetypes) do
+			table.insert(treesitter_folding_filetypes, filetype)
+		end
+	end,
+	treesitter_indenting_filetypes = function(filetypes)
+		for _, filetype in ipairs(filetypes) do
+			table.insert(treesitter_indenting_filetypes, filetype)
 		end
 	end,
 	setup = function()
@@ -95,6 +109,27 @@ return {
 				pattern = filetype,
 				callback = function()
 					pcall(vim.treesitter.start)
+				end,
+			})
+		end
+
+		for _, filetype in ipairs(treesitter_folding_filetypes) do
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("internal_nvim_treesitter_folding_" .. filetype, {}),
+				pattern = filetype,
+				callback = function()
+					vim.opt_local.foldmethod = "expr"
+					vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+				end,
+			})
+		end
+
+		for _, filetype in ipairs(treesitter_indenting_filetypes) do
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("internal_nvim_treesitter_indenting_" .. filetype, {}),
+				pattern = filetype,
+				callback = function()
+					vim.opt_local.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 				end,
 			})
 		end
