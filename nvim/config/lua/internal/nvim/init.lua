@@ -1,6 +1,7 @@
 local M = {}
 
 for _, m in ipairs({
+	require("internal.nvim.conform"),
 	require("internal.nvim.lsp"),
 	require("internal.nvim.treesitter"),
 	require("internal.nvim.vim"),
@@ -14,6 +15,7 @@ M.setup = function()
 	M.setup_vim()
 	M.setup_treesitter()
 	M.setup_lsp()
+	M.setup_conform()
 end
 
 return M
