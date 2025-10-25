@@ -11,10 +11,15 @@ M.matches = function(bufnr, arms)
 	local matched_from_key = {}
 
 	for _, arm in ipairs(arms) do
-		if not matched_from_key[arm.key] then
+		local key = arm.key
+
+		if key == nil or not matched_from_key[key] then
 			if #(arm.pattern.ft or {}) == 0 or vim.list_contains(arm.pattern.ft, vim.bo[bufnr].filetype) then
 				table.insert(matched_arms, arm)
-				matched_from_key[arm.key or ""] = true
+
+				if key ~= nil then
+					matched_from_key[key] = true
+				end
 			end
 		end
 	end
@@ -25,35 +30,23 @@ end
 M.setup = function(opts)
 	-- Vim
 
+	-- TODO: Implement teardown on BufLeave.
+
 	local vim_setup_arms = (opts or {}).vim_setup_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local setups = {}
-			local teardowns = {}
 
 			for _, arm in ipairs(M.matches(args.buf, vim_setup_arms)) do
-				local setup = arm.value[1]
-				local teardown = arm.value[2]
+				local setup = arm.value
 
 				table.insert(setups, setup)
-				table.insert(teardowns, teardown)
 			end
 
 			for _, setup in ipairs(setups) do
 				setup(args.buf)
 			end
-
-			vim.api.nvim_create_autocmd({ "BufLeave" }, {
-				buffer = args.buf,
-				callback = function()
-					for _, setup in ipairs(setups) do
-						teardown(args.buf)
-					end
-
-					return true
-				end,
-			})
 		end,
 	})
 
