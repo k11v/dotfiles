@@ -12,9 +12,9 @@ M.matches = function(bufnr, arms)
 
 	for _, arm in ipairs(arms) do
 		if not matched_from_key[arm.key] then
-			if vim.list_contains(arm.pattern.ft or {}, vim.bo[bufnr].filetype) then
+			if #(arm.pattern.ft or {}) == 0 or vim.list_contains(arm.pattern.ft, vim.bo[bufnr].filetype) then
 				table.insert(matched_arms, arm)
-				matched_from_key[arm.key] = true
+				matched_from_key[arm.key or ""] = true
 			end
 		end
 	end
@@ -22,10 +22,10 @@ M.matches = function(bufnr, arms)
 	return matched_arms
 end
 
-M.setup = function()
+M.setup = function(opts)
 	-- Vim
 
-	local vim_setup_arms = {}
+	local vim_setup_arms = (opts or {}).vim_setup_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
@@ -59,17 +59,21 @@ M.setup = function()
 
 	-- Vim CD
 
-	local vim_cd_arms = {}
+	local vim_cd_arms = (opts or {}).vim_cd_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
-			local arm = M.matches(args.buf, vim_cd_arms)[1]
+			local enabled = false
 
-			local enabled = arm.value
+			for _, arm in ipairs(M.matches(args.buf, vim_cd_arms)) do
+				enabled = arm.value
+
+				break
+			end
 
 			if enabled then
 				local src_dir = vim.fn.getcwd()
-				local dst_dir = vim.cmd.cd("/")
+				local dst_dir = "/"
 
 				local name = vim.api.nvim_buf_get_name(0) -- current buffer
 				if name ~= "" then
@@ -95,15 +99,21 @@ M.setup = function()
 
 	-- Treesitter
 
-	local treesitter_parser_arms = {}
+	local treesitter_parser_arms = (opts or {}).treesitter_parser_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
-			local arm = M.matches(args.buf, treesitter_parser_arms)[1]
+			local parser = ""
 
-			local parser = arm.value
+			for _, arm in ipairs(M.matches(args.buf, treesitter_parser_arms)) do
+				parser = arm.value
 
-			if parser ~= nil then
+				break
+			end
+
+			if parser ~= "" then
+				local parser = arm.value
+
 				vim.treesitter.start(args.buf, parser)
 
 				vim.api.nvim_create_autocmd({ "BufLeave" }, {
@@ -122,13 +132,17 @@ M.setup = function()
 
 	-- Needs treesitter.
 
-	local treesitter_parser_folding_arms = {}
+	local treesitter_parser_folding_arms = (opts or {}).treesitter_parser_folding_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
-			local arm = M.matches(args.buf, treesitter_parser_folding_arms)[1]
+			local enabled = false
 
-			local enabled = arm.value
+			for _, arm in ipairs(M.matches(args.buf, treesitter_parser_folding_arms)) do
+				enabled = arm.value
+
+				break
+			end
 
 			if enabled then
 				vim.opt_local.foldmethod = "expr"
@@ -153,13 +167,15 @@ M.setup = function()
 
 	-- Needs nvim-treesitter.
 
-	local treesitter_parser_indenting_arms = {}
+	local treesitter_parser_indenting_arms = (opts or {}).treesitter_parser_indenting_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
-			local arm = M.matches(args.buf, treesitter_parser_indenting_arms)[1]
+			local enabled = false
 
-			local enabled = arm.value
+			for _, arm in ipairs(M.matches(args.buf, treesitter_parser_indenting_arms)) do
+				enabled = arm.value
+			end
 
 			if enabled then
 				vim.opt_local.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -182,7 +198,7 @@ M.setup = function()
 
 	-- TODO: Consider stopping LSP servers that weren't used in 1 hour.
 
-	local lsp_server_arms = {}
+	local lsp_server_arms = (opts or {}).lsp_server_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
@@ -226,7 +242,7 @@ M.setup = function()
 
 	-- Needs LSP.
 
-	local lsp_server_formatting_arms = {}
+	local lsp_server_formatting_arms = (opts or {}).lsp_server_formatting_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
@@ -267,7 +283,7 @@ M.setup = function()
 
 	-- Conform formatting
 
-	local conform_formatter_formatting_arms = {}
+	local conform_formatter_formatting_arms = (opts or {}).conform_formatter_formatting_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
@@ -310,7 +326,7 @@ M.setup = function()
 
 	-- Lint checking
 
-	local lint_linter_checking_arms = {}
+	local lint_linter_checking_arms = (opts or {}).lint_linter_checking_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
