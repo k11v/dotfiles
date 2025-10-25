@@ -116,6 +116,29 @@ M.setup = function(opts)
 
 	local treesitter_parser_arms = (opts or {}).treesitter_parser_arms or {}
 
+	-- Install nvim-treesitter.
+	require("mini.deps").add({
+		source = "https://github.com/nvim-treesitter/nvim-treesitter",
+		checkout = "main",
+		hooks = {
+			post_checkout = function()
+				vim.cmd("TSUpdate")
+			end,
+		},
+	})
+
+	-- Install treesitter parsers.
+	local treesitter_parsers = {}
+
+	for _, arm in ipairs(treesitter_parser_arms) do
+		local parser = arm.value
+
+		table.insert(treesitter_parsers, parser)
+	end
+
+	require("nvim-treesitter").install(treesitter_parsers):wait(10 * 60 * 1000)
+
+	-- Start treesitter.
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local parser = ""
@@ -127,8 +150,6 @@ M.setup = function(opts)
 			end
 
 			if parser ~= "" then
-				local parser = arm.value
-
 				vim.treesitter.start(args.buf, parser)
 
 				vim.api.nvim_create_autocmd({ "BufLeave" }, {
