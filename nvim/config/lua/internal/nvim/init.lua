@@ -99,15 +99,14 @@ end
 
 -- more specific replaces less specific
 -- server should be installed and configured
--- could potentially have an issue that server isn't started yet but this autocmd is already executing
 M.lsp_server_formatting = function(condition, server, enabled)
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			if check(condition) then
-				local client_id = vim.lsp.get_clients({ bufnr = args.buf, name = server })[1]
 				local autocmd_id = vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 					buffer = args.buf,
 					callback = function()
+						local client_id = vim.lsp.get_clients({ bufnr = args.buf, name = server })[1]
 						vim.lsp.buf.format({ id = client_id })
 					end,
 				})
@@ -123,8 +122,52 @@ M.lsp_server_formatting = function(condition, server, enabled)
 	})
 end
 
-M.lint_linter_diagnostic = function(condition, linter, enabled) end
+M.lint_linter_diagnostic = function(condition, linter, enabled)
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		callback = function(args)
+			if check(condition) then
+				local autocmd_id = vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+					buffer = args.buf,
+					callback = function()
+						require("lint").try_lint(linter) -- current buffer
+					end,
+				})
+				vim.api.nvim_create_autocmd({ "BufLeave" }, {
+					buffer = args.buf,
+					once = true,
+					callback = function()
+						vim.api.nvim_del_autocmd(autocmd_id)
+					end,
+				})
+			end
+		end,
+	})
+end
 
-M.conform_formatter_formatting = function(condition, formatter, enabled) end
+M.conform_formatter_formatting = function(condition, formatter, enabled)
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		callback = function(args)
+			if check(condition) then
+				local autocmd_id = vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+					buffer = args.buf,
+					callback = function()
+						require("conform").format({
+							bufnr = args.buf,
+							formatters = { formatter },
+							timeout_ms = 1 * 1000,
+						})
+					end,
+				})
+				vim.api.nvim_create_autocmd({ "BufLeave" }, {
+					buffer = args.buf,
+					once = true,
+					callback = function()
+						vim.api.nvim_del_autocmd(autocmd_id)
+					end,
+				})
+			end
+		end,
+	})
+end
 
 return M
