@@ -54,8 +54,9 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = "main", value = true },
 	},
 	mise_tool_arms = {
-		{ pattern = { ft = { "go" } }, key = "go", value = "go@1.24.2" },
 		{ pattern = {}, key = "go", value = "go@1.24.1" },
+		{ pattern = { ft = { "go" } }, key = "golangci-lint", value = "golangci-lint@1" }, -- temporary for demo purposes
+		{ pattern = {}, key = "golangci-lint", value = "golangci-lint@2" },
 	},
 	treesitter_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },

@@ -93,8 +93,36 @@ M.setup = function(opts)
 
 	-- Mise tooling
 
+	-- Needs mise executable.
+
+	-- TODO: Improve mise install observability.
+
+	-- TODO: Use tool name as arm key and tool version as arm value.
+
 	local mise_tool_arms = (opts or {}).mise_tool_arms or {}
 
+	-- Install mise tools.
+	local mise_tools = {}
+
+	for _, arm in ipairs(mise_tool_arms) do
+		local tool = arm.value
+
+		if tool ~= "" then
+			table.insert(mise_tools, tool)
+		end
+	end
+
+	if #mise_tools > 0 then
+		local mise_process = vim.system(vim.list_extend({ "mise", "install", "--" }, mise_tools))
+
+		local mise_result = mise_process:wait(10 * 60 * 1000)
+
+		if mise_result.code ~= 0 then
+			vim.notify("failed to install tools with mise", vim.log.levels.ERROR)
+		end
+	end
+
+	-- Hook PATH changer.
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local tools = {}
@@ -106,7 +134,7 @@ M.setup = function(opts)
 			end
 
 			if #tools > 0 then
-				local process = vim.system(vim.list_extend({ "mise", "bin-paths" }, tools), { text = true })
+				local process = vim.system(vim.list_extend({ "mise", "bin-paths", "--" }, tools), { text = true })
 
 				local result = process:wait(1 * 1000)
 
