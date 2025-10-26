@@ -59,7 +59,9 @@ require("internal.nvim").setup({
 	treesitter_parser_folding_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
 	},
-	treesitter_parser_indenting_arms = {},
+	treesitter_parser_indenting_arms = {
+		{ pattern = { ft = { "go" } }, key = "main", value = true },
+	},
 	lsp_server_arms = {},
 	lsp_server_formatting_arms = {},
 	conform_formatter_formatting_arms = {},
