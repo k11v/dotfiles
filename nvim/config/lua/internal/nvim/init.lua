@@ -63,8 +63,6 @@ M.setup = function(opts)
 
 			for _, arm in ipairs(M.matches(args.buf, vim_cd_arms)) do
 				enabled = arm.value
-
-				break
 			end
 
 			if enabled then
@@ -114,7 +112,7 @@ M.setup = function(opts)
 
 	-- Treesitter
 
-	local treesitter_parser_arms = (opts or {}).treesitter_parser_arms or {}
+	local treesitter_arms = (opts or {}).treesitter_arms or {}
 
 	-- Install nvim-treesitter.
 	require("mini.deps").add({
@@ -130,10 +128,28 @@ M.setup = function(opts)
 	-- Install treesitter parsers.
 	local treesitter_parsers = {}
 
-	for _, arm in ipairs(treesitter_parser_arms) do
-		local parser = arm.value
+	for _, arm in ipairs(treesitter_arms) do
+		if type(arm.value) == "table" then
+			local parsers = arm.value
 
-		table.insert(treesitter_parsers, parser)
+			for _, parser in ipairs(parsers) do
+				table.insert(treesitter_parsers, parser)
+			end
+		elseif type(arm.value) == "string" then
+			local parser = arm.value
+
+			table.insert(treesitter_parsers, parser)
+		elseif type(arm.value) == "boolean" then
+			local enabled = arm.value
+
+			if enabled then
+				local filetypes = arm.pattern.ft or {}
+
+				for _, filetype in ipairs(filetypes) do
+					table.insert(treesitter_parsers, vim.treesitter.language.get_lang(filetype))
+				end
+			end
+		end
 	end
 
 	require("nvim-treesitter").install(treesitter_parsers):wait(10 * 60 * 1000)
@@ -143,10 +159,20 @@ M.setup = function(opts)
 		callback = function(args)
 			local parser = ""
 
-			for _, arm in ipairs(M.matches(args.buf, treesitter_parser_arms)) do
-				parser = arm.value
+			for _, arm in ipairs(M.matches(args.buf, treesitter_arms)) do
+				if type(arm.value) == "table" then
+					local parsers = arm.value
 
-				break
+					parser = parsers[1] or ""
+				elseif type(arm.value) == "string" then
+					parser = arm.value
+				elseif type(arm.value) == "boolean" then
+					local enabled = arm.value
+
+					if enabled then
+						parser = vim.treesitter.language.get_lang(filetype)
+					end
+				end
 			end
 
 			if parser ~= "" then
@@ -176,8 +202,6 @@ M.setup = function(opts)
 
 			for _, arm in ipairs(M.matches(args.buf, treesitter_folding_arms)) do
 				enabled = arm.value
-
-				break
 			end
 
 			if enabled then

@@ -53,8 +53,13 @@ require("internal.nvim").setup({
 	vim_cd_arms = {
 		{ pattern = {}, key = "main", value = true },
 	},
-	treesitter_parser_arms = {
-		{ pattern = { ft = { "go" } }, key = "main", value = "go" }, -- TODO: not convenient to configure
+	treesitter_arms = {
+		{ pattern = { ft = { "go" } }, key = "main", value = true },
+		{ pattern = { ft = { "gomod" } }, key = "main", value = true },
+		{ pattern = { ft = { "gosum" } }, key = "main", value = true },
+		{ pattern = { ft = { "gotmpl" } }, key = "main", value = true },
+		{ pattern = { ft = { "gowork" } }, key = "main", value = true },
+		{ pattern = { ft = { "markdown" } }, key = "main", value = { "markdown", "markdown_inline" } },
 	},
 	treesitter_folding_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
