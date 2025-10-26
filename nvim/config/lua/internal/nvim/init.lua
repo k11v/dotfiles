@@ -168,13 +168,13 @@ M.setup = function(opts)
 
 	-- Needs treesitter.
 
-	local treesitter_parser_folding_arms = (opts or {}).treesitter_parser_folding_arms or {}
+	local treesitter_folding_arms = (opts or {}).treesitter_folding_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local enabled = false
 
-			for _, arm in ipairs(M.matches(args.buf, treesitter_parser_folding_arms)) do
+			for _, arm in ipairs(M.matches(args.buf, treesitter_folding_arms)) do
 				enabled = arm.value
 
 				break
@@ -203,13 +203,13 @@ M.setup = function(opts)
 
 	-- Needs nvim-treesitter.
 
-	local treesitter_parser_indenting_arms = (opts or {}).treesitter_parser_indenting_arms or {}
+	local treesitter_indenting_arms = (opts or {}).treesitter_indenting_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local enabled = false
 
-			for _, arm in ipairs(M.matches(args.buf, treesitter_parser_indenting_arms)) do
+			for _, arm in ipairs(M.matches(args.buf, treesitter_indenting_arms)) do
 				enabled = arm.value
 			end
 
