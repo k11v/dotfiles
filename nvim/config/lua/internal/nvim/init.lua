@@ -91,6 +91,55 @@ M.setup = function(opts)
 		end,
 	})
 
+	-- Mise tooling
+
+	local mise_tool_arms = (opts or {}).mise_tool_arms or {}
+
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		callback = function(args)
+			local tools = {}
+
+			for _, arm in ipairs(M.matches(args.buf, mise_tool_arms)) do
+				local tool = arm.value
+
+				table.insert(tools, tool)
+			end
+
+			if #tools > 0 then
+				local process = vim.system(vim.list_extend({ "mise", "bin-paths" }, tools), { text = true })
+
+				local result = process:wait(1 * 1000)
+
+				-- TODO: Handle stderr that would contain warnings about unrecognized tools.
+
+				-- TODO: Handle non-zero exit code.
+
+				-- TODO: Handle colon in bin path.
+
+				-- TODO: Handle tool priority (e.g. when we add go's bin, we might add its golangci-lint installed
+				-- with "go install" and it might take over the golangci-lint tool).
+
+				if result.code == 0 then
+					local paths = vim.split(result.stdout, "\n", { trimempty = true })
+
+					local old_path = vim.env.PATH
+					local new_path = table.concat(paths, ":") .. ":" .. old_path
+
+					vim.env.PATH = new_path
+
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.env.PATH = old_path
+
+							return true
+						end,
+					})
+				end
+			end
+		end,
+	})
+
 	-- Mini Deps
 
 	local deps_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.deps"
@@ -170,7 +219,7 @@ M.setup = function(opts)
 					local enabled = arm.value
 
 					if enabled then
-						parser = vim.treesitter.language.get_lang(filetype)
+						parser = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
 					end
 				end
 			end
@@ -211,8 +260,8 @@ M.setup = function(opts)
 				vim.api.nvim_create_autocmd({ "BufLeave" }, {
 					buffer = args.buf,
 					callback = function()
-						vim.opt_local.foldmethod = vim.opt.foldmethod:get()
-						vim.opt_local.foldexpr = vim.opt.foldexpr:get()
+						vim.opt_local.foldmethod = vim.opt_global.foldmethod:get()
+						vim.opt_local.foldexpr = vim.opt_global.foldexpr:get()
 
 						return true
 					end,
@@ -243,7 +292,7 @@ M.setup = function(opts)
 				vim.api.nvim_create_autocmd({ "BufLeave" }, {
 					buffer = args.buf,
 					callback = function()
-						vim.opt_local.indentexpr = vim.opt.indentexpr
+						vim.opt_local.indentexpr = vim.opt_global.indentexpr:get()
 
 						return true
 					end,

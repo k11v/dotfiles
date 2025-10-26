@@ -53,6 +53,10 @@ require("internal.nvim").setup({
 	vim_cd_arms = {
 		{ pattern = {}, key = "main", value = true },
 	},
+	mise_tool_arms = {
+		{ pattern = { ft = { "go" } }, key = "go", value = "go@1.24.2" },
+		{ pattern = {}, key = "go", value = "go@1.24.1" },
+	},
 	treesitter_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
 		{ pattern = { ft = { "gomod" } }, key = "main", value = true },
