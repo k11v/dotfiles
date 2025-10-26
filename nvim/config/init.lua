@@ -8,7 +8,7 @@ require("internal.nvim").setup({
 				vim.opt_local.confirm = true
 				vim.opt_local.cursorline = true
 				vim.opt_local.cursorlineopt = "number"
-				vim.opt_local.foldlevelstart = 99
+				vim.opt_local.foldlevelstart = 99 -- FIXME: probably not respected in BufEnter
 				vim.opt_local.foldtext = ""
 				vim.opt_local.ignorecase = true
 				vim.opt_local.inccommand = "split"
@@ -56,7 +56,9 @@ require("internal.nvim").setup({
 	treesitter_parser_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = "go" },
 	},
-	treesitter_parser_folding_arms = {},
+	treesitter_parser_folding_arms = {
+		{ pattern = { ft = { "go" } }, key = "main", value = true },
+	},
 	treesitter_parser_indenting_arms = {},
 	lsp_server_arms = {},
 	lsp_server_formatting_arms = {},
