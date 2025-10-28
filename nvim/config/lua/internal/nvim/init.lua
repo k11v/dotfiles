@@ -27,11 +27,11 @@ M.matches = function(bufnr, arms)
 	return matched_arms
 end
 
-M.get = function(key)
+M.get_string = function(key)
 	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
 	local cache_file = cache_dir .. "/" .. key .. ".mpack"
 
-	-- If key is empty, return nil.
+	-- If key is empty, return empty string.
 	if key == nil or key == "" then
 		return nil
 	end
@@ -47,20 +47,15 @@ M.get = function(key)
 	local content = vim.uv.fs_read(fd, stat.size, 0)
 	vim.uv.fs_close(fd)
 
-	-- Decode content.
+	-- Return content.
 	if not content then
 		return nil
 	end
 
-	local ok, decoded = pcall(vim.mpack.decode, content)
-	if not ok then
-		return nil
-	end
-
-	return decoded
+	return content
 end
 
-M.set = function(key, value)
+M.set_string = function(key, value)
 	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
 	local cache_file = cache_dir .. "/" .. key .. ".mpack"
 
@@ -83,16 +78,52 @@ M.set = function(key, value)
 	-- Open file.
 	local fd = vim.uv.fs_open(cache_file, "w", 420) -- 0644
 	if not fd then
-		vim.notify("can't set cache", vim.log.levels.ERROR)
+		vim.notify("can't set string", vim.log.levels.ERROR)
 		return
 	end
 
-	-- Encode content.
-	encoded = vim.mpack.encode(value)
-
 	-- Write content.
-	vim.uv.fs_write(fd, encoded, 0)
+	vim.uv.fs_write(fd, value, 0)
 	vim.uv.fs_close(fd)
+end
+
+M.get = function(key)
+	local value = M.get_string(key)
+	if value == nil then
+		return nil
+	end
+
+	local ok, decoded = pcall(vim.mpack.decode, value)
+	if not ok then
+		return nil
+	end
+
+	return decoded
+end
+
+M.set = function(key, value)
+	local encoded
+
+	if value ~= nil then
+		encoded = vim.mpack.encode(value)
+	else
+		encoded = nil
+	end
+
+	M.set_string(key, encoded)
+end
+
+M.equal_hash = function(key, value)
+	local got_hash = vim.fn.sha256(vim.mpack.encode(value or ""))
+	local want_hash = M.get_string(key) or ""
+
+	return got_hash == want_hash
+end
+
+M.set_hash = function(key, value)
+	local got_hash = vim.fn.sha256(vim.mpack.encode(value or ""))
+
+	M.set_string(key, got_hash)
 end
 
 M.setup = function(opts)
