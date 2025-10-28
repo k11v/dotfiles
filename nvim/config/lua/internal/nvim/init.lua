@@ -27,6 +27,74 @@ M.matches = function(bufnr, arms)
 	return matched_arms
 end
 
+M.get = function(key)
+	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
+	local cache_file = cache_dir .. "/" .. key .. ".mpack"
+
+	-- If key is empty, return nil.
+	if key == nil or key == "" then
+		return nil
+	end
+
+	-- Open file.
+	local fd = vim.uv.fs_open(cache_file, "r", 438) -- 0666
+	if not fd then
+		return nil
+	end
+
+	-- Read content.
+	local stat = vim.uv.fs_fstat(fd)
+	local content = vim.uv.fs_read(fd, stat.size, 0)
+	vim.uv.fs_close(fd)
+
+	-- Decode content.
+	if not content then
+		return nil
+	end
+
+	local ok, decoded = pcall(vim.mpack.decode, content)
+	if not ok then
+		return nil
+	end
+
+	return decoded
+end
+
+M.set = function(key, value)
+	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
+	local cache_file = cache_dir .. "/" .. key .. ".mpack"
+
+	-- If key is empty, return.
+	if key == nil or key == "" then
+		return
+	end
+
+	-- If value is nil, remove file and return.
+	if value == nil then
+		vim.uv.fs_unlink(cache_file)
+		return
+	end
+
+	-- Create directory.
+	if vim.fn.isdirectory(cache_dir) == 0 then
+		vim.fn.mkdir(cache_dir, "p")
+	end
+
+	-- Open file.
+	local fd = vim.uv.fs_open(cache_file, "w", 420) -- 0644
+	if not fd then
+		vim.notify("can't set cache", vim.log.levels.ERROR)
+		return
+	end
+
+	-- Encode content.
+	encoded = vim.mpack.encode(value)
+
+	-- Write content.
+	vim.uv.fs_write(fd, encoded, 0)
+	vim.uv.fs_close(fd)
+end
+
 M.setup = function(opts)
 	-- Vim
 
