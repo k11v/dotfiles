@@ -212,12 +212,17 @@ M.setup = function(opts)
 	end
 
 	if #mise_tools > 0 then
-		local mise_process = vim.system(vim.list_extend({ "mise", "install", "--" }, mise_tools))
+		if not M.equal_hash("mise-install", mise_tools) then
+			local mise_process = vim.system(vim.list_extend({ "mise", "install", "--" }, mise_tools))
 
-		local mise_result = mise_process:wait(10 * 60 * 1000)
+			local mise_result = mise_process:wait(10 * 60 * 1000)
 
-		if mise_result.code ~= 0 then
-			vim.notify("failed to install tools with mise", vim.log.levels.ERROR)
+			if mise_result.code == 0 then
+				M.set_hash("mise-install", mise_tools)
+				vim.notify("installed tools with mise", vim.log.levels.INFO)
+			else
+				vim.notify("failed to install tools with mise", vim.log.levels.ERROR)
+			end
 		end
 	end
 
