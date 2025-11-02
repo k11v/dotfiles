@@ -198,16 +198,21 @@ M.setup = function(opts)
 
 	-- TODO: Use tool name as arm key and tool version as arm value.
 
+	-- TODO: Implement auto-updater with
+	-- `mise latest --installed -- <tool>` (to get current)
+	-- and `mise latest -- <tool>` (to get available)
+
 	local mise_tool_arms = (opts or {}).mise_tool_arms or {}
 
 	-- Install mise tools.
 	local mise_tools = {}
 
 	for _, arm in ipairs(mise_tool_arms) do
-		local tool = arm.value
+		local tool = arm.key
+		local version = arm.value
 
 		if tool ~= "" then
-			table.insert(mise_tools, tool)
+			table.insert(mise_tools, tool .. "@" .. version)
 		end
 	end
 
@@ -232,9 +237,10 @@ M.setup = function(opts)
 			local tools = {}
 
 			for _, arm in ipairs(M.matches(args.buf, mise_tool_arms)) do
-				local tool = arm.value
+				local tool = arm.key
+				local version = arm.value
 
-				table.insert(tools, tool)
+				table.insert(tools, tool .. "@" .. version)
 			end
 
 			if #tools > 0 then
