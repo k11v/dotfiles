@@ -455,6 +455,7 @@ M.setup = function(opts)
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local client_ids = {}
+			local initialized_from_i = {}
 
 			for _, arm in ipairs(M.matches(args.buf, lsp_server_arms)) do
 				local server = arm.key
@@ -475,13 +476,13 @@ M.setup = function(opts)
 				end
 
 				if enabled then
-					local initialized = false
-
 					-- TODO: Maybe config.on_init could be a list of functions?
+					local i = #client_ids + 1
+					initialized_from_i[i] = false
 					local on_init = config.on_init or function() end
 					config.on_init = function(client, init_result)
 						on_init(client, init_result)
-						initialized = true
+						initialized_from_i[i] = true
 					end
 
 					local client_id = vim.lsp.start(config, {
@@ -490,16 +491,24 @@ M.setup = function(opts)
 						attach = false,
 					})
 
-					local ok = vim.wait(1 * 1000, function()
-						return initialized
-					end, 10)
-
-					if not ok then
-						vim.lsp.stop_client(client_id, true) -- force means SIGTERM but it is probably an implementation detail
-						vim.notify("failed to start LSP server: timeout exceeded", vim.log.levels.ERROR)
-					end
-
 					table.insert(client_ids, client_id)
+				end
+			end
+
+			if #client_ids > 0 then
+				local ok = vim.wait(1 * 1000, function()
+					local initialized = true
+					for i = 1, #client_ids do
+						initialized = initialized and initialized_from_i[i]
+					end
+					return initialized
+				end, 10)
+
+				if not ok then
+					for _, client_id in ipairs(client_ids) do
+						vim.lsp.stop_client(client_id, true) -- force means SIGTERM but it is probably an implementation detail
+					end
+					vim.notify("failed to start LSP servers: timeout exceeded", vim.log.levels.ERROR)
 				end
 			end
 
