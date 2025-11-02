@@ -475,11 +475,29 @@ M.setup = function(opts)
 				end
 
 				if enabled then
+					local initialized = false
+
+					-- TODO: Maybe config.on_init could be a list of functions?
+					local on_init = config.on_init or function() end
+					config.on_init = function(client, init_result)
+						on_init(client, init_result)
+						initialized = true
+					end
+
 					local client_id = vim.lsp.start(config, {
 						reuse_client = nil,
 						bufnr = bufnr,
 						attach = false,
 					})
+
+					local ok = vim.wait(1 * 1000, function()
+						return initialized
+					end, 10)
+
+					if not ok then
+						vim.lsp.stop_client(client_id, true) -- force means SIGTERM but it is probably an implementation detail
+						vim.notify("failed to start LSP server: timeout exceeded", vim.log.levels.ERROR)
+					end
 
 					table.insert(client_ids, client_id)
 				end
@@ -519,9 +537,12 @@ M.setup = function(opts)
 				local enabled = arm.value
 
 				if enabled then
-					local client_id = vim.lsp.get_clients({ bufnr = args.buf, name = server })[1]
-
-					table.insert(client_ids, client_id)
+					local client = vim.lsp.get_clients({ bufnr = args.buf, name = server })[1]
+					if client then
+						table.insert(client_ids, client.id)
+					else
+						vim.notify("failed to register LSP server formatting: client not found", vim.log.levels.ERROR)
+					end
 				end
 			end
 
