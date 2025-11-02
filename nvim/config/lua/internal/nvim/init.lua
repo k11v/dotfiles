@@ -445,7 +445,12 @@ M.setup = function(opts)
 
 	-- TODO: Consider stopping LSP servers that weren't used in 1 hour.
 
+	-- TODO: Check filetypes of the LSP config (from nvim-lspconfig)
+	-- and hint that some filetypes might be extra/missing.
+
 	local lsp_server_arms = (opts or {}).lsp_server_arms or {}
+
+	require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
@@ -453,10 +458,24 @@ M.setup = function(opts)
 
 			for _, arm in ipairs(M.matches(args.buf, lsp_server_arms)) do
 				local server = arm.key
-				local enabled = arm.value
+				local config
+				local enabled
+
+				if type(arm.value) == "table" then
+					config = vim.deepcopy(vim.lsp.config[server] or {})
+					config = vim.tbl_deep_extend("force", config, arm.value)
+					enabled = true
+				elseif type(arm.value) == "function" then
+					config = vim.deepcopy(vim.lsp.config[server] or {})
+					config = arm.value(config) or {}
+					enabled = true
+				elseif type(arm.value) == "boolean" then
+					config = vim.deepcopy(vim.lsp.config[server] or {})
+					enabled = arm.value
+				end
 
 				if enabled then
-					local client_id = vim.lsp.start(vim.deepcopy(vim.lsp.config[server]), {
+					local client_id = vim.lsp.start(config, {
 						reuse_client = nil,
 						bufnr = bufnr,
 						attach = false,

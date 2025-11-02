@@ -57,6 +57,8 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = "go", value = "latest" },
 		{ pattern = { ft = { "go" } }, key = "golangci-lint", value = "1" }, -- temporary for demo purposes
 		{ pattern = {}, key = "golangci-lint", value = "2" },
+		{ pattern = {}, key = "go:golang.org/x/tools/gopls", value = "latest" },
+		{ pattern = {}, key = "aqua:LuaLS/lua-language-server", value = "latest" },
 	},
 	treesitter_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
@@ -72,7 +74,10 @@ require("internal.nvim").setup({
 	treesitter_indenting_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
 	},
-	lsp_server_arms = {},
+	lsp_server_arms = {
+		{ pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
+		{ pattern = { ft = { "lua" } }, key = "lua_ls", value = true },
+	},
 	lsp_server_formatting_arms = {},
 	conform_formatter_formatting_arms = {},
 	lint_linter_checking_arms = {},
