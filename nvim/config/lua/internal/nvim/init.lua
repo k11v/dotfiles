@@ -3,6 +3,7 @@ local M = {}
 -- arm.pattern
 -- arm.pattern.ft - buffer's filetype is
 -- arm.pattern.fp - buffer's filepath starts with
+-- arm.pattern.root - buffer's filepath is inside a directory whose name is
 -- arm.pattern.x - environment contains program whose name is
 -- arm.key
 -- arm.value
