@@ -126,6 +126,50 @@ M.set_hash = function(key, value)
 	M.set_string(key, got_hash)
 end
 
+M.system_echo_sync = function(cmd, opts)
+	local obj = nil
+	local echo = {}
+	local i = 0
+
+	opts = vim.tbl_deep_extend("force", {}, opts or {}, {
+		text = true,
+		stdout = function(_, data)
+			if data then
+				table.insert(echo, { "| " .. data })
+			end
+		end,
+		stderr = function(_, data)
+			if data then
+				table.insert(echo, { "| " .. data, "ErrorMsg" })
+			end
+		end,
+	})
+
+	local on_exit = function(o)
+		obj = o
+	end
+
+	vim.system(cmd, opts, on_exit)
+
+	while true do
+		local done = obj ~= nil
+
+		local j = #echo
+		while i < j do
+			i = i + 1
+			vim.api.nvim_echo({ echo[i] }, true, {})
+		end
+
+		if done then
+			break
+		end
+
+		vim.wait(10)
+	end
+
+	return obj
+end
+
 M.setup = function(opts)
 	-- Vim
 
@@ -218,9 +262,10 @@ M.setup = function(opts)
 
 	if #mise_tools > 0 then
 		if not M.equal_hash("mise-install", mise_tools) then
-			local mise_process = vim.system(vim.list_extend({ "mise", "install", "--" }, mise_tools))
-
-			local mise_result = mise_process:wait(10 * 60 * 1000)
+			vim.notify("installing tools with mise", vim.log.levels.INFO)
+			local mise_result = M.system_echo_sync(vim.list_extend({ "mise", "install", "--" }, mise_tools), {
+				timeout = 10 * 60 * 1000,
+			})
 
 			if mise_result.code == 0 then
 				M.set_hash("mise-install", mise_tools)

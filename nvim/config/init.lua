@@ -54,11 +54,12 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = "main", value = true },
 	},
 	mise_tool_arms = {
-		{ pattern = {}, key = "go", value = "latest" },
-		{ pattern = { ft = { "go" } }, key = "golangci-lint", value = "1" }, -- temporary for demo purposes
-		{ pattern = {}, key = "golangci-lint", value = "2" },
+		{ pattern = {}, key = "core:go", value = "latest" },
+		{ pattern = { ft = { "go" } }, key = "aqua:golangci/golangci-lint", value = "1" }, -- temporary for demo purposes
+		{ pattern = {}, key = "aqua:golangci/golangci-lint", value = "2" },
 		{ pattern = {}, key = "go:golang.org/x/tools/gopls", value = "latest" },
 		{ pattern = {}, key = "aqua:LuaLS/lua-language-server", value = "latest" },
+		{ pattern = {}, key = "aqua:JohnnyMorganz/StyLua", value = "latest" },
 	},
 	treesitter_arms = {
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
