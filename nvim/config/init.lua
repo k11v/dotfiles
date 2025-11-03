@@ -1,54 +1,44 @@
 require("internal.nvim").setup({
-	vim_setup_arms = {
-		{
-			pattern = {},
-			value = function(bufnr)
-				vim.opt_local.breakindent = true
-				vim.opt_local.clipboard = ""
-				vim.opt_local.confirm = true
-				vim.opt_local.cursorline = true
-				vim.opt_local.cursorlineopt = "number"
-				vim.opt_local.foldlevelstart = 99 -- FIXME: probably not respected in BufEnter
-				vim.opt_local.foldtext = ""
-				vim.opt_local.ignorecase = true
-				vim.opt_local.inccommand = "split"
-				vim.opt_local.list = true
-				vim.opt_local.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
-				vim.opt_local.mouse = "a"
-				vim.opt_local.number = true
-				vim.opt_local.report = 0
-				vim.opt_local.scrolloff = 10
-				vim.opt_local.shortmess = vim.tbl_deep_extend("force", {}, vim.opt_local.shortmess:get(), { I = true })
-				vim.opt_local.showmode = false
-				vim.opt_local.signcolumn = "yes"
-				vim.opt_local.smartcase = true
-				vim.opt_local.splitbelow = true
-				vim.opt_local.splitright = true
-				vim.opt_local.timeout = false
-				vim.opt_local.undofile = true
-				vim.opt_local.updatetime = 250
-			end,
-		},
-		{
-			pattern = {},
-			value = function(bufnr)
-				vim.opt_local.colorcolumn = { "80" }
-				vim.opt_local.expandtab = false
-				vim.opt_local.shiftwidth = 4
-				vim.opt_local.softtabstop = 4
-				vim.opt_local.tabstop = 4
-			end,
-		},
-		{
-			pattern = { ft = { "go" } },
-			value = function(bufnr)
-				vim.opt_local.colorcolumn = { "120" }
-				vim.opt_local.expandtab = false
-				vim.opt_local.shiftwidth = 4
-				vim.opt_local.softtabstop = 4
-				vim.opt_local.tabstop = 4
-			end,
-		},
+	vim_setup_arms = {},
+	vim_opt_arms = {
+		-- stylua: ignore start
+		{ pattern = { ft = { "go" } }, key = "colorcolumn", value = { "120" } },
+		{ pattern = { ft = { "go" } }, key = "expandtab", value = false },
+		{ pattern = { ft = { "go" } }, key = "shiftwidth", value = 4 },
+		{ pattern = { ft = { "go" } }, key = "softtabstop", value = 4 },
+		{ pattern = { ft = { "go" } }, key = "tabstop", value = 4 },
+
+		{ pattern = {}, key = "colorcolumn", value = { "80" } },
+		{ pattern = {}, key = "expandtab", value = false },
+		{ pattern = {}, key = "shiftwidth", value = 4 },
+		{ pattern = {}, key = "softtabstop", value = 4 },
+		{ pattern = {}, key = "tabstop", value = 4 },
+
+		{ pattern = {}, key = "breakindent", value = true },
+		{ pattern = {}, key = "clipboard", value = "" },
+		{ pattern = {}, key = "confirm", value = true },
+		{ pattern = {}, key = "cursorline", value = true },
+		{ pattern = {}, key = "cursorlineopt", value = "number" },
+		{ pattern = {}, key = "foldlevelstart", value = 99 }, -- FIXME: probably not respected in BufEnter
+		{ pattern = {}, key = "foldtext", value = "" },
+		{ pattern = {}, key = "ignorecase", value = true },
+		{ pattern = {}, key = "inccommand", value = "split" },
+		{ pattern = {}, key = "list", value = true },
+		{ pattern = {}, key = "listchars", value = { tab = "» ", trail = "·", nbsp = "␣" } },
+		{ pattern = {}, key = "mouse", value = "a" },
+		{ pattern = {}, key = "number", value = true },
+		{ pattern = {}, key = "report", value = 0 },
+		{ pattern = {}, key = "scrolloff", value = 10 },
+		{ pattern = {}, key = "shortmess", value = vim.tbl_deep_extend("force", {}, vim.opt_local.shortmess:get(), { I = true }) },
+		{ pattern = {}, key = "showmode", value = false },
+		{ pattern = {}, key = "signcolumn", value = "yes" },
+		{ pattern = {}, key = "smartcase", value = true },
+		{ pattern = {}, key = "splitbelow", value = true },
+		{ pattern = {}, key = "splitright", value = true },
+		{ pattern = {}, key = "timeout", value = false },
+		{ pattern = {}, key = "undofile", value = true },
+		{ pattern = {}, key = "updatetime", value = 250 },
+		-- stylua: ignore end
 	},
 	vim_cd_arms = {
 		{ pattern = {}, key = "main", value = true },
@@ -77,11 +67,11 @@ require("internal.nvim").setup({
 		{ pattern = { ft = { "go" } }, key = "main", value = true },
 	},
 	lsp_server_arms = {
-		{ pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
-		{ pattern = { ft = { "lua" } }, key = "lua_ls", value = true },
+		-- { pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
+		-- { pattern = { ft = { "lua" } }, key = "lua_ls", value = true },
 	},
 	lsp_server_formatting_arms = {
-		{ pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
+		-- { pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
 	},
 	conform_formatter_formatting_arms = {
 		{ pattern = { ft = { "lua" } }, key = "stylua", value = true },
