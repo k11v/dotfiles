@@ -913,6 +913,18 @@ M.setup = function(opts)
 			end
 		end,
 	})
+
+	vim.diagnostic.config({
+		-- Show all diagnostics as underline
+		underline = { severity = { min = "HINT", max = "ERROR" } },
+
+		-- Show more details immediately for errors
+		virtual_text = { severity = { min = "ERROR", max = "ERROR" } },
+		virtual_lines = false,
+
+		-- Show signs for warnings and errors
+		signs = { severity = { min = "WARN", max = "ERROR" } },
+	})
 end
 
 return M
