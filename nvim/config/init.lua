@@ -82,6 +82,8 @@ require("internal.nvim").setup({
 	lsp_server_formatting_arms = {
 		{ pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
 	},
-	conform_formatter_formatting_arms = {},
+	conform_formatter_formatting_arms = {
+		{ pattern = { ft = { "lua" } }, key = "stylua", value = true },
+	},
 	lint_linter_checking_arms = {},
 })

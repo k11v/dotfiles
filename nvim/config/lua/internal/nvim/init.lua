@@ -626,6 +626,8 @@ M.setup = function(opts)
 
 	local conform_formatter_formatting_arms = (opts or {}).conform_formatter_formatting_arms or {}
 
+	require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
+
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
 			local formatters = {}
