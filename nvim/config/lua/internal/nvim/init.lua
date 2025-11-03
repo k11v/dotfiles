@@ -804,7 +804,14 @@ M.setup = function(opts)
 
 	local conform_formatter_formatting_arms = (opts or {}).conform_formatter_formatting_arms or {}
 
-	require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.conform_nvim_installing", {}),
+		callback = function(_)
+			require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
+
+			return true
+		end,
+	})
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		group = vim.api.nvim_create_augroup("internal.conform_formatting", {}),
@@ -860,9 +867,16 @@ M.setup = function(opts)
 
 	local lint_linter_checking_arms = (opts or {}).lint_linter_checking_arms or {}
 
-	require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.nvim_lint_installing", {}),
+		callback = function(_)
+			require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
 
-	require("lint") -- lint doesn't have setup function
+			require("lint") -- lint doesn't have setup function
+
+			return true
+		end,
+	})
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		group = vim.api.nvim_create_augroup("internal.lint_checking", {}),
