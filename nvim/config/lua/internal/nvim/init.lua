@@ -12,9 +12,9 @@ M.matches = function(bufnr, arms)
 	local matched_from_key = {}
 
 	for _, arm in ipairs(arms) do
-		local key = arm.key
+		local key = arm.key or ""
 
-		if key == nil or not matched_from_key[key] then
+		if not matched_from_key[key] then
 			local ft_matched = false
 			local ft = arm.pattern.ft or {}
 			if #ft > 0 then
@@ -197,34 +197,12 @@ M.system_echo_sync = function(cmd, opts)
 end
 
 M.setup = function(opts)
+	-- Vim BufEnterPre
+
 	vim.api.nvim_create_autocmd("BufEnter", {
+		group = vim.api.nvim_create_augroup("internal.vim_buf_enter_pre", {}),
 		callback = function(args)
 			vim.api.nvim_exec_autocmds({ "User" }, { pattern = "BufEnterPre " .. args.buf, modeline = false })
-		end,
-	})
-
-	-- Vim
-
-	-- TODO: Implement teardown on BufLeave.
-
-	local vim_setup_arms = (opts or {}).vim_setup_arms or {}
-
-	vim.g.mapleader = " "
-	vim.g.maplocalleader = " "
-
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		callback = function(args)
-			local setups = {}
-
-			for _, arm in ipairs(M.matches(args.buf, vim_setup_arms)) do
-				local setup = arm.value
-
-				table.insert(setups, setup)
-			end
-
-			for _, setup in ipairs(setups) do
-				setup(args.buf)
-			end
 		end,
 	})
 
@@ -233,6 +211,7 @@ M.setup = function(opts)
 	local vim_opt_arms = (opts or {}).vim_opt_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.vim_opt", {}),
 		callback = function(args)
 			local vim_opts = {}
 
@@ -260,15 +239,16 @@ M.setup = function(opts)
 		end,
 	})
 
-	-- Vim CD
+	-- Vim directory changing
 
-	local vim_cd_arms = (opts or {}).vim_cd_arms or {}
+	local vim_directory_changing_arms = (opts or {}).vim_directory_changing_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.vim_directory_changing", {}),
 		callback = function(args)
 			local enabled = false
 
-			for _, arm in ipairs(M.matches(args.buf, vim_cd_arms)) do
+			for _, arm in ipairs(M.matches(args.buf, vim_directory_changing_arms)) do
 				enabled = arm.value
 			end
 
@@ -342,6 +322,7 @@ M.setup = function(opts)
 
 	-- Hook PATH changer.
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.mise_tooling", {}),
 		callback = function(args)
 			local tools = {}
 
@@ -452,6 +433,7 @@ M.setup = function(opts)
 
 	-- Start treesitter.
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.treesitter", {}),
 		callback = function(args)
 			local parser = ""
 
@@ -493,6 +475,7 @@ M.setup = function(opts)
 	local treesitter_folding_arms = (opts or {}).treesitter_folding_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.treesitter_folding", {}),
 		callback = function(args)
 			local enabled = false
 
@@ -526,6 +509,7 @@ M.setup = function(opts)
 	local treesitter_indenting_arms = (opts or {}).treesitter_indenting_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.treesitter_indenting", {}),
 		callback = function(args)
 			local enabled = false
 
@@ -562,6 +546,7 @@ M.setup = function(opts)
 	require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.lsp", {}),
 		callback = function(args)
 			local client_ids = {}
 			local initialized_from_i = {}
@@ -647,6 +632,7 @@ M.setup = function(opts)
 	local lsp_server_formatting_arms = (opts or {}).lsp_server_formatting_arms or {}
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.lsp_formatting", {}),
 		callback = function(args)
 			local client_ids = {}
 
@@ -701,6 +687,7 @@ M.setup = function(opts)
 	require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.conform_formatting", {}),
 		callback = function(args)
 			local formatters = {}
 
@@ -756,6 +743,7 @@ M.setup = function(opts)
 	require("lint") -- lint doesn't have setup function
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.lint_checking", {}),
 		callback = function(args)
 			local linters = {}
 
