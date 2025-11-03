@@ -54,6 +54,7 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = "main", value = true },
 	},
 	mise_tool_arms = {
+		{ pattern = { ft = { "go" } }, key = "core:go", value = "1.24" }, -- temporary for demo purposes
 		{ pattern = {}, key = "core:go", value = "latest" },
 		{ pattern = { ft = { "go" } }, key = "aqua:golangci/golangci-lint", value = "1" }, -- temporary for demo purposes
 		{ pattern = {}, key = "aqua:golangci/golangci-lint", value = "2" },
@@ -85,5 +86,7 @@ require("internal.nvim").setup({
 	conform_formatter_formatting_arms = {
 		{ pattern = { ft = { "lua" } }, key = "stylua", value = true },
 	},
-	lint_linter_checking_arms = {},
+	lint_linter_checking_arms = {
+		{ pattern = { ft = { "go" }, root = { "go.mod" } }, key = "golangcilint", value = true },
+	},
 })

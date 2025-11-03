@@ -649,6 +649,14 @@ M.setup = function(opts)
 
 	-- Conform formatting
 
+	-- TODO: Improve UX when formatter name is misspelled or nonexistent.
+	-- Right now it sends errors to messages.
+	-- Ideally we don't show any errors and a command like "doctor" tells what's wrong.
+
+	-- TODO: Improve UX when formatter command is not installed.
+
+	-- TODO: The PWD where the formatter is started might be important.
+
 	local conform_formatter_formatting_arms = (opts or {}).conform_formatter_formatting_arms or {}
 
 	require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
@@ -694,7 +702,19 @@ M.setup = function(opts)
 
 	-- Lint checking
 
+	-- TODO: Improve UX when linter name is misspelled or nonexistent.
+	-- Right now it sends errors to messages.
+	-- Ideally we don't show any errors and a command like "doctor" tells what's wrong.
+
+	-- TODO: Improve UX when linter command is not installed.
+
+	-- TODO: The PWD where the linter is started might be important.
+
 	local lint_linter_checking_arms = (opts or {}).lint_linter_checking_arms or {}
+
+	require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
+
+	require("lint") -- lint doesn't have setup function
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		callback = function(args)
