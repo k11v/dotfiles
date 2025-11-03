@@ -14,7 +14,32 @@ M.matches = function(bufnr, arms)
 		local key = arm.key
 
 		if key == nil or not matched_from_key[key] then
-			if #(arm.pattern.ft or {}) == 0 or vim.list_contains(arm.pattern.ft, vim.bo[bufnr].filetype) then
+			local ft_matched = false
+			local ft = arm.pattern.ft or {}
+			if #ft > 0 then
+				if vim.list_contains(ft, vim.bo[bufnr].filetype) then
+					ft_matched = true
+				end
+			else
+				ft_matched = true
+			end
+
+			local root_matched = false
+			local root = arm.pattern.root or {}
+			if #root > 0 then
+				local name = vim.api.nvim_buf_get_name(bufnr)
+				if name ~= "" then
+					local root_name = vim.fs.root(name, root)
+					if root_name ~= nil and root_name ~= "" then
+						root_matched = true
+					end
+				end
+			else
+				root_matched = true
+			end
+
+			local matched = ft_matched and root_matched
+			if matched then
 				table.insert(matched_arms, arm)
 
 				if key ~= nil then
