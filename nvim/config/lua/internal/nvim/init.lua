@@ -199,6 +199,8 @@ end
 M.setup = function(opts)
 	-- Vim BufEnterPre
 
+	-- OK.
+
 	vim.api.nvim_create_autocmd("BufEnter", {
 		group = vim.api.nvim_create_augroup("internal.vim_buf_enter_pre", {}),
 		callback = function(args)
@@ -207,6 +209,8 @@ M.setup = function(opts)
 	})
 
 	-- Vim opt
+
+	-- OK.
 
 	local vim_opt_arms = (opts or {}).vim_opt_arms or {}
 
@@ -240,6 +244,8 @@ M.setup = function(opts)
 	})
 
 	-- Vim directory changing
+
+	-- OK.
 
 	local vim_directory_changing_arms = (opts or {}).vim_directory_changing_arms or {}
 
@@ -278,80 +284,80 @@ M.setup = function(opts)
 		end,
 	})
 
-	-- Mise tooling
+	-- Mise tool installing
 
-	-- Needs mise executable.
+	-- Uses mise executable.
 
-	-- TODO: Improve mise install observability.
+	-- TODO: Mise tool updating (see `mise latest --installed -- <tool>` and `mise latest -- <tool>`).
 
-	-- TODO: Use tool name as arm key and tool version as arm value.
-
-	-- TODO: Implement auto-updater with
-	-- `mise latest --installed -- <tool>` (to get current)
-	-- and `mise latest -- <tool>` (to get available)
+	-- OK.
 
 	local mise_tool_arms = (opts or {}).mise_tool_arms or {}
 
-	-- Install mise tools.
-	local mise_tools = {}
-
-	for _, arm in ipairs(mise_tool_arms) do
-		local tool = arm.key
-		local version = arm.value
-
-		if tool ~= "" then
-			table.insert(mise_tools, tool .. "@" .. version)
-		end
-	end
-
-	if #mise_tools > 0 then
-		if not M.equal_hash("mise-install", mise_tools) then
-			vim.notify("installing tools with mise", vim.log.levels.INFO)
-			local mise_result = M.system_echo_sync(vim.list_extend({ "mise", "install", "--" }, mise_tools), {
-				timeout = 10 * 60 * 1000,
-			})
-
-			if mise_result.code == 0 then
-				M.set_hash("mise-install", mise_tools)
-				vim.notify("installed tools with mise", vim.log.levels.INFO)
-			else
-				vim.notify("failed to install tools with mise", vim.log.levels.ERROR)
-			end
-		end
-	end
-
-	-- Hook PATH changer.
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.mise_tooling", {}),
+		group = vim.api.nvim_create_augroup("internal.mise_tool_installing", {}),
+		callback = function(_)
+			local tools = {}
+
+			for _, arm in ipairs(mise_tool_arms) do
+				local name = arm.key
+				local version = arm.value
+
+				table.insert(tools, name .. "@" .. version)
+			end
+
+			if #tools > 0 then
+				if not M.equal_hash("mise-install", tools) then
+					vim.notify("installing mise tools", vim.log.levels.INFO)
+
+					local mise_result = M.system_echo_sync(vim.list_extend({ "mise", "install", "--" }, tools), {
+						timeout = 10 * 60 * 1000,
+					})
+
+					if mise_result.code == 0 then
+						M.set_hash("mise-install", tools)
+						vim.notify("installed mise tools", vim.log.levels.INFO)
+					else
+						vim.notify("failed to install mise tools", vim.log.levels.ERROR)
+					end
+				end
+			end
+
+			return true
+		end,
+	})
+
+	-- Mise tool using
+
+	-- Uses mise executable.
+
+	-- FIXME: If "go" tool's bin is before "golangci-lint" tool's bin in PATH,
+	-- "go" tool's bin has "golangci-lint" (e.g. it was installed with "go install"),
+	-- then "golangci-lint" from "go" will be used over "golangci-lint" from "golangci-lint".
+
+	-- OK.
+
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.mise_tool_using", {}),
 		callback = function(args)
 			local tools = {}
 
 			for _, arm in ipairs(M.matches(args.buf, mise_tool_arms)) do
-				local tool = arm.key
+				local name = arm.key
 				local version = arm.value
 
-				table.insert(tools, tool .. "@" .. version)
+				table.insert(tools, name .. "@" .. version)
 			end
 
 			if #tools > 0 then
-				local process = vim.system(vim.list_extend({ "mise", "bin-paths", "--" }, tools), { text = true })
+				local obj = vim.system(vim.list_extend({ "mise", "bin-paths", "--" }, tools), { text = true })
 
-				local result = process:wait(1 * 1000)
+				local res = obj:wait(1 * 1000)
 
-				-- TODO: Handle stderr that would contain warnings about unrecognized tools.
-
-				-- TODO: Handle non-zero exit code.
-
-				-- TODO: Handle colon in bin path.
-
-				-- TODO: Handle tool priority (e.g. when we add go's bin, we might add its golangci-lint installed
-				-- with "go install" and it might take over the golangci-lint tool).
-
-				if result.code == 0 then
-					local paths = vim.split(result.stdout, "\n", { trimempty = true })
-
+				if res.code == 0 and #res.stderr == 0 and not string.find(res.stdout, ":") then
+					local bin_paths = vim.split(res.stdout, "\n", { trimempty = true })
 					local old_path = vim.env.PATH
-					local new_path = table.concat(paths, ":") .. ":" .. old_path
+					local new_path = table.concat(bin_paths, ":") .. ":" .. old_path
 
 					vim.env.PATH = new_path
 
@@ -363,91 +369,120 @@ M.setup = function(opts)
 							return true
 						end,
 					})
+				else
+					vim.notify("failed to use mise tools", vim.log.levels.ERROR)
 				end
 			end
 		end,
 	})
 
-	-- Mini Deps
+	-- Vim mini.deps installing
 
-	local deps_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.deps"
+	-- Uses git executable.
 
-	if not vim.loop.fs_stat(deps_path) then
-		vim.cmd('echo "Installing `mini.deps`" | redraw')
-		vim.fn.system({
-			"git",
-			"clone",
-			"--filter=blob:none",
-			"https://github.com/nvim-mini/mini.deps",
-			deps_path,
-		})
-		vim.cmd("packadd mini.deps | helptags ALL")
-		vim.cmd('echo "Installed `mini.deps`" | redraw')
-	end
+	-- NOT OK.
 
-	require("mini.deps").setup()
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.vim_mini_deps_installing", {}),
+		callback = function(_)
+			local deps_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.deps"
 
-	-- Treesitter
+			if not vim.loop.fs_stat(deps_path) then
+				vim.cmd('echo "Installing `mini.deps`" | redraw')
+				vim.fn.system({
+					"git",
+					"clone",
+					"--filter=blob:none",
+					"https://github.com/nvim-mini/mini.deps",
+					deps_path,
+				})
+				vim.cmd("packadd mini.deps | helptags ALL")
+				vim.cmd('echo "Installed `mini.deps`" | redraw')
+			end
+
+			require("mini.deps").setup()
+
+			return true
+		end,
+	})
+
+	-- Treesitter nvim-treesitter installing
+
+	-- NOT OK.
+
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.treesitter_nvim_treesitter_installing", {}),
+		callback = function(_)
+			require("mini.deps").add({
+				source = "https://github.com/nvim-treesitter/nvim-treesitter",
+				checkout = "main",
+				hooks = {
+					post_checkout = function()
+						vim.cmd("TSUpdate")
+					end,
+				},
+			})
+
+			return true
+		end,
+	})
+
+	-- Treesitter parser installing
+
+	-- OK.
 
 	local treesitter_arms = (opts or {}).treesitter_arms or {}
 
-	-- Install nvim-treesitter.
-	require("mini.deps").add({
-		source = "https://github.com/nvim-treesitter/nvim-treesitter",
-		checkout = "main",
-		hooks = {
-			post_checkout = function()
-				vim.cmd("TSUpdate")
-			end,
-		},
-	})
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.treesitter_parser_installing", {}),
+		callback = function(_)
+			local parsers = {}
 
-	-- Install treesitter parsers.
-	local treesitter_parsers = {}
+			for _, arm in ipairs(treesitter_arms) do
+				local arm_parsers
 
-	for _, arm in ipairs(treesitter_arms) do
-		if type(arm.value) == "table" then
-			local parsers = arm.value
+				if type(arm.value) == "table" then
+					arm_parsers = arm.value
+				elseif type(arm.value) == "string" then
+					arm_parsers = { arm.value }
+				elseif type(arm.value) == "boolean" then
+					if arm.value then
+						arm_parsers = {}
+						for _, filetype in ipairs(arm.pattern.ft or {}) do
+							table.insert(arm_parsers, vim.treesitter.language.get_lang(filetype))
+						end
+					end
+				end
 
-			for _, parser in ipairs(parsers) do
-				table.insert(treesitter_parsers, parser)
-			end
-		elseif type(arm.value) == "string" then
-			local parser = arm.value
-
-			table.insert(treesitter_parsers, parser)
-		elseif type(arm.value) == "boolean" then
-			local enabled = arm.value
-
-			if enabled then
-				local filetypes = arm.pattern.ft or {}
-
-				for _, filetype in ipairs(filetypes) do
-					table.insert(treesitter_parsers, vim.treesitter.language.get_lang(filetype))
+				for _, arm_parser in ipairs(arm_parsers) do
+					table.insert(parsers, arm_parser)
 				end
 			end
-		end
-	end
 
-	require("nvim-treesitter").install(treesitter_parsers):wait(10 * 60 * 1000)
+			if #parsers > 0 then
+				require("nvim-treesitter").install(parsers):wait(10 * 60 * 1000)
+			end
 
-	-- Start treesitter.
+			return true
+		end,
+	})
+
+	-- Treesitter starting
+
+	-- OK.
+
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.treesitter", {}),
+		group = vim.api.nvim_create_augroup("internal.treesitter_starting", {}),
 		callback = function(args)
 			local parser = ""
 
 			for _, arm in ipairs(M.matches(args.buf, treesitter_arms)) do
 				if type(arm.value) == "table" then
-					local parsers = arm.value
-
-					parser = parsers[1] or ""
+					parser = arm.value[1] or ""
 				elseif type(arm.value) == "string" then
 					parser = arm.value
 				elseif type(arm.value) == "boolean" then
-					local enabled = arm.value
-
-					if enabled then
+					if arm.value then
 						parser = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
 					end
 				end
@@ -470,7 +505,9 @@ M.setup = function(opts)
 
 	-- Treesitter folding
 
-	-- Needs treesitter.
+	-- Uses treesitter starting (?).
+
+	-- OK.
 
 	local treesitter_folding_arms = (opts or {}).treesitter_folding_arms or {}
 
@@ -502,9 +539,11 @@ M.setup = function(opts)
 
 	-- Treesitter indenting
 
-	-- Needs treesitter.
+	-- Uses treesitter starting (?).
 
-	-- Needs nvim-treesitter.
+	-- Uses nvim-treesitter.
+
+	-- OK.
 
 	local treesitter_indenting_arms = (opts or {}).treesitter_indenting_arms or {}
 
@@ -532,7 +571,20 @@ M.setup = function(opts)
 		end,
 	})
 
-	-- LSP
+	-- LSP nvim-lspconfig installing
+
+	-- NOT OK.
+
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.lsp_nvim_lspconfig_installing", {}),
+		callback = function(_)
+			require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
+
+			return true
+		end,
+	})
+
+	-- LSP starting
 
 	-- TODO: Consider buffers with physical files.
 
@@ -541,12 +593,12 @@ M.setup = function(opts)
 	-- TODO: Check filetypes of the LSP config (from nvim-lspconfig)
 	-- and hint that some filetypes might be extra/missing.
 
+	-- OK.
+
 	local lsp_server_arms = (opts or {}).lsp_server_arms or {}
 
-	require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
-
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.lsp", {}),
+		group = vim.api.nvim_create_augroup("internal.lsp_starting", {}),
 		callback = function(args)
 			local client_ids = {}
 			local initialized_from_i = {}
@@ -627,7 +679,9 @@ M.setup = function(opts)
 
 	-- LSP formatting
 
-	-- Needs LSP.
+	-- Uses LSP starting.
+
+	-- OK.
 
 	local lsp_server_formatting_arms = (opts or {}).lsp_server_formatting_arms or {}
 
@@ -645,7 +699,7 @@ M.setup = function(opts)
 					if client then
 						table.insert(client_ids, client.id)
 					else
-						vim.notify("failed to register LSP server formatting: client not found", vim.log.levels.ERROR)
+						vim.notify("failed to format with LSP server: client not found", vim.log.levels.ERROR)
 					end
 				end
 			end
@@ -681,6 +735,8 @@ M.setup = function(opts)
 	-- TODO: Improve UX when formatter command is not installed.
 
 	-- TODO: The PWD where the formatter is started might be important.
+
+	-- OK.
 
 	local conform_formatter_formatting_arms = (opts or {}).conform_formatter_formatting_arms or {}
 
@@ -735,6 +791,8 @@ M.setup = function(opts)
 	-- TODO: Improve UX when linter command is not installed.
 
 	-- TODO: The PWD where the linter is started might be important.
+
+	-- OK.
 
 	local lint_linter_checking_arms = (opts or {}).lint_linter_checking_arms or {}
 
