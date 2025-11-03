@@ -197,6 +197,20 @@ M.system_echo_sync = function(cmd, opts)
 end
 
 M.setup = function(opts)
+	-- Vim g
+
+	-- NOT OK.
+
+	vim.api.nvim_create_autocmd("BufEnter", {
+		group = vim.api.nvim_create_augroup("internal.vim_g", {}),
+		callback = function(_)
+			vim.g.mapleader = " "
+			vim.g.maplocalleader = " "
+
+			return true
+		end,
+	})
+
 	-- Vim BufEnterPre
 
 	-- OK.
@@ -205,6 +219,52 @@ M.setup = function(opts)
 		group = vim.api.nvim_create_augroup("internal.vim_buf_enter_pre", {}),
 		callback = function(args)
 			vim.api.nvim_exec_autocmds({ "User" }, { pattern = "BufEnterPre " .. args.buf, modeline = false })
+		end,
+	})
+
+	-- Vim reloading
+
+	-- OK.
+
+	vim.api.nvim_create_autocmd("BufEnter", {
+		group = vim.api.nvim_create_augroup("internal.vim_reloading", {}),
+		callback = function(args)
+			local dirname = vim.fn.stdpath("config")
+			local handle = vim.uv.new_fs_event()
+
+			handle:start(
+				dirname,
+				{ recursive = true },
+				vim.schedule_wrap(function(err, filename, _)
+					if err then
+						vim.notify("failed to watch " .. dirname .. ": " .. err, vim.log.levels.ERROR)
+
+						return
+					end
+
+					for k in pairs(package.loaded) do
+						if k:match("^internal") then
+							package.loaded[k] = nil
+						end
+					end
+
+					vim.cmd("source $MYVIMRC")
+
+					vim.api.nvim_exec_autocmds({ "BufLeave" }, { buffer = args.buf, modeline = false })
+					vim.api.nvim_exec_autocmds({ "BufEnter" }, { buffer = args.buf, modeline = false })
+
+					vim.notify("reloaded", vim.log.levels.INFO)
+				end)
+			)
+
+			vim.api.nvim_create_autocmd({ "BufLeave" }, {
+				buffer = args.buf,
+				callback = function()
+					handle:stop()
+
+					return true
+				end,
+			})
 		end,
 	})
 
@@ -593,7 +653,7 @@ M.setup = function(opts)
 	-- TODO: Check filetypes of the LSP config (from nvim-lspconfig)
 	-- and hint that some filetypes might be extra/missing.
 
-	-- OK.
+	-- NOT OK.
 
 	local lsp_server_arms = (opts or {}).lsp_server_arms or {}
 
@@ -636,6 +696,10 @@ M.setup = function(opts)
 						bufnr = bufnr,
 						attach = false,
 					})
+
+					if vim.lsp.get_client_by_id(client_id).initialized then
+						initialized_from_i[i] = true
+					end
 
 					table.insert(client_ids, client_id)
 				end
