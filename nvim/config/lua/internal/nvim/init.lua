@@ -204,9 +204,6 @@ M.setup = function(opts)
 	vim.api.nvim_create_autocmd("BufEnter", {
 		group = vim.api.nvim_create_augroup("internal.vim_g", {}),
 		callback = function(_)
-			vim.g.mapleader = " "
-			vim.g.maplocalleader = " "
-
 			return true
 		end,
 	})
@@ -914,6 +911,8 @@ M.setup = function(opts)
 		end,
 	})
 
+	-- Vim diagnostic
+
 	vim.diagnostic.config({
 		-- Show all diagnostics as underline
 		underline = { severity = { min = "HINT", max = "ERROR" } },
@@ -923,8 +922,138 @@ M.setup = function(opts)
 		virtual_lines = false,
 
 		-- Show signs for warnings and errors
-		signs = { severity = { min = "WARN", max = "ERROR" } },
+		signs = { severity = { min = "WARN", max = "ERROR" }, priority = 200 },
 	})
+
+	-- Mini
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.files" })
+
+	require("mini.files").setup()
+
+	-- Mini maybe
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.notify" })
+
+	require("mini.notify").setup()
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.pick" })
+
+	require("mini.pick").setup()
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.extra" })
+
+	require("mini.extra").setup()
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.visits" })
+
+	require("mini.visits").setup()
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini-git" })
+
+	require("mini.git").setup()
+
+	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.diff" })
+
+	require("mini.diff").setup({
+		view = {
+			style = "sign",
+			priority = 100,
+		},
+	})
+
+	-- Vim keymap
+
+	vim.g.mapleader = " "
+	vim.g.maplocalleader = " "
+
+	-- Vim keymap buffer
+
+	local buffer_scratch = function()
+		vim.api.nvim_win_set_buf(0, vim.api.nvim_create_buf(true, true))
+	end
+
+	vim.keymap.set("n", "<leader>bd", "<Cmd>bd<CR>", { desc = "Delete" })
+	vim.keymap.set("n", "<leader>bD", "<Cmd>bd!<CR>", { desc = "Delete!" })
+	vim.keymap.set("n", "<leader>bs", buffer_scratch, { desc = "Scratch" })
+
+	-- Vim keymap explore
+
+	local explore_file_directory = "<Cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<CR>"
+	local explore_quickfix = function()
+		for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+			if vim.fn.getwininfo(win_id)[1].quickfix == 1 then
+				return vim.cmd("cclose")
+			end
+		end
+		vim.cmd("copen")
+	end
+
+	vim.keymap.set("n", "<leader>ed", "<Cmd>lua MiniFiles.open()<CR>", { desc = "Directory" }) -- TODO: not togglable
+	vim.keymap.set("n", "<leader>ef", explore_file_directory, { desc = "File directory" }) -- TODO: not togglable, fails when not real file
+	vim.keymap.set("n", "<leader>en", "<Cmd>lua MiniNotify.show_history()<CR>", { desc = "Notifications" }) -- TODO: not togglable
+	vim.keymap.set("n", "<leader>eq", explore_quickfix, { desc = "Quickfix" })
+
+	-- Vim keymap find
+
+	local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
+
+	vim.keymap.set("n", "<leader>f/", '<Cmd>Pick history scope="/"<CR>', { desc = '"/" history' })
+	vim.keymap.set("n", "<leader>f:", '<Cmd>Pick history scope=":"<CR>', { desc = '":" history' })
+	vim.keymap.set("n", "<leader>fa", '<Cmd>Pick git_hunks scope="staged"<CR>', { desc = "Added hunks (all)" })
+	vim.keymap.set("n", "<leader>fA", pick_added_hunks_buf, { desc = "Added hunks (buf)" }) -- TODO: fails when not real file
+	vim.keymap.set("n", "<leader>fb", "<Cmd>Pick buffers<CR>", { desc = "Buffers" })
+	vim.keymap.set("n", "<leader>fc", "<Cmd>Pick git_commits<CR>", { desc = "Commits (all)" })
+	vim.keymap.set("n", "<leader>fC", '<Cmd>Pick git_commits path="%"<CR>', { desc = "Commits (buf)" })
+	vim.keymap.set("n", "<leader>fd", '<Cmd>Pick diagnostic scope="all"<CR>', { desc = "Diagnostic workspace" })
+	vim.keymap.set("n", "<leader>fD", '<Cmd>Pick diagnostic scope="current"<CR>', { desc = "Diagnostic buffer" })
+	vim.keymap.set("n", "<leader>ff", "<Cmd>Pick files<CR>", { desc = "Files" })
+	vim.keymap.set("n", "<leader>fg", "<Cmd>Pick grep_live<CR>", { desc = "Grep live" })
+	vim.keymap.set("n", "<leader>fG", '<Cmd>Pick grep pattern="<cword>"<CR>', { desc = "Grep current word" })
+	vim.keymap.set("n", "<leader>fh", "<Cmd>Pick help<CR>", { desc = "Help tags" })
+	vim.keymap.set("n", "<leader>fH", "<Cmd>Pick hl_groups<CR>", { desc = "Highlight groups" })
+	vim.keymap.set("n", "<leader>fl", '<Cmd>Pick buf_lines scope="all"<CR>', { desc = "Lines (all)" })
+	vim.keymap.set("n", "<leader>fL", '<Cmd>Pick buf_lines scope="current"<CR>', { desc = "Lines (buf)" })
+	vim.keymap.set("n", "<leader>fm", "<Cmd>Pick git_hunks<CR>", { desc = "Modified hunks (all)" })
+	vim.keymap.set("n", "<leader>fM", '<Cmd>Pick git_hunks path="%"<CR>', { desc = "Modified hunks (buf)" })
+	vim.keymap.set("n", "<leader>fr", "<Cmd>Pick resume<CR>", { desc = "Resume" })
+	vim.keymap.set("n", "<leader>fR", '<Cmd>Pick lsp scope="references"<CR>', { desc = "References (LSP)" })
+	vim.keymap.set("n", "<leader>fs", '<Cmd>Pick lsp scope="workspace_symbol"<CR>', { desc = "Symbols workspace" })
+	vim.keymap.set("n", "<leader>fS", '<Cmd>Pick lsp scope="document_symbol"<CR>', { desc = "Symbols document" })
+	vim.keymap.set("n", "<leader>fv", '<Cmd>Pick visit_paths cwd=""<CR>', { desc = "Visit paths (all)" })
+	vim.keymap.set("n", "<leader>fV", "<Cmd>Pick visit_paths<CR>", { desc = "Visit paths (cwd)" })
+
+	-- Vim keymap git
+
+	local git_log_cmd = [[Git log --pretty=format:\%h\ \%as\ │\ \%s --topo-order]]
+	local git_log_buf_cmd = git_log_cmd .. " --follow -- %"
+
+	vim.keymap.set("n", "<leader>ga", "<Cmd>Git diff --cached<CR>", { desc = "Added diff" })
+	vim.keymap.set("n", "<leader>gA", "<Cmd>Git diff --cached -- %<CR>", { desc = "Added diff buffer" })
+	vim.keymap.set("n", "<leader>gc", "<Cmd>Git commit<CR>", { desc = "Commit" })
+	vim.keymap.set("n", "<leader>gC", "<Cmd>Git commit --amend<CR>", { desc = "Commit amend" })
+	vim.keymap.set("n", "<leader>gd", "<Cmd>Git diff<CR>", { desc = "Diff" })
+	vim.keymap.set("n", "<leader>gD", "<Cmd>Git diff -- %<CR>", { desc = "Diff buffer" })
+	vim.keymap.set("n", "<leader>gl", "<Cmd>" .. git_log_cmd .. "<CR>", { desc = "Log" })
+	vim.keymap.set("n", "<leader>gL", "<Cmd>" .. git_log_buf_cmd .. "<CR>", { desc = "Log buffer" })
+	vim.keymap.set("n", "<leader>go", "<Cmd>lua MiniDiff.toggle_overlay()<CR>", { desc = "Toggle overlay" })
+	vim.keymap.set("n", "<leader>gs", "<Cmd>lua MiniGit.show_at_cursor()<CR>", { desc = "Show at cursor" })
+	vim.keymap.set("x", "<leader>gs", "<Cmd>lua MiniGit.show_at_cursor()<CR>", { desc = "Show at selection" })
+
+	-- Vim keymap language
+
+	local language_format = '<Cmd>lua require("conform").format({lsp_fallback=true})<CR>'
+
+	vim.keymap.set("n", "<leader>la", "<Cmd>lua vim.lsp.buf.code_action()<CR>", { desc = "Actions" })
+	vim.keymap.set("n", "<leader>ld", "<Cmd>lua vim.diagnostic.open_float()<CR>", { desc = "Diagnostic popup" })
+	vim.keymap.set("n", "<leader>lf", language_format, { desc = "Format" })
+	vim.keymap.set("n", "<leader>li", "<Cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "Implementation" })
+	vim.keymap.set("n", "<leader>lh", "<Cmd>lua vim.lsp.buf.hover()<CR>", { desc = "Hover" })
+	vim.keymap.set("n", "<leader>lr", "<Cmd>lua vim.lsp.buf.rename()<CR>", { desc = "Rename" })
+	vim.keymap.set("n", "<leader>lR", "<Cmd>lua vim.lsp.buf.references()<CR>", { desc = "References" })
+	vim.keymap.set("n", "<leader>ls", "<Cmd>lua vim.lsp.buf.definition()<CR>", { desc = "Source definition" })
+	vim.keymap.set("n", "<leader>lt", "<Cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "Type definition" })
+	vim.keymap.set("x", "<leader>lf", language_format, { desc = "Format selection" })
 end
 
 return M
