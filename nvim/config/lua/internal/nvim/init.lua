@@ -196,7 +196,17 @@ M.system_echo_sync = function(cmd, opts)
 	return obj
 end
 
+M.data = {}
+M.data.teardowns = {}
+
 M.setup = function(opts)
+	local teardowns = M.data.teardowns
+	M.data.teardowns = {}
+
+	for _, teardown in ipairs(teardowns) do
+		teardown()
+	end
+
 	-- Vim g
 
 	-- NOT OK.
@@ -427,7 +437,7 @@ M.setup = function(opts)
 						end,
 					})
 				else
-					vim.notify("failed to use mise tools", vim.log.levels.ERROR)
+					vim.notify("failed to use mise tools: " .. res.stderr, vim.log.levels.ERROR)
 				end
 			end
 		end,
@@ -913,17 +923,25 @@ M.setup = function(opts)
 
 	-- Vim diagnostic
 
-	vim.diagnostic.config({
-		-- Show all diagnostics as underline
-		underline = { severity = { min = "HINT", max = "ERROR" } },
+	do
+		local old_config = vim.diagnostic.config(nil)
 
-		-- Show more details immediately for errors
-		virtual_text = { severity = { min = "ERROR", max = "ERROR" } },
-		virtual_lines = false,
+		vim.diagnostic.config({
+			-- Show all diagnostics as underline
+			underline = { severity = { min = "HINT", max = "ERROR" } },
 
-		-- Show signs for warnings and errors
-		signs = { severity = { min = "WARN", max = "ERROR" }, priority = 200 },
-	})
+			-- Show more details immediately for errors
+			virtual_text = { severity = { min = "ERROR", max = "ERROR" } },
+			virtual_lines = false,
+
+			-- Show signs for warnings and errors
+			signs = { severity = { min = "WARN", max = "ERROR" }, priority = 200 },
+		})
+
+		table.insert(M.data.teardowns, function()
+			vim.diagnostic.config(old_config)
+		end)
+	end
 
 	-- Mini
 
