@@ -96,7 +96,7 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = { "n", "<leader>bD" }, value = { "<Cmd>bd!<CR>", "Delete!" } },
 		{ pattern = {}, key = { "n", "<leader>bs" }, value = { function() vim.api.nvim_win_set_buf(0, vim.api.nvim_create_buf(true, true)) end, "Scratch" } },
 		-- Explore
-		{ pattern = { ft = { "go" } }, key = { "n", "<leader>ed" }, value = { "<Cmd>lua MiniFiles.open()<CR>", "Directory" } }, -- TODO: not togglable
+		{ pattern = {}, key = { "n", "<leader>ed" }, value = { "<Cmd>lua MiniFiles.open()<CR>", "Directory" } }, -- TODO: not togglable
 		{ pattern = {}, key = { "n", "<leader>ef" }, value = { "<Cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<CR>", "File directory" } }, -- TODO: not togglable, fails when not real file
 		{ pattern = {}, key = { "n", "<leader>en" }, value = { "<Cmd>lua MiniNotify.show_history()<CR>", "Notifications" } }, -- TODO: not togglable
 		{ pattern = {}, key = { "n", "<leader>eq" }, value = { function() for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do if vim.fn.getwininfo(win_id)[1].quickfix == 1 then return vim.cmd("cclose") end end vim.cmd("copen") end, "Quickfix" } },
