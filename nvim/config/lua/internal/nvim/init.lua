@@ -222,15 +222,6 @@ M.setup = function(opts)
 		teardown()
 	end
 
-	-- Vim g
-
-	vim.g.mapleader = " "
-	vim.g.maplocalleader = " "
-
-	-- Vim BufEnterPre
-
-	-- OK.
-
 	vim.api.nvim_create_autocmd("BufEnter", {
 		group = vim.api.nvim_create_augroup("internal.vim_buf_enter_pre", {}),
 		callback = function(args)
@@ -238,127 +229,134 @@ M.setup = function(opts)
 		end,
 	})
 
+	-- Vim g
+
+	do
+		vim.g.mapleader = " "
+		vim.g.maplocalleader = " "
+	end
+
 	-- Vim reloading
 
-	-- OK.
+	do
+		vim.api.nvim_create_autocmd("BufEnter", {
+			group = vim.api.nvim_create_augroup("internal.vim_reloading", {}),
+			callback = function(args)
+				local dirname = vim.fn.stdpath("config")
+				local handle = vim.uv.new_fs_event()
 
-	vim.api.nvim_create_autocmd("BufEnter", {
-		group = vim.api.nvim_create_augroup("internal.vim_reloading", {}),
-		callback = function(args)
-			local dirname = vim.fn.stdpath("config")
-			local handle = vim.uv.new_fs_event()
+				handle:start(
+					dirname,
+					{ recursive = true },
+					vim.schedule_wrap(function(err, filename, _)
+						if err then
+							vim.notify("failed to watch " .. dirname .. ": " .. err, vim.log.levels.ERROR)
 
-			handle:start(
-				dirname,
-				{ recursive = true },
-				vim.schedule_wrap(function(err, filename, _)
-					if err then
-						vim.notify("failed to watch " .. dirname .. ": " .. err, vim.log.levels.ERROR)
-
-						return
-					end
-
-					for k in pairs(package.loaded) do
-						if M.package_contains("internal", k) then
-							package.loaded[k] = nil
+							return
 						end
-					end
 
-					vim.cmd("source $MYVIMRC")
+						for k in pairs(package.loaded) do
+							if M.package_contains("internal", k) then
+								package.loaded[k] = nil
+							end
+						end
 
-					vim.api.nvim_exec_autocmds({ "BufLeave" }, { buffer = args.buf, modeline = false })
-					vim.api.nvim_exec_autocmds({ "BufEnter" }, { buffer = args.buf, modeline = false })
+						vim.cmd("source $MYVIMRC")
 
-					vim.notify("reloaded", vim.log.levels.INFO)
-				end)
-			)
+						vim.api.nvim_exec_autocmds({ "BufLeave" }, { buffer = args.buf, modeline = false })
+						vim.api.nvim_exec_autocmds({ "BufEnter" }, { buffer = args.buf, modeline = false })
 
-			vim.api.nvim_create_autocmd({ "BufLeave" }, {
-				buffer = args.buf,
-				callback = function()
-					handle:stop()
-
-					return true
-				end,
-			})
-		end,
-	})
-
-	-- Vim opt
-
-	-- OK.
-
-	local vim_opt_arms = (opts or {}).vim_opt_arms or {}
-
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.vim_opt", {}),
-		callback = function(args)
-			local vim_opts = {}
-
-			for _, arm in ipairs(M.matches(args.buf, vim_opt_arms)) do
-				local name = arm.key
-				local value = arm.value
-
-				table.insert(vim_opts, { name = name, value = value })
-			end
-
-			for _, o in ipairs(vim_opts) do
-				vim.opt_local[o.name] = o.value -- current buffer
-			end
-
-			vim.api.nvim_create_autocmd({ "User" }, {
-				pattern = "BufEnterPre " .. args.buf,
-				callback = function()
-					for _, o in ipairs(vim_opts) do
-						vim.opt_local[o.name] = vim.opt_global[o.name]:get() -- current buffer
-					end
-
-					return true
-				end,
-			})
-		end,
-	})
-
-	-- Vim directory changing
-
-	-- OK.
-
-	local vim_directory_changing_arms = (opts or {}).vim_directory_changing_arms or {}
-
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.vim_directory_changing", {}),
-		callback = function(args)
-			local enabled = false
-
-			for _, arm in ipairs(M.matches(args.buf, vim_directory_changing_arms)) do
-				enabled = arm.value
-			end
-
-			if enabled then
-				local src_dir = vim.fn.getcwd()
-				local dst_dir = "/"
-
-				local name = vim.api.nvim_buf_get_name(0) -- current buffer
-				if name ~= "" then
-					local project_name = vim.fs.root(name, ".git")
-					if project_name ~= nil and project_name ~= "" then
-						dst_dir = project_name
-					end
-				end
-
-				vim.cmd.cd(dst_dir) -- current buffer
+						vim.notify("reloaded", vim.log.levels.INFO)
+					end)
+				)
 
 				vim.api.nvim_create_autocmd({ "BufLeave" }, {
 					buffer = args.buf,
 					callback = function()
-						vim.cmd.cd(src_dir) -- current buffer
+						handle:stop()
 
 						return true
 					end,
 				})
-			end
-		end,
-	})
+			end,
+		})
+	end
+
+	-- Vim opt
+
+	local vim_opt_arms = (opts or {}).vim_opt_arms or {}
+
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.vim_opt", {}),
+			callback = function(args)
+				local vim_opts = {}
+
+				for _, arm in ipairs(M.matches(args.buf, vim_opt_arms)) do
+					local name = arm.key
+					local value = arm.value
+
+					table.insert(vim_opts, { name = name, value = value })
+				end
+
+				for _, o in ipairs(vim_opts) do
+					vim.opt_local[o.name] = o.value -- current buffer
+				end
+
+				vim.api.nvim_create_autocmd({ "User" }, {
+					pattern = "BufEnterPre " .. args.buf,
+					callback = function()
+						for _, o in ipairs(vim_opts) do
+							vim.opt_local[o.name] = vim.opt_global[o.name]:get() -- current buffer
+						end
+
+						return true
+					end,
+				})
+			end,
+		})
+	end
+
+	-- Vim directory changing
+
+	local vim_directory_changing_arms = (opts or {}).vim_directory_changing_arms or {}
+
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.vim_directory_changing", {}),
+			callback = function(args)
+				local enabled = false
+
+				for _, arm in ipairs(M.matches(args.buf, vim_directory_changing_arms)) do
+					enabled = arm.value
+				end
+
+				if enabled then
+					local src_dir = vim.fn.getcwd()
+					local dst_dir = "/"
+
+					local name = vim.api.nvim_buf_get_name(0) -- current buffer
+					if name ~= "" then
+						local project_name = vim.fs.root(name, ".git")
+						if project_name ~= nil and project_name ~= "" then
+							dst_dir = project_name
+						end
+					end
+
+					vim.cmd.cd(dst_dir) -- current buffer
+
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.cmd.cd(src_dir) -- current buffer
+
+							return true
+						end,
+					})
+				end
+			end,
+		})
+	end
 
 	-- Mise tool installing
 
@@ -366,42 +364,35 @@ M.setup = function(opts)
 
 	-- TODO: Mise tool updating (see `mise latest --installed -- <tool>` and `mise latest -- <tool>`).
 
-	-- OK.
-
 	local mise_tool_arms = (opts or {}).mise_tool_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.mise_tool_installing", {}),
-		callback = function(_)
-			local tools = {}
+	do
+		local tools = {}
 
-			for _, arm in ipairs(mise_tool_arms) do
-				local name = arm.key
-				local version = arm.value
+		for _, arm in ipairs(mise_tool_arms) do
+			local name = arm.key
+			local version = arm.value
 
-				table.insert(tools, name .. "@" .. version)
-			end
+			table.insert(tools, name .. "@" .. version)
+		end
 
-			if #tools > 0 then
-				if not M.equal_hash("mise-install", tools) then
-					vim.notify("installing mise tools", vim.log.levels.INFO)
+		if #tools > 0 then
+			if not M.equal_hash("mise-install", tools) then
+				vim.notify("installing mise tools", vim.log.levels.INFO)
 
-					local mise_result = M.system_echo_sync(vim.list_extend({ "mise", "install", "--" }, tools), {
-						timeout = 10 * 60 * 1000,
-					})
+				local mise_result = M.system_echo_sync(vim.list_extend({ "mise", "install", "--" }, tools), {
+					timeout = 10 * 60 * 1000,
+				})
 
-					if mise_result.code == 0 then
-						M.set_hash("mise-install", tools)
-						vim.notify("installed mise tools", vim.log.levels.INFO)
-					else
-						vim.notify("failed to install mise tools", vim.log.levels.ERROR)
-					end
+				if mise_result.code == 0 then
+					M.set_hash("mise-install", tools)
+					vim.notify("installed mise tools", vim.log.levels.INFO)
+				else
+					vim.notify("failed to install mise tools", vim.log.levels.ERROR)
 				end
 			end
-
-			return true
-		end,
-	})
+		end
+	end
 
 	-- Mise tool using
 
@@ -411,97 +402,85 @@ M.setup = function(opts)
 	-- "go" tool's bin has "golangci-lint" (e.g. it was installed with "go install"),
 	-- then "golangci-lint" from "go" will be used over "golangci-lint" from "golangci-lint".
 
-	-- OK.
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.mise_tool_using", {}),
+			callback = function(args)
+				local tools = {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.mise_tool_using", {}),
-		callback = function(args)
-			local tools = {}
+				for _, arm in ipairs(M.matches(args.buf, mise_tool_arms)) do
+					local name = arm.key
+					local version = arm.value
 
-			for _, arm in ipairs(M.matches(args.buf, mise_tool_arms)) do
-				local name = arm.key
-				local version = arm.value
-
-				table.insert(tools, name .. "@" .. version)
-			end
-
-			if #tools > 0 then
-				local obj = vim.system(vim.list_extend({ "mise", "bin-paths", "--" }, tools), { text = true })
-
-				local res = obj:wait(1 * 1000)
-
-				if res.code == 0 and #res.stderr == 0 and not string.find(res.stdout, ":") then
-					local bin_paths = vim.split(res.stdout, "\n", { trimempty = true })
-					local old_path = vim.env.PATH
-					local new_path = table.concat(bin_paths, ":") .. ":" .. old_path
-
-					vim.env.PATH = new_path
-
-					vim.api.nvim_create_autocmd({ "BufLeave" }, {
-						buffer = args.buf,
-						callback = function()
-							vim.env.PATH = old_path
-
-							return true
-						end,
-					})
-				else
-					vim.notify("failed to use mise tools: " .. res.stderr, vim.log.levels.ERROR)
+					table.insert(tools, name .. "@" .. version)
 				end
-			end
-		end,
-	})
 
-	-- Vim mini.deps installing
+				if #tools > 0 then
+					local obj = vim.system(vim.list_extend({ "mise", "bin-paths", "--" }, tools), { text = true })
+
+					local res = obj:wait(1 * 1000)
+
+					if res.code == 0 and #res.stderr == 0 and not string.find(res.stdout, ":") then
+						local bin_paths = vim.split(res.stdout, "\n", { trimempty = true })
+						local old_path = vim.env.PATH
+						local new_path = table.concat(bin_paths, ":") .. ":" .. old_path
+
+						vim.env.PATH = new_path
+
+						vim.api.nvim_create_autocmd({ "BufLeave" }, {
+							buffer = args.buf,
+							callback = function()
+								vim.env.PATH = old_path
+
+								return true
+							end,
+						})
+					else
+						vim.notify("failed to use mise tools: " .. res.stderr, vim.log.levels.ERROR)
+					end
+				end
+			end,
+		})
+	end
+
+	-- Mini deps
 
 	-- Uses git executable.
 
-	-- NOT OK.
+	do
+		local deps_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.deps"
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.vim_mini_deps_installing", {}),
-		callback = function(_)
-			local deps_path = vim.fn.stdpath("data") .. "/site/pack/deps/start/mini.deps"
+		if not vim.loop.fs_stat(deps_path) then
+			vim.cmd('echo "Installing `mini.deps`" | redraw')
+			vim.fn.system({
+				"git",
+				"clone",
+				"--filter=blob:none",
+				"https://github.com/nvim-mini/mini.deps",
+				deps_path,
+			})
+			vim.cmd("packadd mini.deps | helptags ALL")
+			vim.cmd('echo "Installed `mini.deps`" | redraw')
+		end
 
-			if not vim.loop.fs_stat(deps_path) then
-				vim.cmd('echo "Installing `mini.deps`" | redraw')
-				vim.fn.system({
-					"git",
-					"clone",
-					"--filter=blob:none",
-					"https://github.com/nvim-mini/mini.deps",
-					deps_path,
-				})
-				vim.cmd("packadd mini.deps | helptags ALL")
-				vim.cmd('echo "Installed `mini.deps`" | redraw')
-			end
-
-			require("mini.deps").setup()
-
-			return true
-		end,
-	})
+		require("mini.deps").setup()
+	end
 
 	-- Treesitter nvim-treesitter installing
 
-	-- NOT OK.
+	do
+		require("mini.deps").add({
+			source = "https://github.com/nvim-treesitter/nvim-treesitter",
+			checkout = "main",
+			hooks = {
+				post_checkout = function()
+					vim.cmd("TSUpdate")
+				end,
+			},
+		})
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.treesitter_nvim_treesitter_installing", {}),
-		callback = function(_)
-			require("mini.deps").add({
-				source = "https://github.com/nvim-treesitter/nvim-treesitter",
-				checkout = "main",
-				hooks = {
-					post_checkout = function()
-						vim.cmd("TSUpdate")
-					end,
-				},
-			})
-
-			return true
-		end,
-	})
+		require("nvim-treesitter")
+	end
 
 	-- Treesitter parser installing
 
@@ -509,109 +488,104 @@ M.setup = function(opts)
 
 	local treesitter_arms = (opts or {}).treesitter_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.treesitter_parser_installing", {}),
-		callback = function(_)
-			local parsers = {}
+	do
+		local parsers = {}
 
-			for _, arm in ipairs(treesitter_arms) do
-				local arm_parsers
+		for _, arm in ipairs(treesitter_arms) do
+			local arm_parsers
 
-				if type(arm.value) == "table" then
-					arm_parsers = arm.value
-				elseif type(arm.value) == "string" then
-					arm_parsers = { arm.value }
-				elseif type(arm.value) == "boolean" then
-					if arm.value then
-						arm_parsers = {}
-						for _, filetype in ipairs(arm.pattern.ft or {}) do
-							table.insert(arm_parsers, vim.treesitter.language.get_lang(filetype))
+			if type(arm.value) == "table" then
+				arm_parsers = arm.value
+			elseif type(arm.value) == "string" then
+				arm_parsers = { arm.value }
+			elseif type(arm.value) == "boolean" then
+				if arm.value then
+					arm_parsers = {}
+					for _, filetype in ipairs(arm.pattern.ft or {}) do
+						table.insert(arm_parsers, vim.treesitter.language.get_lang(filetype))
+					end
+				end
+			end
+
+			for _, arm_parser in ipairs(arm_parsers) do
+				table.insert(parsers, arm_parser)
+			end
+		end
+
+		if #parsers > 0 then
+			require("nvim-treesitter").install(parsers):wait(10 * 60 * 1000)
+		end
+	end
+
+	-- Treesitter starting
+
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.treesitter_starting", {}),
+			callback = function(args)
+				local parser = ""
+
+				for _, arm in ipairs(M.matches(args.buf, treesitter_arms)) do
+					if type(arm.value) == "table" then
+						parser = arm.value[1] or ""
+					elseif type(arm.value) == "string" then
+						parser = arm.value
+					elseif type(arm.value) == "boolean" then
+						if arm.value then
+							parser = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
 						end
 					end
 				end
 
-				for _, arm_parser in ipairs(arm_parsers) do
-					table.insert(parsers, arm_parser)
+				if parser ~= "" then
+					vim.treesitter.start(args.buf, parser)
+
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.treesitter.stop(args.buf)
+
+							return true
+						end,
+					})
 				end
-			end
-
-			if #parsers > 0 then
-				require("nvim-treesitter").install(parsers):wait(10 * 60 * 1000)
-			end
-
-			return true
-		end,
-	})
-
-	-- Treesitter starting
-
-	-- OK.
-
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.treesitter_starting", {}),
-		callback = function(args)
-			local parser = ""
-
-			for _, arm in ipairs(M.matches(args.buf, treesitter_arms)) do
-				if type(arm.value) == "table" then
-					parser = arm.value[1] or ""
-				elseif type(arm.value) == "string" then
-					parser = arm.value
-				elseif type(arm.value) == "boolean" then
-					if arm.value then
-						parser = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
-					end
-				end
-			end
-
-			if parser ~= "" then
-				vim.treesitter.start(args.buf, parser)
-
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					buffer = args.buf,
-					callback = function()
-						vim.treesitter.stop(args.buf)
-
-						return true
-					end,
-				})
-			end
-		end,
-	})
+			end,
+		})
+	end
 
 	-- Treesitter folding
 
 	-- Uses treesitter starting (?).
 
-	-- OK.
-
 	local treesitter_folding_arms = (opts or {}).treesitter_folding_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.treesitter_folding", {}),
-		callback = function(args)
-			local enabled = false
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.treesitter_folding", {}),
+			callback = function(args)
+				local enabled = false
 
-			for _, arm in ipairs(M.matches(args.buf, treesitter_folding_arms)) do
-				enabled = arm.value
-			end
+				for _, arm in ipairs(M.matches(args.buf, treesitter_folding_arms)) do
+					enabled = arm.value
+				end
 
-			if enabled then
-				vim.opt_local.foldmethod = "expr"
-				vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+				if enabled then
+					vim.opt_local.foldmethod = "expr"
+					vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					buffer = args.buf,
-					callback = function()
-						vim.opt_local.foldmethod = vim.opt_global.foldmethod:get()
-						vim.opt_local.foldexpr = vim.opt_global.foldexpr:get()
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.opt_local.foldmethod = vim.opt_global.foldmethod:get()
+							vim.opt_local.foldexpr = vim.opt_global.foldexpr:get()
 
-						return true
-					end,
-				})
-			end
-		end,
-	})
+							return true
+						end,
+					})
+				end
+			end,
+		})
+	end
 
 	-- Treesitter indenting
 
@@ -619,46 +593,41 @@ M.setup = function(opts)
 
 	-- Uses nvim-treesitter.
 
-	-- OK.
-
 	local treesitter_indenting_arms = (opts or {}).treesitter_indenting_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.treesitter_indenting", {}),
-		callback = function(args)
-			local enabled = false
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.treesitter_indenting", {}),
+			callback = function(args)
+				local enabled = false
 
-			for _, arm in ipairs(M.matches(args.buf, treesitter_indenting_arms)) do
-				enabled = arm.value
-			end
+				for _, arm in ipairs(M.matches(args.buf, treesitter_indenting_arms)) do
+					enabled = arm.value
+				end
 
-			if enabled then
-				vim.opt_local.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				if enabled then
+					vim.opt_local.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					buffer = args.buf,
-					callback = function()
-						vim.opt_local.indentexpr = vim.opt_global.indentexpr:get()
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.opt_local.indentexpr = vim.opt_global.indentexpr:get()
 
-						return true
-					end,
-				})
-			end
-		end,
-	})
+							return true
+						end,
+					})
+				end
+			end,
+		})
+	end
 
 	-- LSP nvim-lspconfig installing
 
-	-- NOT OK.
+	do
+		require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.lsp_nvim_lspconfig_installing", {}),
-		callback = function(_)
-			require("mini.deps").add({ source = "https://github.com/neovim/nvim-lspconfig" })
-
-			return true
-		end,
-	})
+		require("lspconfig")
+	end
 
 	-- LSP starting
 
@@ -669,142 +638,150 @@ M.setup = function(opts)
 	-- TODO: Check filetypes of the LSP config (from nvim-lspconfig)
 	-- and hint that some filetypes might be extra/missing.
 
-	-- NOT OK.
-
 	local lsp_server_arms = (opts or {}).lsp_server_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.lsp_starting", {}),
-		callback = function(args)
-			local client_ids = {}
-			local initialized_from_i = {}
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.lsp_starting", {}),
+			callback = function(args)
+				local client_ids = {}
+				local initialized_from_i = {}
 
-			for _, arm in ipairs(M.matches(args.buf, lsp_server_arms)) do
-				local server = arm.key
-				local config
-				local enabled
+				for _, arm in ipairs(M.matches(args.buf, lsp_server_arms)) do
+					local server = arm.key
+					local config
+					local enabled
 
-				if type(arm.value) == "table" then
-					config = vim.deepcopy(vim.lsp.config[server] or {})
-					config = vim.tbl_deep_extend("force", config, arm.value)
-					enabled = true
-				elseif type(arm.value) == "function" then
-					config = vim.deepcopy(vim.lsp.config[server] or {})
-					config = arm.value(config) or {}
-					enabled = true
-				elseif type(arm.value) == "boolean" then
-					config = vim.deepcopy(vim.lsp.config[server] or {})
-					enabled = arm.value
-				end
-
-				if enabled then
-					-- TODO: Maybe config.on_init could be a list of functions?
-					local i = #client_ids + 1
-					initialized_from_i[i] = false
-					local on_init = config.on_init or function() end
-					config.on_init = function(client, init_result)
-						on_init(client, init_result)
-						initialized_from_i[i] = true
+					if type(arm.value) == "table" then
+						config = vim.deepcopy(vim.lsp.config[server] or {})
+						config = vim.tbl_deep_extend("force", config, arm.value)
+						enabled = true
+					elseif type(arm.value) == "function" then
+						config = vim.deepcopy(vim.lsp.config[server] or {})
+						config = arm.value(config) or {}
+						enabled = true
+					elseif type(arm.value) == "boolean" then
+						config = vim.deepcopy(vim.lsp.config[server] or {})
+						enabled = arm.value
 					end
 
-					local client_id = vim.lsp.start(config, {
-						reuse_client = nil,
-						bufnr = bufnr,
-						attach = false,
-					})
-
-					if vim.lsp.get_client_by_id(client_id).initialized then
-						initialized_from_i[i] = true
-					end
-
-					table.insert(client_ids, client_id)
-				end
-			end
-
-			if #client_ids > 0 then
-				local ok = vim.wait(1 * 1000, function()
-					local initialized = true
-					for i = 1, #client_ids do
-						initialized = initialized and initialized_from_i[i]
-					end
-					return initialized
-				end, 10)
-
-				if not ok then
-					for _, client_id in ipairs(client_ids) do
-						vim.lsp.stop_client(client_id, true) -- force means SIGTERM but it is probably an implementation detail
-					end
-					vim.notify("failed to start LSP servers: timeout exceeded", vim.log.levels.ERROR)
-				end
-			end
-
-			if #client_ids > 0 then
-				for _, client_id in ipairs(client_ids) do
-					vim.lsp.buf_attach_client(args.buf, client_id)
-				end
-
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					buffer = args.buf,
-					callback = function()
-						for _, client_id in ipairs(client_ids) do
-							vim.lsp.buf_detach_client(args.buf, client_id)
+					if enabled then
+						-- TODO: Maybe config.on_init could be a list of functions?
+						local i = #client_ids + 1
+						initialized_from_i[i] = false
+						local on_init = config.on_init or function() end
+						config.on_init = function(client, init_result)
+							on_init(client, init_result)
+							initialized_from_i[i] = true
 						end
 
-						return true
-					end,
-				})
-			end
-		end,
-	})
+						local client_id = vim.lsp.start(config, {
+							reuse_client = nil,
+							bufnr = bufnr,
+							attach = false,
+						})
+
+						if vim.lsp.get_client_by_id(client_id).initialized then
+							initialized_from_i[i] = true
+						end
+
+						table.insert(client_ids, client_id)
+					end
+				end
+
+				if #client_ids > 0 then
+					local ok = vim.wait(1 * 1000, function()
+						local initialized = true
+						for i = 1, #client_ids do
+							initialized = initialized and initialized_from_i[i]
+						end
+						return initialized
+					end, 10)
+
+					if not ok then
+						for _, client_id in ipairs(client_ids) do
+							vim.lsp.stop_client(client_id, true) -- force means SIGTERM but it is probably an implementation detail
+						end
+						vim.notify("failed to start LSP servers: timeout exceeded", vim.log.levels.ERROR)
+					end
+				end
+
+				if #client_ids > 0 then
+					for _, client_id in ipairs(client_ids) do
+						vim.lsp.buf_attach_client(args.buf, client_id)
+					end
+
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							for _, client_id in ipairs(client_ids) do
+								vim.lsp.buf_detach_client(args.buf, client_id)
+							end
+
+							return true
+						end,
+					})
+				end
+			end,
+		})
+	end
 
 	-- LSP formatting
 
 	-- Uses LSP starting.
 
-	-- OK.
-
 	local lsp_server_formatting_arms = (opts or {}).lsp_server_formatting_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.lsp_formatting", {}),
-		callback = function(args)
-			local client_ids = {}
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.lsp_formatting", {}),
+			callback = function(args)
+				local client_ids = {}
 
-			for _, arm in ipairs(M.matches(args.buf, lsp_server_formatting_arms)) do
-				local server = arm.key
-				local enabled = arm.value
+				for _, arm in ipairs(M.matches(args.buf, lsp_server_formatting_arms)) do
+					local server = arm.key
+					local enabled = arm.value
 
-				if enabled then
-					local client = vim.lsp.get_clients({ bufnr = args.buf, name = server })[1]
-					if client then
-						table.insert(client_ids, client.id)
-					else
-						vim.notify("failed to format with LSP server: client not found", vim.log.levels.ERROR)
+					if enabled then
+						local client = vim.lsp.get_clients({ bufnr = args.buf, name = server })[1]
+						if client then
+							table.insert(client_ids, client.id)
+						else
+							vim.notify("failed to format with LSP server: client not found", vim.log.levels.ERROR)
+						end
 					end
 				end
-			end
 
-			if #client_ids > 0 then
-				local autocmd = vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-					buffer = args.buf,
-					callback = function()
-						for _, client_id in ipairs(client_ids) do
-							vim.lsp.buf.format({ id = client_id })
-						end
-					end,
-				})
+				if #client_ids > 0 then
+					local autocmd = vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+						buffer = args.buf,
+						callback = function()
+							for _, client_id in ipairs(client_ids) do
+								vim.lsp.buf.format({ id = client_id })
+							end
+						end,
+					})
 
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					buffer = args.buf,
-					callback = function()
-						vim.api.nvim_del_autocmd(autocmd)
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.api.nvim_del_autocmd(autocmd)
 
-						return true
-					end,
-				})
-			end
-		end,
-	})
+							return true
+						end,
+					})
+				end
+			end,
+		})
+	end
+
+	-- Conform installing
+
+	do
+		require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
+
+		require("conform")
+	end
 
 	-- Conform formatting
 
@@ -816,58 +793,57 @@ M.setup = function(opts)
 
 	-- TODO: The PWD where the formatter is started might be important.
 
-	-- OK.
-
 	local conform_formatter_formatting_arms = (opts or {}).conform_formatter_formatting_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.conform_nvim_installing", {}),
-		callback = function(_)
-			require("mini.deps").add({ source = "https://github.com/stevearc/conform.nvim" })
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.conform_formatting", {}),
+			callback = function(args)
+				local formatters = {}
 
-			return true
-		end,
-	})
+				for _, arm in ipairs(M.matches(args.buf, conform_formatter_formatting_arms)) do
+					local formatter = arm.key
+					local enabled = arm.value
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.conform_formatting", {}),
-		callback = function(args)
-			local formatters = {}
-
-			for _, arm in ipairs(M.matches(args.buf, conform_formatter_formatting_arms)) do
-				local formatter = arm.key
-				local enabled = arm.value
-
-				if enabled then
-					table.insert(formatters, formatter)
+					if enabled then
+						table.insert(formatters, formatter)
+					end
 				end
-			end
 
-			if #formatters > 0 then
-				local autocmd = vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-					buffer = args.buf,
-					callback = function()
-						for _, formatter in ipairs(formatters) do
-							require("conform").format({
-								bufnr = args.buf,
-								formatters = { formatter },
-								timeout_ms = 1 * 1000,
-							})
-						end
-					end,
-				})
+				if #formatters > 0 then
+					local autocmd = vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+						buffer = args.buf,
+						callback = function()
+							for _, formatter in ipairs(formatters) do
+								require("conform").format({
+									bufnr = args.buf,
+									formatters = { formatter },
+									timeout_ms = 1 * 1000,
+								})
+							end
+						end,
+					})
 
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					buffer = args.buf,
-					callback = function()
-						vim.api.nvim_del_autocmd(autocmd)
+					vim.api.nvim_create_autocmd({ "BufLeave" }, {
+						buffer = args.buf,
+						callback = function()
+							vim.api.nvim_del_autocmd(autocmd)
 
-						return true
-					end,
-				})
-			end
-		end,
-	})
+							return true
+						end,
+					})
+				end
+			end,
+		})
+	end
+
+	-- Lint installing
+
+	do
+		require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
+
+		require("lint")
+	end
 
 	-- Lint checking
 
@@ -879,17 +855,7 @@ M.setup = function(opts)
 
 	-- TODO: The PWD where the linter is started might be important.
 
-	-- OK.
-
 	local lint_linter_checking_arms = (opts or {}).lint_linter_checking_arms or {}
-
-	do
-		require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
-
-		require("lint")
-
-		-- No teardown.
-	end
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		group = vim.api.nvim_create_augroup("internal.lint_checking", {}),
@@ -973,38 +939,40 @@ M.setup = function(opts)
 
 	local vim_keymap_arms = (opts or {}).vim_keymap_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.vim_keymap", {}),
-		callback = function(args)
-			local keymaps = {}
+	do
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.vim_keymap", {}),
+			callback = function(args)
+				local keymaps = {}
 
-			for _, arm in ipairs(M.matches(args.buf, vim_keymap_arms)) do
-				local mode = arm.key[1]
-				local lhs = arm.key[2]
-				local rhs = arm.value[1]
-				local desc = arm.value[2]
+				for _, arm in ipairs(M.matches(args.buf, vim_keymap_arms)) do
+					local mode = arm.key[1]
+					local lhs = arm.key[2]
+					local rhs = arm.value[1]
+					local desc = arm.value[2]
 
-				if type(rhs) == "string" or type(rhs) == "function" then
-					table.insert(keymaps, { mode = mode, lhs = lhs, rhs = rhs, desc = desc })
-				end
-			end
-
-			for _, k in ipairs(keymaps) do
-				vim.keymap.set(k.mode, k.lhs, k.rhs, { desc = k.desc, buffer = args.buf })
-			end
-
-			vim.api.nvim_create_autocmd({ "BufLeave" }, {
-				buffer = args.buf,
-				callback = function()
-					for _, k in ipairs(keymaps) do
-						vim.keymap.del(k.mode, k.lhs, { buffer = args.buf })
+					if type(rhs) == "string" or type(rhs) == "function" then
+						table.insert(keymaps, { mode = mode, lhs = lhs, rhs = rhs, desc = desc })
 					end
+				end
 
-					return true
-				end,
-			})
-		end,
-	})
+				for _, k in ipairs(keymaps) do
+					vim.keymap.set(k.mode, k.lhs, k.rhs, { desc = k.desc, buffer = args.buf })
+				end
+
+				vim.api.nvim_create_autocmd({ "BufLeave" }, {
+					buffer = args.buf,
+					callback = function()
+						for _, k in ipairs(keymaps) do
+							vim.keymap.del(k.mode, k.lhs, { buffer = args.buf })
+						end
+
+						return true
+					end,
+				})
+			end,
+		})
+	end
 
 	-- Mini clue
 
