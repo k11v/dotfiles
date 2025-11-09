@@ -1,217 +1,7 @@
 local M = {}
 
--- arm.pattern
--- arm.pattern.ft - buffer's filetype is
--- arm.pattern.fp - buffer's filepath starts with
--- arm.pattern.root - buffer's filepath is inside a directory whose name is
--- arm.pattern.x - environment contains program whose name is
--- arm.key
--- arm.value
-M.matches = function(bufnr, arms)
-	local matched_arms = {}
-	local matched_from_key = {}
-
-	for _, arm in ipairs(arms) do
-		local key
-		if type(arm.key) == "string" then
-			key = arm.key
-		elseif type(arm.key) == "table" then
-			key = vim.json.encode(arm.key) -- TODO: Optimize table key.
-		else
-			key = ""
-		end
-
-		if not matched_from_key[key] then
-			local ft_matched = false
-			local ft = arm.pattern.ft or {}
-			if #ft > 0 then
-				if vim.list_contains(ft, vim.bo[bufnr].filetype) then
-					ft_matched = true
-				end
-			else
-				ft_matched = true
-			end
-
-			local root_matched = false
-			local root = arm.pattern.root or {}
-			if #root > 0 then
-				local name = vim.api.nvim_buf_get_name(bufnr)
-				if name ~= "" then
-					local root_name = vim.fs.root(name, root)
-					if root_name ~= nil and root_name ~= "" then
-						root_matched = true
-					end
-				end
-			else
-				root_matched = true
-			end
-
-			local matched = ft_matched and root_matched
-			if matched then
-				table.insert(matched_arms, arm)
-
-				matched_from_key[key] = true
-			end
-		end
-	end
-
-	return matched_arms
-end
-
-M.get_string = function(key)
-	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
-	local cache_file = cache_dir .. "/" .. key .. ".mpack"
-
-	-- If key is empty, return empty string.
-	if key == nil or key == "" then
-		return nil
-	end
-
-	-- Open file.
-	local fd = vim.uv.fs_open(cache_file, "r", 438) -- 0666
-	if not fd then
-		return nil
-	end
-
-	-- Read content.
-	local stat = vim.uv.fs_fstat(fd)
-	local content = vim.uv.fs_read(fd, stat.size, 0)
-	vim.uv.fs_close(fd)
-
-	-- Return content.
-	if not content then
-		return nil
-	end
-
-	return content
-end
-
-M.set_string = function(key, value)
-	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
-	local cache_file = cache_dir .. "/" .. key .. ".mpack"
-
-	-- If key is empty, return.
-	if key == nil or key == "" then
-		return
-	end
-
-	-- If value is nil, remove file and return.
-	if value == nil then
-		vim.uv.fs_unlink(cache_file)
-		return
-	end
-
-	-- Create directory.
-	if vim.fn.isdirectory(cache_dir) == 0 then
-		vim.fn.mkdir(cache_dir, "p")
-	end
-
-	-- Open file.
-	local fd = vim.uv.fs_open(cache_file, "w", 420) -- 0644
-	if not fd then
-		vim.notify("can't set string", vim.log.levels.ERROR)
-		return
-	end
-
-	-- Write content.
-	vim.uv.fs_write(fd, value, 0)
-	vim.uv.fs_close(fd)
-end
-
-M.get = function(key)
-	local value = M.get_string(key)
-	if value == nil then
-		return nil
-	end
-
-	local ok, decoded = pcall(vim.mpack.decode, value)
-	if not ok then
-		return nil
-	end
-
-	return decoded
-end
-
-M.set = function(key, value)
-	local encoded
-
-	if value ~= nil then
-		encoded = vim.mpack.encode(value)
-	else
-		encoded = nil
-	end
-
-	M.set_string(key, encoded)
-end
-
-M.equal_hash = function(key, value)
-	local got_hash = vim.fn.sha256(vim.mpack.encode(value or ""))
-	local want_hash = M.get_string(key) or ""
-
-	return got_hash == want_hash
-end
-
-M.set_hash = function(key, value)
-	local got_hash = vim.fn.sha256(vim.mpack.encode(value or ""))
-
-	M.set_string(key, got_hash)
-end
-
-M.system_echo_sync = function(cmd, opts)
-	local obj = nil
-	local echo = {}
-	local i = 0
-
-	opts = vim.tbl_deep_extend("force", {}, opts or {}, {
-		text = true,
-		stdout = function(_, data)
-			if data then
-				table.insert(echo, { "| " .. data })
-			end
-		end,
-		stderr = function(_, data)
-			if data then
-				table.insert(echo, { "| " .. data, "ErrorMsg" })
-			end
-		end,
-	})
-
-	local on_exit = function(o)
-		obj = o
-	end
-
-	vim.system(cmd, opts, on_exit)
-
-	while true do
-		local done = obj ~= nil
-
-		local j = #echo
-		while i < j do
-			i = i + 1
-			vim.api.nvim_echo({ echo[i] }, true, {})
-		end
-
-		if done then
-			break
-		end
-
-		vim.wait(10)
-	end
-
-	return obj
-end
-
-M.package_contains = function(p, subpkg)
-	if string.sub(subpkg, 1, #p) == p then
-		local n = string.sub(subpkg, #p + 1, #p + 1)
-		if n == "." or n == "" then
-			return true
-		end
-	end
-	return false
-end
-
 M.data = {}
+
 M.data.teardowns = {}
 
 M.setup = function(opts)
@@ -1043,6 +833,217 @@ M.setup = function(opts)
 
 		require("mini.icons").setup({})
 	end
+end
+
+-- arm.pattern
+-- arm.pattern.ft - buffer's filetype is
+-- arm.pattern.fp - buffer's filepath starts with
+-- arm.pattern.root - buffer's filepath is inside a directory whose name is
+-- arm.pattern.x - environment contains program whose name is
+-- arm.key
+-- arm.value
+M.matches = function(bufnr, arms)
+	local matched_arms = {}
+	local matched_from_key = {}
+
+	for _, arm in ipairs(arms) do
+		local key
+		if type(arm.key) == "string" then
+			key = arm.key
+		elseif type(arm.key) == "table" then
+			key = vim.json.encode(arm.key) -- TODO: Optimize table key.
+		else
+			key = ""
+		end
+
+		if not matched_from_key[key] then
+			local ft_matched = false
+			local ft = arm.pattern.ft or {}
+			if #ft > 0 then
+				if vim.list_contains(ft, vim.bo[bufnr].filetype) then
+					ft_matched = true
+				end
+			else
+				ft_matched = true
+			end
+
+			local root_matched = false
+			local root = arm.pattern.root or {}
+			if #root > 0 then
+				local name = vim.api.nvim_buf_get_name(bufnr)
+				if name ~= "" then
+					local root_name = vim.fs.root(name, root)
+					if root_name ~= nil and root_name ~= "" then
+						root_matched = true
+					end
+				end
+			else
+				root_matched = true
+			end
+
+			local matched = ft_matched and root_matched
+			if matched then
+				table.insert(matched_arms, arm)
+
+				matched_from_key[key] = true
+			end
+		end
+	end
+
+	return matched_arms
+end
+
+M.get_string = function(key)
+	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
+	local cache_file = cache_dir .. "/" .. key .. ".mpack"
+
+	-- If key is empty, return empty string.
+	if key == nil or key == "" then
+		return nil
+	end
+
+	-- Open file.
+	local fd = vim.uv.fs_open(cache_file, "r", 438) -- 0666
+	if not fd then
+		return nil
+	end
+
+	-- Read content.
+	local stat = vim.uv.fs_fstat(fd)
+	local content = vim.uv.fs_read(fd, stat.size, 0)
+	vim.uv.fs_close(fd)
+
+	-- Return content.
+	if not content then
+		return nil
+	end
+
+	return content
+end
+
+M.set_string = function(key, value)
+	local cache_dir = vim.fn.stdpath("cache") .. "/internal"
+	local cache_file = cache_dir .. "/" .. key .. ".mpack"
+
+	-- If key is empty, return.
+	if key == nil or key == "" then
+		return
+	end
+
+	-- If value is nil, remove file and return.
+	if value == nil then
+		vim.uv.fs_unlink(cache_file)
+		return
+	end
+
+	-- Create directory.
+	if vim.fn.isdirectory(cache_dir) == 0 then
+		vim.fn.mkdir(cache_dir, "p")
+	end
+
+	-- Open file.
+	local fd = vim.uv.fs_open(cache_file, "w", 420) -- 0644
+	if not fd then
+		vim.notify("can't set string", vim.log.levels.ERROR)
+		return
+	end
+
+	-- Write content.
+	vim.uv.fs_write(fd, value, 0)
+	vim.uv.fs_close(fd)
+end
+
+M.get = function(key)
+	local value = M.get_string(key)
+	if value == nil then
+		return nil
+	end
+
+	local ok, decoded = pcall(vim.mpack.decode, value)
+	if not ok then
+		return nil
+	end
+
+	return decoded
+end
+
+M.set = function(key, value)
+	local encoded
+
+	if value ~= nil then
+		encoded = vim.mpack.encode(value)
+	else
+		encoded = nil
+	end
+
+	M.set_string(key, encoded)
+end
+
+M.equal_hash = function(key, value)
+	local got_hash = vim.fn.sha256(vim.mpack.encode(value or ""))
+	local want_hash = M.get_string(key) or ""
+
+	return got_hash == want_hash
+end
+
+M.set_hash = function(key, value)
+	local got_hash = vim.fn.sha256(vim.mpack.encode(value or ""))
+
+	M.set_string(key, got_hash)
+end
+
+M.system_echo_sync = function(cmd, opts)
+	local obj = nil
+	local echo = {}
+	local i = 0
+
+	opts = vim.tbl_deep_extend("force", {}, opts or {}, {
+		text = true,
+		stdout = function(_, data)
+			if data then
+				table.insert(echo, { "| " .. data })
+			end
+		end,
+		stderr = function(_, data)
+			if data then
+				table.insert(echo, { "| " .. data, "ErrorMsg" })
+			end
+		end,
+	})
+
+	local on_exit = function(o)
+		obj = o
+	end
+
+	vim.system(cmd, opts, on_exit)
+
+	while true do
+		local done = obj ~= nil
+
+		local j = #echo
+		while i < j do
+			i = i + 1
+			vim.api.nvim_echo({ echo[i] }, true, {})
+		end
+
+		if done then
+			break
+		end
+
+		vim.wait(10)
+	end
+
+	return obj
+end
+
+M.package_contains = function(p, subpkg)
+	if string.sub(subpkg, 1, #p) == p then
+		local n = string.sub(subpkg, #p + 1, #p + 1)
+		if n == "." or n == "" then
+			return true
+		end
+	end
+	return false
 end
 
 return M
