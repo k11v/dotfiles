@@ -12,7 +12,14 @@ M.matches = function(bufnr, arms)
 	local matched_from_key = {}
 
 	for _, arm in ipairs(arms) do
-		local key = arm.key or ""
+		local key
+		if type(arm.key) == "string" then
+			key = arm.key
+		elseif type(arm.key) == "table" then
+			key = vim.json.encode(arm.key) -- TODO: Optimize table key.
+		else
+			key = ""
+		end
 
 		if not matched_from_key[key] then
 			local ft_matched = false
@@ -43,9 +50,7 @@ M.matches = function(bufnr, arms)
 			if matched then
 				table.insert(matched_arms, arm)
 
-				if key ~= nil then
-					matched_from_key[key] = true
-				end
+				matched_from_key[key] = true
 			end
 		end
 	end
@@ -196,6 +201,16 @@ M.system_echo_sync = function(cmd, opts)
 	return obj
 end
 
+M.package_contains = function(p, subpkg)
+	if string.sub(subpkg, 1, #p) == p then
+		local n = string.sub(subpkg, #p + 1, #p + 1)
+		if n == "." or n == "" then
+			return true
+		end
+	end
+	return false
+end
+
 M.data = {}
 M.data.teardowns = {}
 
@@ -209,14 +224,8 @@ M.setup = function(opts)
 
 	-- Vim g
 
-	-- NOT OK.
-
-	vim.api.nvim_create_autocmd("BufEnter", {
-		group = vim.api.nvim_create_augroup("internal.vim_g", {}),
-		callback = function(_)
-			return true
-		end,
-	})
+	vim.g.mapleader = " "
+	vim.g.maplocalleader = " "
 
 	-- Vim BufEnterPre
 
@@ -250,7 +259,7 @@ M.setup = function(opts)
 					end
 
 					for k in pairs(package.loaded) do
-						if k:match("^internal") then
+						if M.package_contains("internal", k) then
 							package.loaded[k] = nil
 						end
 					end
@@ -874,16 +883,13 @@ M.setup = function(opts)
 
 	local lint_linter_checking_arms = (opts or {}).lint_linter_checking_arms or {}
 
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("internal.nvim_lint_installing", {}),
-		callback = function(_)
-			require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
+	do
+		require("mini.deps").add({ source = "https://github.com/mfussenegger/nvim-lint" })
 
-			require("lint") -- lint doesn't have setup function
+		require("lint")
 
-			return true
-		end,
-	})
+		-- No teardown.
+	end
 
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		group = vim.api.nvim_create_augroup("internal.lint_checking", {}),
@@ -927,15 +933,9 @@ M.setup = function(opts)
 		local old_config = vim.diagnostic.config(nil)
 
 		vim.diagnostic.config({
-			-- Show all diagnostics as underline
-			underline = { severity = { min = "HINT", max = "ERROR" } },
-
-			-- Show more details immediately for errors
-			virtual_text = { severity = { min = "ERROR", max = "ERROR" } },
-			virtual_lines = false,
-
-			-- Show signs for warnings and errors
-			signs = { severity = { min = "WARN", max = "ERROR" }, priority = 200 },
+			underline = { severity = { min = "HINT", max = "ERROR" } }, -- Show all diagnostics as underline
+			virtual_text = { severity = { min = "ERROR", max = "ERROR" } }, -- Show more details immediately for errors
+			signs = { severity = { min = "WARN", max = "ERROR" }, priority = 100 }, -- Show signs for warnings and errors
 		})
 
 		table.insert(M.data.teardowns, function()
@@ -943,135 +943,158 @@ M.setup = function(opts)
 		end)
 	end
 
-	-- Mini
+	-- Mini files
 
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.files" })
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.files" })
 
-	require("mini.files").setup()
+		require("mini.files").setup({})
+	end
 
-	-- Mini maybe
+	-- Mini notify
 
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.notify" })
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.notify" })
 
-	require("mini.notify").setup()
+		require("mini.notify").setup({})
+	end
 
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.pick" })
+	-- Mini pick
 
-	require("mini.pick").setup()
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.pick" })
 
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.extra" })
-
-	require("mini.extra").setup()
-
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.visits" })
-
-	require("mini.visits").setup()
-
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini-git" })
-
-	require("mini.git").setup()
-
-	require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.diff" })
-
-	require("mini.diff").setup({
-		view = {
-			style = "sign",
-			priority = 100,
-		},
-	})
+		require("mini.pick").setup({})
+	end
 
 	-- Vim keymap
 
-	vim.g.mapleader = " "
-	vim.g.maplocalleader = " "
+	local vim_keymap_arms = (opts or {}).vim_keymap_arms or {}
 
-	-- Vim keymap buffer
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		group = vim.api.nvim_create_augroup("internal.vim_keymap", {}),
+		callback = function(args)
+			local keymaps = {}
 
-	local buffer_scratch = function()
-		vim.api.nvim_win_set_buf(0, vim.api.nvim_create_buf(true, true))
-	end
+			for _, arm in ipairs(M.matches(args.buf, vim_keymap_arms)) do
+				local mode = arm.key[1]
+				local lhs = arm.key[2]
+				local rhs = arm.value[1]
+				local desc = arm.value[2]
 
-	vim.keymap.set("n", "<leader>bd", "<Cmd>bd<CR>", { desc = "Delete" })
-	vim.keymap.set("n", "<leader>bD", "<Cmd>bd!<CR>", { desc = "Delete!" })
-	vim.keymap.set("n", "<leader>bs", buffer_scratch, { desc = "Scratch" })
-
-	-- Vim keymap explore
-
-	local explore_file_directory = "<Cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<CR>"
-	local explore_quickfix = function()
-		for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-			if vim.fn.getwininfo(win_id)[1].quickfix == 1 then
-				return vim.cmd("cclose")
+				if type(rhs) == "string" or type(rhs) == "function" then
+					table.insert(keymaps, { mode = mode, lhs = lhs, rhs = rhs, desc = desc })
+				end
 			end
-		end
-		vim.cmd("copen")
+
+			for _, k in ipairs(keymaps) do
+				vim.keymap.set(k.mode, k.lhs, k.rhs, { desc = k.desc, buffer = args.buf })
+			end
+
+			vim.api.nvim_create_autocmd({ "BufLeave" }, {
+				buffer = args.buf,
+				callback = function()
+					for _, k in ipairs(keymaps) do
+						vim.keymap.del(k.mode, k.lhs, { buffer = args.buf })
+					end
+
+					return true
+				end,
+			})
+		end,
+	})
+
+	-- Mini clue
+
+	local miniclue_clue_arms = (opts or {}).miniclue_clue_arms or {}
+	local miniclue_trigger_arms = (opts or {}).miniclue_trigger_arms or {}
+
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.clue" })
+
+		require("mini.clue").setup({
+			clues = nil, -- dynamic
+			triggers = nil, -- dynamic
+			window = { delay = 0 },
+		})
+
+		vim.api.nvim_create_autocmd({ "BufEnter" }, {
+			group = vim.api.nvim_create_augroup("internal.miniclue", {}),
+			callback = function(args)
+				local clues = {}
+
+				for _, arm in ipairs(M.matches(args.buf, miniclue_clue_arms)) do
+					local mode = arm.key[1]
+					local lhs = arm.key[2]
+					local rhs = arm.value[1]
+					local desc = arm.value[2]
+
+					table.insert(clues, { mode = mode, keys = lhs, desc = desc })
+				end
+
+				local triggers = {}
+
+				for _, arm in ipairs(M.matches(args.buf, miniclue_trigger_arms)) do
+					local mode = arm.key[1]
+					local lhs = arm.key[2]
+					local rhs = arm.value[1]
+					local desc = arm.value[2]
+
+					table.insert(triggers, { mode = mode, keys = lhs })
+				end
+
+				vim.b[args.buf].miniclue_config = {
+					clues = clues,
+					triggers = triggers,
+					window = nil, -- static
+				}
+
+				require("mini.clue").ensure_buf_triggers(args.buf)
+			end,
+		})
 	end
 
-	vim.keymap.set("n", "<leader>ed", "<Cmd>lua MiniFiles.open()<CR>", { desc = "Directory" }) -- TODO: not togglable
-	vim.keymap.set("n", "<leader>ef", explore_file_directory, { desc = "File directory" }) -- TODO: not togglable, fails when not real file
-	vim.keymap.set("n", "<leader>en", "<Cmd>lua MiniNotify.show_history()<CR>", { desc = "Notifications" }) -- TODO: not togglable
-	vim.keymap.set("n", "<leader>eq", explore_quickfix, { desc = "Quickfix" })
+	-- Mini visits
 
-	-- Vim keymap find
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.visits" })
 
-	local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
+		require("mini.visits").setup({})
+	end
 
-	vim.keymap.set("n", "<leader>f/", '<Cmd>Pick history scope="/"<CR>', { desc = '"/" history' })
-	vim.keymap.set("n", "<leader>f:", '<Cmd>Pick history scope=":"<CR>', { desc = '":" history' })
-	vim.keymap.set("n", "<leader>fa", '<Cmd>Pick git_hunks scope="staged"<CR>', { desc = "Added hunks (all)" })
-	vim.keymap.set("n", "<leader>fA", pick_added_hunks_buf, { desc = "Added hunks (buf)" }) -- TODO: fails when not real file
-	vim.keymap.set("n", "<leader>fb", "<Cmd>Pick buffers<CR>", { desc = "Buffers" })
-	vim.keymap.set("n", "<leader>fc", "<Cmd>Pick git_commits<CR>", { desc = "Commits (all)" })
-	vim.keymap.set("n", "<leader>fC", '<Cmd>Pick git_commits path="%"<CR>', { desc = "Commits (buf)" })
-	vim.keymap.set("n", "<leader>fd", '<Cmd>Pick diagnostic scope="all"<CR>', { desc = "Diagnostic workspace" })
-	vim.keymap.set("n", "<leader>fD", '<Cmd>Pick diagnostic scope="current"<CR>', { desc = "Diagnostic buffer" })
-	vim.keymap.set("n", "<leader>ff", "<Cmd>Pick files<CR>", { desc = "Files" })
-	vim.keymap.set("n", "<leader>fg", "<Cmd>Pick grep_live<CR>", { desc = "Grep live" })
-	vim.keymap.set("n", "<leader>fG", '<Cmd>Pick grep pattern="<cword>"<CR>', { desc = "Grep current word" })
-	vim.keymap.set("n", "<leader>fh", "<Cmd>Pick help<CR>", { desc = "Help tags" })
-	vim.keymap.set("n", "<leader>fH", "<Cmd>Pick hl_groups<CR>", { desc = "Highlight groups" })
-	vim.keymap.set("n", "<leader>fl", '<Cmd>Pick buf_lines scope="all"<CR>', { desc = "Lines (all)" })
-	vim.keymap.set("n", "<leader>fL", '<Cmd>Pick buf_lines scope="current"<CR>', { desc = "Lines (buf)" })
-	vim.keymap.set("n", "<leader>fm", "<Cmd>Pick git_hunks<CR>", { desc = "Modified hunks (all)" })
-	vim.keymap.set("n", "<leader>fM", '<Cmd>Pick git_hunks path="%"<CR>', { desc = "Modified hunks (buf)" })
-	vim.keymap.set("n", "<leader>fr", "<Cmd>Pick resume<CR>", { desc = "Resume" })
-	vim.keymap.set("n", "<leader>fR", '<Cmd>Pick lsp scope="references"<CR>', { desc = "References (LSP)" })
-	vim.keymap.set("n", "<leader>fs", '<Cmd>Pick lsp scope="workspace_symbol"<CR>', { desc = "Symbols workspace" })
-	vim.keymap.set("n", "<leader>fS", '<Cmd>Pick lsp scope="document_symbol"<CR>', { desc = "Symbols document" })
-	vim.keymap.set("n", "<leader>fv", '<Cmd>Pick visit_paths cwd=""<CR>', { desc = "Visit paths (all)" })
-	vim.keymap.set("n", "<leader>fV", "<Cmd>Pick visit_paths<CR>", { desc = "Visit paths (cwd)" })
+	-- Mini git
 
-	-- Vim keymap git
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini-git" })
 
-	local git_log_cmd = [[Git log --pretty=format:\%h\ \%as\ │\ \%s --topo-order]]
-	local git_log_buf_cmd = git_log_cmd .. " --follow -- %"
+		require("mini.git").setup()
+	end
 
-	vim.keymap.set("n", "<leader>ga", "<Cmd>Git diff --cached<CR>", { desc = "Added diff" })
-	vim.keymap.set("n", "<leader>gA", "<Cmd>Git diff --cached -- %<CR>", { desc = "Added diff buffer" })
-	vim.keymap.set("n", "<leader>gc", "<Cmd>Git commit<CR>", { desc = "Commit" })
-	vim.keymap.set("n", "<leader>gC", "<Cmd>Git commit --amend<CR>", { desc = "Commit amend" })
-	vim.keymap.set("n", "<leader>gd", "<Cmd>Git diff<CR>", { desc = "Diff" })
-	vim.keymap.set("n", "<leader>gD", "<Cmd>Git diff -- %<CR>", { desc = "Diff buffer" })
-	vim.keymap.set("n", "<leader>gl", "<Cmd>" .. git_log_cmd .. "<CR>", { desc = "Log" })
-	vim.keymap.set("n", "<leader>gL", "<Cmd>" .. git_log_buf_cmd .. "<CR>", { desc = "Log buffer" })
-	vim.keymap.set("n", "<leader>go", "<Cmd>lua MiniDiff.toggle_overlay()<CR>", { desc = "Toggle overlay" })
-	vim.keymap.set("n", "<leader>gs", "<Cmd>lua MiniGit.show_at_cursor()<CR>", { desc = "Show at cursor" })
-	vim.keymap.set("x", "<leader>gs", "<Cmd>lua MiniGit.show_at_cursor()<CR>", { desc = "Show at selection" })
+	-- Mini diff
 
-	-- Vim keymap language
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.diff" })
 
-	local language_format = '<Cmd>lua require("conform").format({lsp_fallback=true})<CR>'
+		require("mini.diff").setup({
+			view = { style = "sign", priority = 100 },
+		})
+	end
 
-	vim.keymap.set("n", "<leader>la", "<Cmd>lua vim.lsp.buf.code_action()<CR>", { desc = "Actions" })
-	vim.keymap.set("n", "<leader>ld", "<Cmd>lua vim.diagnostic.open_float()<CR>", { desc = "Diagnostic popup" })
-	vim.keymap.set("n", "<leader>lf", language_format, { desc = "Format" })
-	vim.keymap.set("n", "<leader>li", "<Cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "Implementation" })
-	vim.keymap.set("n", "<leader>lh", "<Cmd>lua vim.lsp.buf.hover()<CR>", { desc = "Hover" })
-	vim.keymap.set("n", "<leader>lr", "<Cmd>lua vim.lsp.buf.rename()<CR>", { desc = "Rename" })
-	vim.keymap.set("n", "<leader>lR", "<Cmd>lua vim.lsp.buf.references()<CR>", { desc = "References" })
-	vim.keymap.set("n", "<leader>ls", "<Cmd>lua vim.lsp.buf.definition()<CR>", { desc = "Source definition" })
-	vim.keymap.set("n", "<leader>lt", "<Cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "Type definition" })
-	vim.keymap.set("x", "<leader>lf", language_format, { desc = "Format selection" })
+	-- Mini extra
+
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.extra" })
+
+		require("mini.extra").setup({})
+	end
+
+	-- Mini icons
+
+	do
+		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.icons" })
+
+		require("mini.icons").setup({})
+	end
 end
 
 return M
