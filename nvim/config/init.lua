@@ -148,6 +148,13 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = { "n", "<leader>ls" }, value = { "<Cmd>lua vim.lsp.buf.definition()<CR>", "Source definition" } },
 		{ pattern = {}, key = { "n", "<leader>lt" }, value = { "<Cmd>lua vim.lsp.buf.type_definition()<CR>", "Type definition" } },
 		{ pattern = {}, key = { "x", "<leader>lf" }, value = { '<Cmd>lua require("conform").format({lsp_fallback=true})<CR>', "Format selection" } },
+		-- Visit
+		{ pattern = {}, key = { "n", '<leader>vc' }, value = { function() local sort_latest = MiniVisits.gen_sort.default({ recency_weight = 1 }) local local_opts = { cwd = '', filter = 'core', sort = sort_latest } MiniExtra.pickers.visit_paths(local_opts, { source = { name = 'Core visits (all)' } }) end, 'Core visits (all)' } },
+		{ pattern = {}, key = { "n", '<leader>vC' }, value = { function() local sort_latest = MiniVisits.gen_sort.default({ recency_weight = 1 }) local local_opts = { cwd = nil, filter = 'core', sort = sort_latest } MiniExtra.pickers.visit_paths(local_opts, { source = { name = 'Core visits (cwd)' } }) end, 'Core visits (cwd)' } },
+		{ pattern = {}, key = { "n", '<leader>vv' }, value = { '<Cmd>lua MiniVisits.add_label("core")<CR>', 'Add "core" label' } },
+		{ pattern = {}, key = { "n", '<leader>vV' }, value = { '<Cmd>lua MiniVisits.remove_label("core")<CR>', 'Remove "core" label' } },
+		{ pattern = {}, key = { "n", '<leader>vl' }, value = { '<Cmd>lua MiniVisits.add_label()<CR>', 'Add label' } },
+		{ pattern = {}, key = { "n", '<leader>vL' }, value = { '<Cmd>lua MiniVisits.remove_label()<CR>', 'Remove label' } },
 		-- stylua: ignore end
 	},
 })

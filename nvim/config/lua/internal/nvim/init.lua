@@ -935,7 +935,7 @@ M.setup = function(opts)
 		vim.diagnostic.config({
 			underline = { severity = { min = "HINT", max = "ERROR" } }, -- Show all diagnostics as underline
 			virtual_text = { severity = { min = "ERROR", max = "ERROR" } }, -- Show more details immediately for errors
-			signs = { severity = { min = "WARN", max = "ERROR" }, priority = 100 }, -- Show signs for warnings and errors
+			signs = { severity = { min = "WARN", max = "ERROR" }, priority = 200 }, -- Show signs for warnings and errors
 		})
 
 		table.insert(M.data.teardowns, function()
@@ -948,7 +948,9 @@ M.setup = function(opts)
 	do
 		require("mini.deps").add({ source = "https://github.com/nvim-mini/mini.files" })
 
-		require("mini.files").setup({})
+		require("mini.files").setup({
+			mappings = { close = "<esc>" },
+		})
 	end
 
 	-- Mini notify
