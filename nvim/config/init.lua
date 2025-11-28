@@ -1,4 +1,40 @@
-require("internal.nvim").setup({
+local M = {}
+
+M.setup = function(opts)
+	require("internal.app").setup(opts)
+	require("internal.vim_g").setup(opts)
+	require("internal.vim_reloading").setup(opts)
+	require("internal.vim_opt").setup(opts)
+	require("internal.vim_directory_changing").setup(opts)
+	require("internal.mise_tool_installing").setup(opts)
+	require("internal.mise_tool_using").setup(opts)
+	require("internal.mini_deps").setup(opts)
+	require("internal.treesitter_nvim_treesitter_installing").setup(opts)
+	require("internal.treesitter_parser_installing").setup(opts)
+	require("internal.treesitter_starting").setup(opts)
+	require("internal.treesitter_folding").setup(opts)
+	require("internal.treesitter_indenting").setup(opts)
+	require("internal.lsp_nvim_lspconfig_installing").setup(opts)
+	require("internal.lsp_starting").setup(opts)
+	require("internal.lsp_formatting").setup(opts)
+	require("internal.conform_installing").setup(opts)
+	require("internal.conform_formatting").setup(opts)
+	require("internal.lint_installing").setup(opts)
+	require("internal.lint_checking").setup(opts)
+	require("internal.vim_diagnostic").setup(opts)
+	require("internal.mini_files").setup(opts)
+	require("internal.mini_notify").setup(opts)
+	require("internal.mini_pick").setup(opts)
+	require("internal.vim_keymap").setup(opts)
+	require("internal.mini_clue").setup(opts)
+	require("internal.mini_visits").setup(opts)
+	require("internal.mini_git").setup(opts)
+	require("internal.mini_diff").setup(opts)
+	require("internal.mini_extra").setup(opts)
+	require("internal.mini_icons").setup(opts)
+end
+
+M.setup({
 	vim_opt_arms = {
 		{ pattern = { ft = { "go" } }, key = "colorcolumn", value = { "120" } },
 		{ pattern = { ft = { "go" } }, key = "expandtab", value = false },
@@ -10,8 +46,8 @@ require("internal.nvim").setup({
 		{ pattern = {}, key = "confirm", value = true },
 		{ pattern = {}, key = "cursorline", value = true },
 		{ pattern = {}, key = "cursorlineopt", value = "number" },
-		{ pattern = {}, key = "foldlevelstart", value = 99 }, -- FIXME: probably not respected in BufEnter
-		{ pattern = {}, key = "foldtext", value = "" },
+		-- { pattern = {}, key = "foldlevelstart", value = 99 }, -- FIXME: probably not respected in BufEnter
+		-- { pattern = {}, key = "foldtext", value = "" },
 		{ pattern = {}, key = "ignorecase", value = true },
 		{ pattern = {}, key = "inccommand", value = "split" },
 		{ pattern = {}, key = "list", value = true },
@@ -41,13 +77,13 @@ require("internal.nvim").setup({
 		{ pattern = {}, value = true },
 	},
 	mise_tool_arms = {
-		{ pattern = { ft = { "go" } }, key = "core:go", value = "1.24" }, -- temporary for demo purposes
-		{ pattern = { ft = { "go" } }, key = "aqua:golangci/golangci-lint", value = "1" }, -- temporary for demo purposes
-		{ pattern = {}, key = "core:go", value = "latest" },
-		{ pattern = {}, key = "aqua:golangci/golangci-lint", value = "2" },
-		{ pattern = {}, key = "go:golang.org/x/tools/gopls", value = "latest" },
-		{ pattern = {}, key = "aqua:LuaLS/lua-language-server", value = "latest" },
-		{ pattern = {}, key = "aqua:JohnnyMorganz/StyLua", value = "latest" },
+		-- { pattern = { ft = { "go" } }, key = "core:go", value = "1.24" }, -- temporary for demo purposes
+		-- { pattern = { ft = { "go" } }, key = "aqua:golangci/golangci-lint", value = "1" }, -- temporary for demo purposes
+		-- { pattern = {}, key = "core:go", value = "latest" },
+		-- { pattern = {}, key = "aqua:golangci/golangci-lint", value = "2" },
+		-- { pattern = {}, key = "go:golang.org/x/tools/gopls", value = "latest" },
+		-- { pattern = {}, key = "aqua:LuaLS/lua-language-server", value = "latest" },
+		-- { pattern = {}, key = "aqua:JohnnyMorganz/StyLua", value = "latest" },
 	},
 	treesitter_arms = {
 		{ pattern = { ft = { "go" } }, value = true },
@@ -58,23 +94,24 @@ require("internal.nvim").setup({
 		{ pattern = { ft = { "markdown" } }, value = { "markdown", "markdown_inline" } },
 	},
 	treesitter_folding_arms = {
-		{ pattern = { ft = { "go" } }, value = true },
+		-- { pattern = { ft = { "go" } }, value = true },
 	},
 	treesitter_indenting_arms = {
 		{ pattern = { ft = { "go" } }, value = true },
 	},
 	lsp_server_arms = {
-		{ pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
-		{ pattern = { ft = { "lua" } }, key = "lua_ls", value = true },
+		-- { pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
+		-- { pattern = { ft = { "lua" } }, key = "lua_ls", value = true },
+		{ pattern = { ft = { "rust", "cargo" } }, key = "rust_analyzer", value = true },
 	},
 	lsp_server_formatting_arms = {
-		{ pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
+		-- { pattern = { ft = { "go", "gomod", "gowork", "gotmpl" } }, key = "gopls", value = true },
 	},
 	conform_formatter_formatting_arms = {
-		{ pattern = { ft = { "lua" } }, key = "stylua", value = true },
+		-- { pattern = { ft = { "lua" } }, key = "stylua", value = true },
 	},
 	lint_linter_checking_arms = {
-		{ pattern = { ft = { "go" }, root = { "go.mod" } }, key = "golangcilint", value = true },
+		-- { pattern = { ft = { "go" }, root = { "go.mod" } }, key = "golangcilint", value = true },
 	},
 	miniclue_trigger_arms = {
 		{ pattern = {}, key = { "n", "<leader>" }, value = { true, true } },
