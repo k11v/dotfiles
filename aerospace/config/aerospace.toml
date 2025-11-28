@@ -258,6 +258,10 @@ default-root-container-orientation = 'auto'
     if.app-id = "md.obsidian"
     run = "move-node-to-workspace E"
 
+[[on-window-detected]]
+    if.app-id = "cc.k11v.neovim"
+    run = "move-node-to-workspace E"
+
 # Workspace R
 
 [[on-window-detected]]
