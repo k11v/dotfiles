@@ -34,44 +34,83 @@ M.setup = function(opts)
 	require("internal.mini_icons").setup(opts)
 end
 
+M.setup = function(opts)
+	require("internal.app").setup(opts)
+	require("internal.vim_opt").setup(opts)
+	require("internal.mini_deps").setup(opts)
+	require("internal.lsp_nvim_lspconfig_installing").setup(opts)
+	vim.lsp.enable("rust_analyzer")
+	vim.cmd([[autocmd BufWritePre *.rs lua vim.lsp.buf.format({ async = false })]])
+
+	local progress_from_key = {}
+	vim.api.nvim_create_autocmd("LspProgress", {
+		callback = function(args)
+			local buffer_id = args.buf
+			local client_id = args.data.client_id
+			local token = args.data.params.token
+			local value = args.data.params.value
+
+			-- Get client name.
+			local client = vim.lsp.get_client_by_id(client_id)
+			if client == nil then
+				return
+			end
+			local client_name = client.name
+
+			-- Get progress key.
+			local progress_key = string.format("%s:%s:%s", buffer_id, client_id, token)
+			local progress_value = progress_from_key[progress_key]
+
+			-- Get and set notification parameters.
+			if value.kind == "begin" then
+				if progress_value ~= nil then
+					return
+				end
+				progress_value = {}
+				progress_value.name = client.name or ""
+				progress_value.title = value.title or ""
+				progress_value.message = value.message or ""
+				progress_value.percentage = 0
+				progress_from_key[progress_key] = progress_value
+			elseif value.kind == "report" then
+				if progress_value == nil then
+					return
+				end
+				progress_value.message = value.message or ""
+				progress_value.percentage = value.percentage or progress_value.percentage
+				progress_from_key[progress_key] = progress_value
+			elseif value.kind == "end" then
+				if progress_value == nil then
+					return
+				end
+				progress_value.message = value.message or ""
+				progress_value.percentage = 100
+				progress_from_key[progress_key] = progress_value
+			else
+				return
+			end
+
+			-- Get notification.
+			local notification = string.format(
+				"%s: %s%s%s%s(%s%%)",
+				progress_value.name,
+				progress_value.title,
+				progress_value.title == "" and "" or " ",
+				progress_value.message,
+				progress_value.message == "" and "" or " ",
+				progress_value.percentage
+			)
+
+			-- Send notification.
+			vim.notify(notification)
+		end,
+	})
+end
+
 M.setup({
 	vim_opt_arms = {
-		{ pattern = { ft = { "go" } }, key = "colorcolumn", value = { "120" } },
-		{ pattern = { ft = { "go" } }, key = "expandtab", value = false },
-		{ pattern = { ft = { "go" } }, key = "shiftwidth", value = 4 },
-		{ pattern = { ft = { "go" } }, key = "softtabstop", value = 4 },
-		{ pattern = { ft = { "go" } }, key = "tabstop", value = 4 },
-		{ pattern = {}, key = "breakindent", value = true },
-		{ pattern = {}, key = "clipboard", value = "" },
-		{ pattern = {}, key = "confirm", value = true },
-		{ pattern = {}, key = "cursorline", value = true },
-		{ pattern = {}, key = "cursorlineopt", value = "number" },
-		-- { pattern = {}, key = "foldlevelstart", value = 99 }, -- FIXME: probably not respected in BufEnter
-		-- { pattern = {}, key = "foldtext", value = "" },
-		{ pattern = {}, key = "ignorecase", value = true },
-		{ pattern = {}, key = "inccommand", value = "split" },
-		{ pattern = {}, key = "list", value = true },
-		{ pattern = {}, key = "listchars", value = { tab = "» ", trail = "·", nbsp = "␣" } },
-		{ pattern = {}, key = "mouse", value = "a" },
-		{ pattern = {}, key = "number", value = true },
-		{ pattern = {}, key = "report", value = 0 },
-		{ pattern = {}, key = "scrolloff", value = 10 },
-		-- stylua: ignore start
-		{ pattern = {}, key = "shortmess", value = vim.tbl_deep_extend("force", {}, vim.opt_local.shortmess:get(), { I = true }) },
-		-- stylua: ignore end
-		{ pattern = {}, key = "showmode", value = false },
-		{ pattern = {}, key = "signcolumn", value = "yes" },
-		{ pattern = {}, key = "smartcase", value = true },
-		{ pattern = {}, key = "splitbelow", value = true },
-		{ pattern = {}, key = "splitright", value = true },
 		{ pattern = {}, key = "timeout", value = false },
-		{ pattern = {}, key = "undofile", value = true },
-		{ pattern = {}, key = "updatetime", value = 250 },
-		{ pattern = {}, key = "colorcolumn", value = { "80" } },
-		{ pattern = {}, key = "expandtab", value = false },
-		{ pattern = {}, key = "shiftwidth", value = 4 },
-		{ pattern = {}, key = "softtabstop", value = 4 },
-		{ pattern = {}, key = "tabstop", value = 4 },
+		{ pattern = {}, key = "signcolumn", value = "yes" },
 	},
 	vim_directory_changing_arms = {
 		{ pattern = {}, value = true },
