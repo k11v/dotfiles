@@ -14,6 +14,8 @@ func main() {
 }
 
 func run() int {
+	var actions []Action
+
 	dotfilesDir := dotfilesDir()
 	if dotfilesDir == "" {
 		slog.Error("empty dotfiles dir")
@@ -28,10 +30,16 @@ func run() int {
 
 	for _, dotfilesEntry := range dotfilesEntries {
 		if dotfilesEntry.IsDir() {
-			detectActions(filepath.Join(dotfilesDir, dotfilesEntry.Name()))
+			modDir := filepath.Join(dotfilesDir, dotfilesEntry.Name())
+			actions2, err := detectActions(modDir)
+			if err != nil {
+				slog.Error("detecting actions failed", "modDir", modDir, "error", err)
+			}
+			actions = append(actions, actions2...)
 		}
 	}
 
+	fmt.Printf("%#v\n", actions[0].ConfigAction)
 
 	return 0
 }
@@ -56,6 +64,21 @@ func detectActions(modDir string) ([]Action, error) {
 	err = errors.Join(err, err2)
 
 	return actions, err
+}
+
+func doActions(actions []Action) error {
+	var err error
+
+	for _, action := range actions {
+		switch {
+		case action.ConfigAction != nil:
+			err2 := doConfigAction(action.ConfigAction)
+			err = errors.Join(err, err2)
+		case action.BinAction != nil:
+			err2 := doBinAction(action.BinAction)
+			err = errors.Join(err, err2)
+		}
+	}
 }
 
 type ConfigAction struct {
@@ -87,6 +110,54 @@ func detectConfigActions(modDir string) ([]Action, error) {
 	return actions, nil
 }
 
+func doConfigAction(configAction *ConfigAction) error {
+	// Make old name.
+
+	if configAction.SrcSymlink == "" {
+		return errors.New("config: empty src")
+	}
+
+	oldName := configAction.SrcSymlink
+
+	// Make new name.
+
+	if configAction.Name == "" {
+		return errors.New("config: empty name")
+	}
+
+	newName := filepath.Join(homeDir(), ".config", configAction.Name)
+
+	// Check new name.
+
+	newNameFileInfo, err := os.Stat(newName)
+
+	if errors.Is(err, fs.ErrNotExist) {
+		// OK.
+	} else if err != nil {
+		// Not OK.
+	} else {
+		mode := newNameFileInfo.Mode()
+		isSymlink := mode & ModeSymlink != 0
+
+		if !isSymlink {
+			// Not OK.
+		}
+
+		// Read symlink...
+
+		// If destination equals wanted destination, then OK, else not OK.
+	}
+
+	// Symlink.
+
+	err := os.Symlink(oldName, newName)
+	if err != nil {
+		return fmt.Errorf("config: %w", err)
+	}
+
+	return nil
+}
+
 type BinAction struct {
 	Name       string
 	SrcSymlink string
@@ -102,7 +173,7 @@ func detectBinActions(modDir string) ([]Action, error) {
 	}
 
 	for _, modEntry := range modEntries {
-		if modEntry.Name() == ".bin" {
+		if modEntry.Name() == ".bin.d" {
 			binEntries, err := os.ReadDir(modDir)
 			if err != nil {
 				return nil, fmt.Errorf("can't read mod bin dir: %w", err)
@@ -121,6 +192,9 @@ func detectBinActions(modDir string) ([]Action, error) {
 	}
 
 	return actions, nil
+}
+
+func doBinAction(binAction *BinAction) error {
 }
 
 func dotfilesDir() string {
