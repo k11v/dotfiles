@@ -43,7 +43,14 @@ vim.opt.signcolumn = "yes"
 
 -- Disable 'hidden' to reduce buffer list pollution with modified buffers.
 -- The default is on in Neovim and off in Vim.
+--
+-- When 'hidden' is disabled and buffer is abandoned,
+-- it is unloaded and undo information is lost.
+-- Enabling 'undofile' mitigates that.
 vim.opt.hidden = false
+
+-- Enable 'undofile' to persist undo information for unloaded buffers.
+vim.opt.undofile = true
 
 -- Other.
 
