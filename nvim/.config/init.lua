@@ -189,3 +189,25 @@ vim.api.nvim_create_user_command("Search", function(opts)
   vim.fn.setreg("/", pattern)
   vim.cmd("normal! n")
 end, { nargs = 1 })
+
+-- Use
+do
+	create_use_callback = function(args_keys)
+		return function(args)
+			local t = vim.uv.hrtime()
+
+			local payload = {}
+			for _, k in ipairs(args_keys) do
+				payload[k] = args[k]
+			end
+			payload["t"] = t
+
+			-- TODO: Replace with writing to file a usefile through a buffer.
+			-- Also consider executing everything after t asynchroniously.
+			vim.print(payload)
+		end
+	end
+
+	vim.api.nvim_create_autocmd("BufEnter", { group = vim.g.augroup, callback = create_use_callback({ "buf", "event" }) })
+	vim.api.nvim_create_autocmd("BufLeave", { group = vim.g.augroup, callback = create_use_callback({ "buf", "event" }) })
+end
