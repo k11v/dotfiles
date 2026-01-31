@@ -105,8 +105,10 @@ vim.lsp.config("gopls", {
 
 vim.lsp.enable("gopls")
 
--- Go LSP formatting.
-vim.cmd([[autocmd g BufWritePre *.go lua vim.lsp.buf.format({})]])
+vim.api.nvim_create_augroup("internal", {})
+require("internal.go_gopls_lsp_import_organizing")
+require("internal.go_gopls_lsp_formatting")
+require("internal.capital_view")
 
 -- LSP progress.
 local lsp_progress_func
