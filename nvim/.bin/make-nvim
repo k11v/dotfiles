@@ -1,0 +1,34 @@
+#!/usr/bin/env zsh
+
+set -e
+
+nvim_dist="$HOME/.local/dist/nvim"
+nvim_src="$HOME/.local/src/neovim"
+nvim_commit="${1:-master}"
+
+# Ensure src exists.
+if [[ ! -e "$nvim_src" ]]; then
+	mkdir -p "$(basename "$nvim_src")"
+	git clone --filter blob:none https://github.com/neovim/neovim.git "$nvim_src"
+	( cd "$nvim_src"; git reset --hard "$(git merge-base stable origin/master)" )
+fi
+
+# Change into src.
+cd "$nvim_src"
+
+# Update master.
+git fetch origin master
+git --no-pager log --decorate=short --pretty=short master..origin/master
+git checkout master
+git merge --ff-only origin/master
+git checkout -
+
+# Checkout commit.
+git checkout "$nvim_commit"
+
+# Build.
+# Requires `brew install cmake`.
+# Utilizes `brew install ninja` for faster builds.
+make distclean
+rm -rf "$nvim_dist"
+make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$nvim_dist" install
