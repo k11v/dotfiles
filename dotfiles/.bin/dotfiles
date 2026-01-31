@@ -1,0 +1,61 @@
+#!/usr/bin/env zsh
+
+set -e
+set -o pipefail
+
+function main() {
+	local module_path
+
+	for module_path in "$@"; do
+		do_module "$module_path"
+	done
+}
+
+function do_module() {
+	local module_path="$1"
+
+	[[ ! -e "$module_path" ]] && return 0
+
+	do_module_bin "$module_path" || echo "error" >&2
+	do_module_config "$module_path" || echo "error" >&2
+}
+
+function do_module_bin() {
+	local bin_path="$1/.bin"
+
+	[[ ! -e "$bin_path" ]] && return 0
+
+	for bin_entry_path in "$1/.bin/"*; do
+		symlink "$(get_bin_path)/$(basename "$bin_entry_path")" "$bin_entry_path"
+	done
+}
+
+function do_module_config() {
+	local module_path="$1"
+	local config_path="$module_path/.config"
+
+	[[ ! -e "$config_path" ]] && return 0
+
+	symlink "$(get_config_path)/$(basename "$module_path")" "$config_path"
+}
+
+function get_bin_path() {
+	printf "%s" "$HOME/.local/bin"
+}
+
+function get_config_path() {
+	printf "%s" "$HOME/.config"
+}
+
+function symlink() {
+	echo "symlink" "$@"
+	local dst="$1" src="$2"
+	src="$(readlink -f "$src")"
+	[[ -L "$dst" && "$(readlink "$dst")" = "$src" ]] && return 0 # stop if dst is already a symlink to src
+	[[ -L "$dst" && ! -e "$dst" ]] && rm "$dst" # continue if dst is a broken symlink
+	[[ -e "$dst" ]] && { echo "error: dst exists" >&2; return 1 } # stop if dst exists
+	mkdir -p "$(dirname "$dst")"
+	ln -s "$src" "$dst"
+}
+
+main "$@"
