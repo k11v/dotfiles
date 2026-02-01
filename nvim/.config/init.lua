@@ -52,6 +52,12 @@ vim.opt.hidden = false
 -- Enable 'undofile' to persist undo information for unloaded buffers.
 vim.opt.undofile = true
 
+-- In Visual mode, don't allow cursor to be positioned on character past the line.
+vim.opt.selection = "old"
+
+-- In Visual block mode, allow cursor to be positioned where there is no actual character.
+vim.opt.virtualedit = "block"
+
 -- Other.
 
 -- Augroup.
