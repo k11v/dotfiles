@@ -2,6 +2,9 @@ local mod = "go_gopls_lsp_import_organizing"
 
 _G.get_buf_cursor = function(buf)
 	buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
+	if not vim.api.nvim_buf_is_valid(buf) then
+		return { 1, 0 }
+	end
 
 	local cur_win = vim.api.nvim_get_current_win()
 	local cur_buf = vim.api.nvim_win_get_buf(cur_win)
