@@ -1,5 +1,6 @@
 local mod = "go_gopls_lsp_import_organizing"
 
+-- get_buf_cursor gets buf cursor position for any valid buffer, including hidden.
 _G.get_buf_cursor = function(buf)
 	buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
 	if not vim.api.nvim_buf_is_valid(buf) then
@@ -25,29 +26,135 @@ _G.get_buf_cursor = function(buf)
 	return { 1, 0 }
 end
 
-local code_action_promise = function()
-	-- GET CLIENTS
-	-- • {filter}  (`table?`) Key-value pairs used to filter the returned
-	--             clients.
-	--             • {id}? (`integer`) Only return clients with the given id
-	--             • {bufnr}? (`integer`) Only return clients attached to this
-	--               buffer
-	--             • {name}? (`string`) Only return clients with the given name
-	--             • {method}? (`string`) Only return clients supporting the
-	--               given method
-	-- vim.lsp.get_clients()
-	
-	local client = {} -- IMPLEMENT
+_G.code_action = function()
+	-- TODO: Support as a parameter.
+	local buf = vim.api.nvim_get_current_buf()
 
-	vim.lsp.util.make_given_range_params(
-		nil,
-		nil,
-		0,
-		client.offset_encoding
-	)
-	{
-		
-	}
+	-- TODO: Support as a parameter.
+	-- TODO: Support multiple.
+	local client = vim.lsp.get_clients({ bufnr = buf, method = "textDocument/codeAction" })[1]
+	if client == nil then
+		vim.notify("code action missing client", vim.log.levels.INFO)
+		return
+	end
+
+	-- REQUEST
+
+	-- As of 2026-02-01 note that Client:request flushes didChange notifications only for the provided buf.
+	-- It doesn't flush changes for other buffers, it looks like it could lead to codeAction faults.
+
+	local codeActionParams = nil
+	local codeActionResult = nil
+	local codeActionCancel = nil
+
+	do
+		local pos = get_buf_cursor(buf)
+		local range_params = vim.lsp.util.make_given_range_params(pos, pos, buf, client.offset_encoding)
+		codeActionParams = {
+			textDocument = range_params.textDocument,
+			range = range_params.range,
+			context = {
+				diagnostics = {},
+				only = nil,
+				triggerKind = nil,
+			},
+		}
+	end
+
+	do
+		local ok, id = client:request(
+			"textDocument/codeAction",
+			codeActionParams,
+			function(err, ok) codeActionResult = { ok = ok, err = err } end,
+			buf
+		)
+		if ok then
+			codeActionCancel = function() client:cancel_request(id) end
+		else
+			codeActionResult = { err = {} }
+		end
+	end
+
+	do
+		local ok, _ = vim.wait(1000, function() return codeActionResult ~= nil end, 10)
+		if not ok then
+			codeActionCancel()
+			vim.notify("code action timeout", vim.log.levels.INFO)
+			return
+		end
+	end
+
+	local codeActionOkResult = nil
+
+	do
+		local err = codeActionResult.err
+		if err ~= nil then
+			vim.notify(string.format("code action error: %s", vim.inspect(err)), vim.log.levels.INFO)
+			return
+		end
+		codeActionOkResult = codeActionResult.ok
+	end
+
+	-- REQUEST
+
+	local resolveParams = nil
+	local resolveResult = nil
+	local resolveCancel = nil
+
+	do
+		resolveParams = codeActionOkResult[1]
+	end
+
+	do
+		local ok, id = client:request(
+			"codeAction/resolve",
+			resolveParams,
+			function(err, ok) resolveResult = { ok = ok, err = err } end,
+			buf
+		)
+		if ok then
+			resolveCancel = function() client:cancel_request(id) end
+		else
+			resolveResult = { err = {} }
+		end
+	end
+
+	do
+		local ok, _ = vim.wait(1000, function() return resolveResult ~= nil end, 10)
+		if not ok then
+			resolveCancel()
+			vim.notify("code action resolve timeout", vim.log.levels.INFO)
+			return
+		end
+	end
+
+	local resolveOkResult = nil
+
+	do
+		local err = resolveResult.err
+		if err ~= nil then
+			vim.notify(string.format("code action resolve error: %s", vim.inspect(err)), vim.log.levels.INFO)
+			return
+		end
+		resolveOkResult = resolveResult.ok
+	end
+
+	return { codeActionOkResult = codeActionOkResult, resolveOkResult = resolveOkResult }
+
+	-- if not (action.edit and action.command) and client:supports_method('codeAction/resolve') then
+
+	-- local function apply_action(action, client, ctx)
+	--   if action.edit then
+	--     util.apply_workspace_edit(action.edit, client.offset_encoding)
+	--   end
+	--   local a_cmd = action.command
+	--   if a_cmd then
+	--     local command = type(a_cmd) == 'table' and a_cmd or action
+	--     --- @cast command lsp.Command
+	--     client:exec_cmd(command, ctx)
+	--   end
+	-- end
+
 
 	-- -- Client:request_sync({method}, {params}, {timeout_ms}, {bufnr})
 	-- client:request_sync()
