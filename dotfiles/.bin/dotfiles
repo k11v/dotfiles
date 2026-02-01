@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
-set -e
-set -o pipefail
+set -e -o pipefail -u
 
 function main() {
 	local module_path
