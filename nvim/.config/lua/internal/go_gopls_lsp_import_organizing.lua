@@ -1,5 +1,38 @@
 local mod = "go_gopls_lsp_import_organizing"
 
+_G.get_buf_cursor = function(buf)
+	local win
+	buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
+	win = nil
+
+	local cur_win = vim.api.nvim_get_current_win()
+	local cur_win_buf = vim.api.nvim_win_get_buf(cur_win)
+	if win == nil and buf == cur_win_buf then
+		win = cur_win
+	end
+
+	local all_win, all_win_buf
+	local all_wins = vim.api.nvim_list_wins()
+	for _, all_win in ipairs(all_wins) do
+		all_win_buf = vim.api.nvim_win_get_buf(all_win)
+		if win == nil and buf == all_win_buf then
+			win = all_win
+		end
+	end
+
+	local pos = nil
+	if win ~= nil then
+		pos = vim.api.nvim_win_get_cursor(win)
+	else
+		pos = vim.api.nvim_buf_get_mark(buf, '"')
+		if pos[1] == 0 and pos[2] == 0 then
+			pos = {1, 0}
+		end
+	end
+
+	return pos
+end
+
 local code_action_promise = function()
 	-- GET CLIENTS
 	-- • {filter}  (`table?`) Key-value pairs used to filter the returned
@@ -11,6 +44,18 @@ local code_action_promise = function()
 	--             • {method}? (`string`) Only return clients supporting the
 	--               given method
 	-- vim.lsp.get_clients()
+	
+	local client = {} -- IMPLEMENT
+
+	vim.lsp.util.make_given_range_params(
+		nil,
+		nil,
+		0,
+		client.offset_encoding
+	)
+	{
+		
+	}
 
 	-- -- Client:request_sync({method}, {params}, {timeout_ms}, {bufnr})
 	-- client:request_sync()
