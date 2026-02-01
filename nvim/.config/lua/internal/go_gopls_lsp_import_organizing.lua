@@ -1,36 +1,25 @@
 local mod = "go_gopls_lsp_import_organizing"
 
 _G.get_buf_cursor = function(buf)
-	local win
 	buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
-	win = nil
 
 	local cur_win = vim.api.nvim_get_current_win()
-	local cur_win_buf = vim.api.nvim_win_get_buf(cur_win)
-	if win == nil and buf == cur_win_buf then
-		win = cur_win
+	local cur_buf = vim.api.nvim_win_get_buf(cur_win)
+	if cur_buf == buf then
+		return vim.api.nvim_win_get_cursor(cur_win)
 	end
 
-	local all_win, all_win_buf
-	local all_wins = vim.api.nvim_list_wins()
-	for _, all_win in ipairs(all_wins) do
-		all_win_buf = vim.api.nvim_win_get_buf(all_win)
-		if win == nil and buf == all_win_buf then
-			win = all_win
-		end
+	local wins = vim.fn.win_findbuf(buf)
+	if #wins > 0 then
+		return vim.api.nvim_win_get_cursor(wins[1])
 	end
 
-	local pos = nil
-	if win ~= nil then
-		pos = vim.api.nvim_win_get_cursor(win)
-	else
-		pos = vim.api.nvim_buf_get_mark(buf, '"')
-		if pos[1] == 0 and pos[2] == 0 then
-			pos = {1, 0}
-		end
+	local pos = vim.api.nvim_buf_get_mark(buf, '"')
+	if pos[1] ~= 0 then
+		return pos
 	end
 
-	return pos
+	return { 1, 0 }
 end
 
 local code_action_promise = function()
