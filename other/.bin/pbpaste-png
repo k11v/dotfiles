@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+local out="$1"
+out="${out:a}"
+osascript -e '
+	on run argv
+		set outPath to item 1 of argv
+		set pngData to the clipboard as «class PNGf»
+		set f to open for access POSIX file outPath with write permission
+		set eof f to 0
+		write pngData to f
+		close access f
+	end run
+' "$out"
