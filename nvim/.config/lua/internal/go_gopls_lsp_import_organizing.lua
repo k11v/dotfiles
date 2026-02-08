@@ -97,6 +97,8 @@ _G.code_action = function(client, buf, code_action_context)
 		local err = code_action_result.err
 		if err ~= nil then
 			vim.notify(string.format("code action error: %s", vim.inspect(err)), vim.log.levels.INFO)
+			vim.notify(string.format("code action params: %s", vim.inspect(code_action_params)), vim.log.levels.DEBUG)
+			vim.notify(string.format("code action result: %s", vim.inspect(code_action_result)), vim.log.levels.DEBUG)
 			return
 		end
 		code_action_ok_result = code_action_result.ok
@@ -161,6 +163,8 @@ _G.code_action = function(client, buf, code_action_context)
 			local err = resolve_result.err
 			if err ~= nil then
 				vim.notify(string.format("code action resolve error: %s", vim.inspect(err)), vim.log.levels.INFO)
+				vim.notify(string.format("code action resolve params: %s", vim.inspect(resolve_params)), vim.log.levels.DEBUG)
+				vim.notify(string.format("code action resolve result: %s", vim.inspect(resolve_result)), vim.log.levels.DEBUG)
 				return
 			end
 			resolve_ok_result = resolve_result.ok
