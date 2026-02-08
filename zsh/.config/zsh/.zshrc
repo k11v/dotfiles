@@ -14,3 +14,7 @@ zstyle ":completion:*" cache-path "$ZCOMPCACHE"
 autoload -Uz compinit
 [[ ! -e "$HOME/.local/cache/zsh" ]] && mkdir -p "$HOME/.local/cache/zsh"
 [[ "$ZCOMPDUMP"(N.mh-24) ]] && compinit -C -d "$ZCOMPDUMP" || { compinit -d "$ZCOMPDUMP"; touch "$ZCOMPDUMP" }
+
+for f in "$HOME"/.local/share/zsh/integration/*.zsh(N); do
+	source "$f"
+done
