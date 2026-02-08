@@ -4,5 +4,7 @@
 !.bin
 !.brewfile
 !.config
+!.home
+!.zshenv
 !.zshrc
 !/.gitignore
