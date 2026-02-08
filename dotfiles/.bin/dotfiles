@@ -14,6 +14,8 @@ function do_module() {
 
 	[[ ! -e "$module_dir" ]] && return 0
 
+	do_module_unhome "$module_dir" || echo "error" >&2
+	do_module_home "$module_dir" || echo "error" >&2
 	do_module_unbin "$module_dir" || echo "error" >&2
 	do_module_bin "$module_dir" || echo "error" >&2
 	do_module_unconfig "$module_dir" || echo "error" >&2
@@ -21,7 +23,33 @@ function do_module() {
 	do_module_brewfile "$module_dir" || echo "error" >&2
 }
 
-function do_module_bin() {
+function do_module_home() (
+	local module_dir="$1"
+	local remote_dir="$(get_home_dir)"
+	local local_dir="$module_dir/.home"
+
+	[[ ! -e "$local_dir" ]] && return 0
+
+	local f
+	for f in "$local_dir/"*(D); do
+		symlink "$remote_dir/$(basename "$f")" "$f"
+	done
+)
+
+function do_module_unhome() (
+	local module_dir="$1"
+	local remote_dir="$(get_home_dir)"
+	local local_dir="$module_dir/.home"
+
+	[[ ! -e "$remote_dir" ]] && return 0
+
+	local f
+	for f in "$remote_dir/"*(D); do
+		unsymlink "$f" "$module_dir"
+	done
+)
+
+function do_module_bin() (
 	local module_dir="$1"
 	local remote_dir="$(get_bin_dir)"
 	local local_dir="$module_dir/.bin"
@@ -29,12 +57,12 @@ function do_module_bin() {
 	[[ ! -e "$local_dir" ]] && return 0
 
 	local f
-	for f in "$local_dir/"*; do
+	for f in "$local_dir/"*(D); do
 		symlink "$remote_dir/$(basename "$f")" "$f"
 	done
-}
+)
 
-function do_module_unbin() {
+function do_module_unbin() (
 	local module_dir="$1"
 	local remote_dir="$(get_bin_dir)"
 	local local_dir="$module_dir/.bin"
@@ -42,12 +70,12 @@ function do_module_unbin() {
 	[[ ! -e "$remote_dir" ]] && return 0
 
 	local f
-	for f in "$remote_dir/"*; do
+	for f in "$remote_dir/"*(D); do
 		unsymlink "$f" "$module_dir"
 	done
-}
+)
 
-function do_module_config() {
+function do_module_config() (
 	local module_dir="$1"
 	local remote_dir="$(get_config_dir)"
 	local local_dir="$module_dir/.config"
@@ -55,12 +83,12 @@ function do_module_config() {
 	[[ ! -e "$local_dir" ]] && return 0
 
 	local f
-	for f in "$local_dir/"*; do
+	for f in "$local_dir/"*(D); do
 		symlink "$remote_dir/$(basename "$f")" "$f"
 	done
-}
+)
 
-function do_module_unconfig() {
+function do_module_unconfig() (
 	local module_dir="$1"
 	local remote_dir="$(get_config_dir)"
 	local local_dir="$module_dir/.config"
@@ -68,18 +96,22 @@ function do_module_unconfig() {
 	[[ ! -e "$remote_dir" ]] && return 0
 
 	local f
-	for f in "$remote_dir/"*; do
+	for f in "$remote_dir/"*(D); do
 		unsymlink "$f" "$module_dir"
 	done
-}
+)
 
-function do_module_brewfile() {
+function do_module_brewfile() (
 	local module_dir="$1"
 	local local_file="$module_path/.brewfile"
 
 	[[ ! -e "$local_file" ]] && return 0
 
 	brewfile "$local_file"
+)
+
+function get_home_dir() {
+	printf "%s" "$HOME"
 }
 
 function get_bin_dir() {
@@ -91,8 +123,12 @@ function get_config_dir() {
 }
 
 function symlink() {
-	echo "symlink" "$@"
 	local dst="$1" src="$2"
+	[[ "$(basename "$src")" = "." ]] && return 0 # stop if src is "."
+	[[ "$(basename "$src")" = ".." ]] && return 0 # stop if src is ".."
+	[[ "$(basename "$src")" = ".DS_Store" ]] && return 0 # stop if src is ".DS_Store"
+
+	echo "symlink" "$@"
 	src="$(readlink -f "$src")"
 	[[ -L "$dst" && "$(readlink "$dst")" = "$src" ]] && return 0 # stop if dst is already a symlink to src
 	[[ -L "$dst" && ! -e "$dst" ]] && rm "$dst" # continue if dst is a broken symlink
@@ -104,9 +140,13 @@ function symlink() {
 function unsymlink() {
 	local dst="$1" dir="$2"
 	dir="$(readlink -f "$dir")"
+	[[ "$(basename "$dst")" = "." ]] && return 0 # stop if src is "."
+	[[ "$(basename "$dst")" = ".." ]] && return 0 # stop if src is ".."
+	[[ "$(basename "$dst")" = ".DS_Store" ]] && return 0 # stop if src is ".DS_Store"
 	[[ ! -L "$dst" ]] && return 0 # stop if dst is not a symlink
 	[[ "$(readlink "$dst")" != "$dir/"* ]] && return 0 # stop if dst source is not in dir
 	[[ -e "$dst" ]] && return 0 # stop if dst exists, meaning it is not broken
+
 	echo "unsymlink" "$@"
 	rm "$dst"
 }
