@@ -1,4 +1,4 @@
-HISTFILE="$HOME/.local/state/zsh/.zhistory"
+HISTFILE="$HOME/.local/state/zsh/.zsh_history"
 ZCOMPCACHE="$HOME/.cache/zsh/.zcompcache" # user-defined
 ZCOMPDUMP="$HOME/.cache/zsh/.zcompdump" # user-defined
 ZDOTDIR="$HOME/.config/zsh"
