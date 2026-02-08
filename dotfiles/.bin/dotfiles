@@ -3,56 +3,62 @@
 set -e -o pipefail -u
 
 function main() {
-	local module_path
-
-	for module_path in "$@"; do
-		do_module "$module_path"
+	local module_dir
+	for module_dir in "$@"; do
+		do_module "$module_dir"
 	done
 }
 
 function do_module() {
-	local module_path="$1"
+	local module_dir="$1"
 
-	[[ ! -e "$module_path" ]] && return 0
+	[[ ! -e "$module_dir" ]] && return 0
 
-	do_module_bin "$module_path" || echo "error" >&2
-	do_module_config "$module_path" || echo "error" >&2
-	do_module_brewfile "$module_path" || echo "error" >&2
+	do_module_bin "$module_dir" || echo "error" >&2
+	do_module_config "$module_dir" || echo "error" >&2
+	do_module_brewfile "$module_dir" || echo "error" >&2
 }
 
 function do_module_bin() {
-	local bin_path="$1/.bin"
+	local module_dir="$1"
+	local remote_dir="$(get_bin_dir)"
+	local local_dir="$module_dir/.bin"
 
-	[[ ! -e "$bin_path" ]] && return 0
+	[[ ! -e "$local_dir" ]] && return 0
 
-	for bin_entry_path in "$1/.bin/"*; do
-		symlink "$(get_bin_path)/$(basename "$bin_entry_path")" "$bin_entry_path"
+	local f
+	for f in "$local_dir/"*; do
+		symlink "$remote_dir/$(basename "$f")" "$f"
 	done
 }
 
 function do_module_config() {
-	local module_path="$1"
-	local config_path="$module_path/.config"
+	local module_dir="$1"
+	local remote_dir="$(get_config_dir)"
+	local local_dir="$module_dir/.config"
 
-	[[ ! -e "$config_path" ]] && return 0
+	[[ ! -e "$local_dir" ]] && return 0
 
-	symlink "$(get_config_path)/$(basename "$module_path")" "$config_path"
+	local f
+	for f in "$local_dir/"*; do
+		symlink "$remote_dir/$(basename "$f")" "$f"
+	done
 }
 
 function do_module_brewfile() {
-	local module_path="$1"
-	local brewfile_path="$module_path/.brewfile"
+	local module_dir="$1"
+	local local_file="$module_path/.brewfile"
 
-	[[ ! -e "$brewfile_path" ]] && return 0
+	[[ ! -e "$local_file" ]] && return 0
 
-	brewfile "$brewfile_path"
+	brewfile "$local_file"
 }
 
-function get_bin_path() {
+function get_bin_dir() {
 	printf "%s" "$HOME/.local/bin"
 }
 
-function get_config_path() {
+function get_config_dir() {
 	printf "%s" "$HOME/.config"
 }
 
