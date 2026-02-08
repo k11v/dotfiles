@@ -5,6 +5,7 @@
 !.brewfile
 !.config
 !.home
+!.integration
 !.zshenv
 !.zshrc
 !/.gitignore
