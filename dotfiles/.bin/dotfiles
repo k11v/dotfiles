@@ -17,6 +17,7 @@ function do_module() {
 
 	do_module_bin "$module_path" || echo "error" >&2
 	do_module_config "$module_path" || echo "error" >&2
+	do_module_brewfile "$module_path" || echo "error" >&2
 }
 
 function do_module_bin() {
@@ -38,6 +39,15 @@ function do_module_config() {
 	symlink "$(get_config_path)/$(basename "$module_path")" "$config_path"
 }
 
+function do_module_brewfile() {
+	local module_path="$1"
+	local brewfile_path="$module_path/.brewfile"
+
+	[[ ! -e "$brewfile_path" ]] && return 0
+
+	brewfile "$brewfile_path"
+}
+
 function get_bin_path() {
 	printf "%s" "$HOME/.local/bin"
 }
@@ -55,6 +65,13 @@ function symlink() {
 	[[ -e "$dst" ]] && { echo "error: dst exists" >&2; return 1 } # stop if dst exists
 	mkdir -p "$(dirname "$dst")"
 	ln -s "$src" "$dst"
+}
+
+function brewfile() {
+	echo "brewfile" "$@"
+	local src="$1"
+	brew bundle check --no-upgrade --file "$src" > /dev/null && return 0 # stop if src is already installed
+	brew bundle install --quiet --file "$src"
 }
 
 main "$@"
