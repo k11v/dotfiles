@@ -11,6 +11,11 @@ _G.lsp_pos_from_vim_pos = function(pos)
 end
 
 -- get_buf_cursor gets buf cursor position for any valid buffer, including hidden.
+--
+-- FIXME: Either get_buf_cursor or lsp_pos_from_vim_pos should solve that 
+-- code_action runs on "virtual column" instead of "real column" and fails.
+-- Reproduce with "in Go file go to a line with a tab, go to the end of the line, run code_action".
+-- Maybe after the fix, reduce logging verbosity.
 _G.get_buf_cursor = function(buf)
 	buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
 	if not vim.api.nvim_buf_is_valid(buf) then
