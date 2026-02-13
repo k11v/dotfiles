@@ -5,6 +5,7 @@
 !.brewfile
 !.config
 !.home
+!.hushlogin
 !.integration
 !.zshenv
 !.zshrc
