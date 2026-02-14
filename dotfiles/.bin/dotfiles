@@ -34,7 +34,7 @@ function do_module_home() (
 
 	local f
 	for f in "$local_dir/"*(D); do
-		symlink "$remote_dir/$(basename "$f")" "$f"
+		file "$remote_dir/$(basename "$f")" "$f"
 	done
 )
 
@@ -60,7 +60,7 @@ function do_module_bin() (
 
 	local f
 	for f in "$local_dir/"*(D); do
-		symlink "$remote_dir/$(basename "$f")" "$f"
+		file "$remote_dir/$(basename "$f")" "$f"
 	done
 )
 
@@ -86,7 +86,7 @@ function do_module_config() (
 
 	local f
 	for f in "$local_dir/"*(D); do
-		symlink "$remote_dir/$(basename "$f")" "$f"
+		file "$remote_dir/$(basename "$f")" "$f"
 	done
 )
 
@@ -112,7 +112,7 @@ function do_module_integration_zsh() (
 
 	local f
 	for f in "$local_dir/"*(D); do
-		symlink "$remote_dir/$(basename "$f")" "$f"
+		file "$remote_dir/$(basename "$f")" "$f"
 	done
 )
 
@@ -154,11 +154,21 @@ function get_integration_zsh_dir() {
 	printf "%s" "$HOME/.local/share/zsh/integration"
 }
 
-function symlink() {
+function file() {
 	local dst="$1" src="$2"
 	[[ "$(basename "$src")" = "." ]] && return 0 # stop if src is "."
 	[[ "$(basename "$src")" = ".." ]] && return 0 # stop if src is ".."
 	[[ "$(basename "$src")" = ".DS_Store" ]] && return 0 # stop if src is ".DS_Store"
+
+	if [[ "$src" == *.tmpl ]]; then
+		template "$dst" "$src"
+	else
+		symlink "$dst" "$src"
+	fi
+}
+
+function symlink() {
+	local dst="$1" src="$2"
 
 	echo "symlink" "$@"
 	src="$(readlink -f "$src")"
@@ -167,6 +177,13 @@ function symlink() {
 	[[ -e "$dst" ]] && { echo "error: dst exists" >&2; return 1 } # stop if dst exists
 	mkdir -p "$(dirname "$dst")"
 	ln -s "$src" "$dst"
+}
+
+function template() {
+	local dst="$1" src="$2"
+
+	echo "template" "$@"
+	dst="${dst%.tmpl}"
 }
 
 function unsymlink() {
