@@ -7,14 +7,14 @@ size = 13.0
 [terminal]
 shell.program = "/bin/sh"
 shell.args = [
-	"-c",
-	"""
-	set -e
-	alias tmux="/opt/homebrew/bin/tmux" # for tmux installed with Homebrew on Apple Silicon
-	tmux start-server
-	tmux has-session || tmux new-session -d -s default
-	tmux attach-session
-	""",
+  "-c",
+  """
+set -e
+alias tmux="/opt/homebrew/bin/tmux" # for tmux installed with Homebrew on Apple Silicon
+tmux start-server
+tmux has-session || tmux new-session -d -s default
+tmux attach-session
+""",
 ]
 
 [window]
