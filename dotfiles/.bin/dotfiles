@@ -22,6 +22,8 @@ function do_module() {
 	do_module_config "$module_dir" || echo "error" >&2
 	do_module_unintegration_zsh "$module_dir" || echo "error" >&2
 	do_module_integration_zsh "$module_dir" || echo "error" >&2
+	do_module_unintegration_tldr "$module_dir" || echo "error" >&2
+	do_module_integration_tldr "$module_dir" || echo "error" >&2
 	do_module_brewfile "$module_dir" || echo "error" >&2
 }
 
@@ -129,6 +131,32 @@ function do_module_unintegration_zsh() (
 	done
 )
 
+function do_module_integration_tldr() (
+	local module_dir="$1"
+	local remote_dir="$(get_integration_tldr_dir)"
+	local local_dir="$module_dir/.integration/tldr"
+
+	[[ ! -e "$local_dir" ]] && return 0
+
+	local f
+	for f in "$local_dir/"*(D); do
+		file "$remote_dir/$(basename "$f")" "$f"
+	done
+)
+
+function do_module_unintegration_tldr() (
+	local module_dir="$1"
+	local remote_dir="$(get_integration_tldr_dir)"
+	local local_dir="$module_dir/.integration/tldr"
+
+	[[ ! -e "$remote_dir" ]] && return 0
+
+	local f
+	for f in "$remote_dir/"*(D); do
+		unsymlink "$f" "$module_dir"
+	done
+)
+
 function do_module_brewfile() (
 	local module_dir="$1"
 	local local_file="$module_path/.brewfile"
@@ -152,6 +180,10 @@ function get_config_dir() {
 
 function get_integration_zsh_dir() {
 	printf "%s" "$HOME/.local/share/zsh/integration"
+}
+
+function get_integration_tldr_dir() {
+	printf "%s" "$HOME/.local/share/tldr/pages"
 }
 
 function file() {
