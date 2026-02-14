@@ -19,11 +19,14 @@ func main() {
 }
 
 func run() error {
-	ctx := context.Background()
-	moduleDirs := os.Args[1:]
+	var (
+		ctx        = context.Background()
+		moduleDirs = os.Args[1:]
+		service    = newService()
+	)
 
 	for _, moduleDir := range moduleDirs {
-		if err := doModule(ctx, moduleDir); err != nil {
+		if err := service.doModule(ctx, moduleDir); err != nil {
 			slog.ErrorContext(ctx, err.Error(), "module_dir", moduleDir)
 		}
 	}
@@ -31,18 +34,21 @@ func run() error {
 	return nil
 }
 
-func doModule(ctx context.Context, moduleDir string) error {
-	slog.InfoContext(ctx, "started doing module", "module_dir", moduleDir)
-	defer slog.InfoContext(ctx, "stopped doing module", "module_dir", moduleDir)
+type service struct{}
 
-	if err := checkModuleExists(moduleDir); err != nil {
+func newService() *service {
+	return &service{}
+}
+
+func (s *service) doModule(ctx context.Context, moduleDir string) error {
+	if err := s.checkModuleExists(moduleDir); err != nil {
 		return fmt.Errorf("do module: %w", err)
 	}
 
 	return nil
 }
 
-func checkModuleExists(moduleDir string) error {
+func (s *service) checkModuleExists(moduleDir string) error {
 	_, err := os.Stat(moduleDir)
 
 	if errors.Is(err, os.ErrNotExist) {
