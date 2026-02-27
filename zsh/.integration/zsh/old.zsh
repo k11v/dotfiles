@@ -1,3 +1,4 @@
+export PATH="$PATH:/opt/homebrew/opt/git/bin" # use newer Git from Homebrew
 export PATH="$PATH:$HOME/.local/dist/nvim/bin"
 
 export CARGO_HOME="$HOME/.local/share/cargo"
@@ -141,6 +142,7 @@ alias ga="git add"
 alias gap="git add --patch"
 alias gb="git branch"
 alias gc="git_commit"  # git_commit is user-defined
+alias gcf="git commit --fixup"
 alias gca="git commit --amend"
 alias gci='git commit --allow-empty -m "Initial commit"'
 alias gco="git checkout"
@@ -157,6 +159,8 @@ alias gls="git log -S"
 alias gp="git push"
 alias gr="git reset HEAD"
 alias grc="git rebase --continue"
+alias grb="git rebase"
+alias grbi="git rebase -i"
 alias gs="git status -sb"
 alias gso="git show"
 alias gt="gotestsum -- --count 1 --tags integration --race"
@@ -230,6 +234,11 @@ function gdfbo() {
 		return 1
 	fi
 	gdf $(git merge-base "$branch" origin/master) "$branch"
+}
+
+function gcfa() {
+	git commit --fixup "$1"
+	git rebase --autosquash "$1"^
 }
 
 function git_commit() {
