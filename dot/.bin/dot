@@ -12,7 +12,7 @@ function main() {
 function do_module() {
 	local module_dir="$1"
 
-	[[ ! -e "$module_dir" ]] && return 0
+	[[ ! -d "$module_dir" ]] && return 0
 
 	do_module_unhome "$module_dir" || echo "error" >&2
 	do_module_home "$module_dir" || echo "error" >&2
