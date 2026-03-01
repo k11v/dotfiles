@@ -1,7 +1,0 @@
-#!/bin/sh
-#
-# Usage: docker-open
-#
-# Opens the Docker application on macOS from the command line.
-
-open -a Docker

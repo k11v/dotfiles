@@ -1,5 +1,0 @@
-#compdef repo
-#
-# Usage: repo <repository>
-
-_files -/ -W "$REPOSITORIES"
