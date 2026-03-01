@@ -1,0 +1,86 @@
+{
+    "global": { "show_in_menu_bar": false },
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Input selector",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "left_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_command" }],
+                                "to_if_alone": [{ "select_input_source": { "input_source_id": "^me.tonsky.keyboardlayout.universal.english-universal$" } }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "right_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "right_command" }],
+                                "to_if_alone": [{ "select_input_source": { "input_source_id": "^me.tonsky.keyboardlayout.universal.russian-universal$" } }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Spotify controller",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "f7" },
+                                "to_if_alone": [{ "shell_command": "osascript -e 'tell application \"Spotify\" to previous track'" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": { "key_code": "f8" },
+                                "to_if_alone": [{ "shell_command": "osascript -e 'tell application \"Spotify\" to playpause'" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": { "key_code": "f9" },
+                                "to_if_alone": [{ "shell_command": "osascript -e 'tell application \"Spotify\" to next track'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Escape hyperer",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "escape",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["command", "control", "option"]
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "name": "Default profile",
+            "selected": true,
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "escape" }]
+                },
+                {
+                    "from": { "key_code": "escape" },
+                    "to": [{ "key_code": "vk_none" }]
+                }
+            ],
+            "virtual_hid_keyboard": { "keyboard_type_v2": "iso" }
+        }
+    ]
+}
