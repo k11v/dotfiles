@@ -197,3 +197,13 @@ vim.api.nvim_create_user_command("Search", function(opts)
   vim.fn.setreg("/", pattern)
   vim.cmd("normal! n")
 end, { nargs = 1 })
+
+if vim.g.did_test == nil then
+	for k, v in pairs(_G) do
+		if string.sub(k, 1, 5) == "test_" then
+			v()
+		end
+	end
+
+	vim.g.did_test = true
+end

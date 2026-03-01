@@ -3,11 +3,60 @@ local mod = "go_gopls_lsp_import_organizing"
 -- As of 2026-02-01 note that Client:request flushes didChange notifications only for the provided buf.
 -- It doesn't flush changes for other buffers, it looks like it could lead to codeAction faults.
 
--- Good enough Vim pos to LSP pos conversion.
--- Assumes that cursor points at an actual character or an empty line.
--- Doesn't assume that cursor points at non-existing character, e.g. in Visual block mode.
-_G.lsp_pos_from_vim_pos = function(pos)
-	return { line = pos[1] - 1, character = pos[2] }
+_G.lsp_pos_from_vim_pos = function(buf, pos, offset_encoding)
+	local line = vim.api.nvim_buf_get_lines(buf, pos[1] - 1, pos[1], true)[1]
+	if not line then
+		return { line = 0, character = 0 }
+	end
+
+	return internal_lsp_pos_from_vim_pos(line, pos, offset_encoding)
+end
+
+_G.internal_lsp_pos_from_vim_pos = function(line, pos, offset_encoding)
+	local row = pos[1]
+	local col = pos[2]
+	local lsp_row = row - 1
+	local lsp_col = vim.str_utfindex(line, offset_encoding, col, true)
+	return { line = lsp_row, character = lsp_col }
+end
+
+_G.test_internal_lsp_pos_from_vim_pos = function()
+	local tests = {
+		{
+			name = "line with single-byte characters",
+			line = "text",
+			pos = { 1, 3 },
+			offset_encoding = "utf-16",
+			want = { line = 0, character = 3 },
+		},
+		{
+			name = "empty line",
+			line = "",
+			pos = { 1, 0 },
+			offset_encoding = "utf-16",
+			want = { line = 0, character = 0 },
+		},
+		{
+			name = "line with multibyte characters",
+			line = "text текст",
+			pos = { 1, 13 },
+			offset_encoding = "utf-16",
+			want = { line = 0, character = 9 },
+		},
+	}
+
+	for _, tt in ipairs(tests) do
+		local got = internal_lsp_pos_from_vim_pos(tt.line, tt.pos, tt.offset_encoding)
+		if not vim.deep_equal(got, tt.want) then
+			vim.notify(
+				string.format(
+					"test_internal_lsp_pos_from_vim_pos/%s: got %s, want %s",
+					tt.name, vim.inspect(got), vim.inspect(tt.want)
+				),
+				vim.log.levels.ERROR
+			)
+		end
+	end
 end
 
 -- get_buf_cursor gets buf cursor position for any valid buffer, including hidden.
@@ -65,7 +114,7 @@ _G.code_action = function(client, buf, code_action_context)
 
 	do
 		local vim_pos = get_buf_cursor(buf)
-		local lsp_pos = lsp_pos_from_vim_pos(vim_pos)
+		local lsp_pos = lsp_pos_from_vim_pos(buf, vim_pos, client.offset_encoding)
 		code_action_params = {
 			textDocument = vim.lsp.util.make_text_document_params(buf),
 			range = { start = lsp_pos, ["end"] = lsp_pos },
