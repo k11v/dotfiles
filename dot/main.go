@@ -8,7 +8,6 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 var (
@@ -28,94 +27,40 @@ func main() {
 func run() error {
 	var (
 		ctx        = context.Background()
+		_          = ctx
 		moduleDirs = os.Args[1:]
-		logger     = slog.Default()
-		store      = MustNewStore(logger)
-		service    = NewService(logger, store)
 	)
 
 	for _, moduleDir := range moduleDirs {
-		if err := service.doModule(ctx, moduleDir); err != nil {
-			slog.ErrorContext(ctx, err.Error(), "module_dir", moduleDir)
+		if exists, err := fileExists(moduleDir); err != nil {
+			return err
+		} else if !exists {
+			return errors.New("module dir does not exist")
+		}
+
+		srcDir := filepath.Join(moduleDir, ".config.tmpl")
+		if exists, err := fileExists(srcDir); err != nil {
+			return err
+		} else if !exists {
+			continue
+		}
+
+		srcDirEntries, err := os.ReadDir(srcDir)
+		if err != nil {
+			return err
+		}
+
+		for _, srcDirEntry := range srcDirEntries {
+			dstDirEntryString := filepath.Join(homeDir(), ".config.tmpl", srcDirEntry.Name())
+			srcDirEntryString := filepath.Join(srcDir, srcDirEntry.Name())
+			_, _ = dstDirEntryString, srcDirEntryString
 		}
 	}
 
 	return nil
 }
 
-type Service struct {
-	logger *slog.Logger
-	store  *Store
-}
-
-func NewService(logger *slog.Logger, store *Store) *Service {
-	return &Service{
-		logger: logger,
-		store:  store,
-	}
-}
-
-func (s *Service) doModule(ctx context.Context, moduleDir string) error {
-	if !s.fileExists(moduleDir) {
-		return fmt.Errorf("do module: %w", errSourceNotFound)
-	}
-
-	dos := []func(context.Context, string) error{
-		s.doModuleConfigTemplate,
-	}
-
-	for _, do := range dos {
-		if err := do(ctx, moduleDir); err != nil {
-			s.logger.ErrorContext(ctx, err.Error(), "module_dir", moduleDir)
-		}
-	}
-
-	return nil
-}
-
-func (s *Service) doModuleConfigTemplate(ctx context.Context, moduleDir string) error {
-	srcDir := filepath.Join(moduleDir, ".config")
-	if !s.fileExists(srcDir) {
-		return fmt.Errorf("do module config template: %w", errSourceNotFound)
-	}
-
-	srcDirEntries, err := os.ReadDir(srcDir)
-	if err != nil {
-		return fmt.Errorf("do module config template: %w", err)
-	}
-
-	for _, srcDirEntry := range srcDirEntries {
-		if err := s.doModuleConfigTemplateEntry(filepath.Join(srcDir, srcDirEntry.Name())); err != nil {
-			return fmt.Errorf("do module config template: %w", err)
-		}
-	}
-
-	return nil
-}
-
-func (s *Service) doModuleConfigTemplateEntry(srcDirEntry string) error {
-	if !s.fileExists(srcDirEntry) {
-		return fmt.Errorf("do module config template entry: %w", errSourceNotFound)
-	}
-
-	if !strings.HasSuffix(srcDirEntry, ".tmpl") {
-		return fmt.Errorf("do module config template entry: %w", errSourceNotValid)
-	}
-
-	dstDirEntry := filepath.Join(s.homeDir(), ".config", strings.TrimSuffix(srcDirEntry, ".tmpl"))
-
-	if err := s.doTemplate(dstDirEntry, srcDirEntry); err != nil {
-		return fmt.Errorf("do module config template: %w", err)
-	}
-
-	return nil
-}
-
-func (s *Service) doTemplate(dst, src string) error {
-	return nil
-}
-
-func (s *Service) homeDir() string {
+func homeDir() string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		panic(fmt.Errorf("home dir: %w", err))
@@ -124,27 +69,27 @@ func (s *Service) homeDir() string {
 	return homeDir
 }
 
-func (s *Service) fileExists(file string) bool {
+func fileExists(file string) (bool, error) {
 	_, err := os.Stat(file)
 
 	if errors.Is(err, os.ErrNotExist) {
-		return false
+		return false, nil
 	}
 
 	if err != nil {
-		panic(fmt.Errorf("file exists: %w", err))
+		return false, fmt.Errorf("file exists: %w", err)
 	}
 
-	return true
+	return true, nil
 }
 
-func (s *Service) isDir(file string) bool {
+func isDir(file string) (bool, error) {
 	fileInfo, err := os.Stat(file)
 	if err != nil {
-		panic(fmt.Errorf("is dir: %w", err))
+		return false, fmt.Errorf("is dir: %w", err)
 	}
 
-	return fileInfo.IsDir()
+	return fileInfo.IsDir(), nil
 }
 
 type TemplateInfo struct {
