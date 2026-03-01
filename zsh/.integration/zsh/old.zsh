@@ -1,13 +1,6 @@
 export PATH="$PATH:/opt/homebrew/opt/git/bin" # use newer Git from Homebrew
 export PATH="$PATH:$HOME/.local/dist/nvim/bin"
 
-export CARGO_HOME="$HOME/.local/share/cargo"
-export PATH="$PATH:$HOME/.local/share/cargo/bin"
-export RUSTUP_HOME="$HOME/.local/share/rustup"
-
-export PAGER="less"
-export LESS="-g -i -M -R -S -x4 --mouse --wheel-lines=5"
-
 # Input
 
 # Use Vim line editor.
@@ -126,6 +119,8 @@ add-zsh-hook precmd _prompt_precmd
 
 # Aliases
 
+alias sudo="sudo " # enables sudo for aliases
+
 alias dcb="docker compose build"
 alias dcd="docker compose down"
 alias dcdv="docker compose down -v"
@@ -176,7 +171,11 @@ alias vim="nvim"
 
 # Functions
 
-function cdf () {
+function bat() { command bat --paging=never "$@" }
+function grep() { command grep --color=auto "$@" }
+function ls() { command ls --color=auto "$@" }
+
+function cdf() {
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
@@ -368,3 +367,339 @@ EOF
 function myip() {
     ifconfig | grep inet | grep -v inet6 | cut -d " " -f 2
 }
+
+myexternalip() {
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+# FIXME: If file doesn't end with a newline, the last variable is not exported.
+# Load a .env file (formatted according to the Compose spec)
+dotenv() {
+    local kv
+    cat "${1-.env}" | sed '/^#.*$/d' | sed '/^$/d' | sed -n '/^.*=.*$/p' | while read -r kv; do
+        export "$kv"
+    done
+}
+
+dsa() {
+    local problem_name subproblem_name main_path repo_root current_dir module_path
+
+    problem_name="$(slugify "$1")"
+    subproblem_name="$(slugify "$2")"
+
+    if [[ -z "$problem_name" ]]; then
+        echo "error: missing problem name" >&2
+        return 1
+    fi
+    
+    if [[ -z "$subproblem_name" ]]; then
+        main_path="$problem_name"
+    else
+        main_path="$problem_name/$subproblem_name"
+    fi
+
+    repo_root="$(git rev-parse --show-toplevel)"
+    current_dir="$(pwd)"
+    if [[ "$current_dir" == "$repo_root" ]]; then
+        module_path="github.com/k11v/dsa/$problem_name"
+    else
+        module_path="github.com/k11v/dsa/${current_dir#$repo_root/}/$problem_name"
+    fi
+
+    mkdir -p "$problem_name"
+    cat <<EOF > "$problem_name/go.mod"
+module $module_path
+
+go 1.23.4
+EOF
+    cat <<EOF > "$problem_name/README.md"
+Time to solve:
+
+- read: 0s
+- think: 0s
+- implement: 0s
+- check and fix: 0s
+- run and fix: 0s
+- success: 0s
+- read: 0s
+- solve: 0s
+- success: 0s
+- _total: 0s_
+EOF
+
+    mkdir -p "$main_path"
+    cat <<EOF > "$main_path/main.go"
+package main
+
+func main() {
+}
+EOF
+}
+
+# awesomestars reads HTML from the standart input, extracts links,
+# retrieves stargazer count for each link to a GitHub repository,
+# and returns the links enriched with stargazer count.
+awesomestars() {
+    # Parse Pandoc Link objects from STDIN.
+    # cat is actually redundant but it shows intent.
+    items="$(cat | pandoc --from html --to json | jq -c '.. | if type == "object" and .t == "Link" then . else empty end' | while read l; do
+        # Parse link name and URL into n and u.
+        n="$(echo "$l" | jq '.c[1]' | jq '{
+          "pandoc-api-version": [1, 23, 1],
+          "meta": {},
+          "blocks": [
+            {
+              "t": "Plain",
+              "c": .
+            }
+          ]
+        }' | pandoc --from json --to plain)"
+        u="$(echo "$l" | jq -r '.c[2][0]')"
+
+        # Parse GitHub repository's owner/name from URL into repo, then fetch star count into s.
+        repo="$(echo "$u" | python3 -c '
+import sys, urllib.parse
+scheme, netloc, path, _, _ = urllib.parse.urlsplit(sys.stdin.readline())
+if not (scheme == "http" or scheme == "https"): exit()
+if not (netloc == "github.com"): exit()
+if not (len(path) > 0): exit()
+print(path[1:])
+        ')"
+        if [[ -n "$repo" ]]; then
+            s="$(gh repo view "$repo" --json stargazerCount | jq '.stargazerCount')"
+        else
+            s="0"
+        fi
+
+        # Output name, url, star_count.
+        jq -c -n --arg name "$n" --arg url "$u" --arg star_count "$s" '{"name": $name, "url": $url, "star_count": ($star_count | tonumber)}'
+        printf '.' >&2 # singal that we processed one URL
+    done)"
+    printf "\n" >&2
+
+    printf "%s" "$items" | jq -s -c 'sort_by(.star_count) | reverse | .[]'
+}
+
+# venv [<path>] activates a Python venv.
+venv() {
+    local venv="$1"
+    if [[ -z "$venv" ]]; then
+        venv=".venv"
+    fi
+    if [[ ! -e "$venv" ]]; then
+        echo >&2 "error: venv doesn't exist: $venv"
+        return 1
+    fi
+    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
+    [[ "$?" -ne 0 ]] && return 1
+
+    source "$venv/bin/activate"
+}
+
+# mkvenv <version> [<path>] creates a Python venv.
+mkvenv() {
+    local version="$1"
+    if [[ -z "$version" ]]; then
+        echo >&2 "error: version is not specified"
+        return 1
+    fi
+
+    local venv="$2"
+    if [[ -z "$venv" ]]; then
+        venv=".venv"
+    fi
+    if [[ -e "$venv" ]]; then
+        echo >&2 "error: venv already exists"
+        return 1
+    fi
+    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
+    [[ "$?" -ne 0 ]] && return 1
+
+    mise x "python@$version" -- python -m venv "$venv"
+    [[ "$?" -ne 0 ]] && return 1
+
+    source "$venv/bin/activate"
+}
+
+# rmvenv [<path>] deactivates and removes a Python venv.
+rmvenv() {
+    local venv="$1"
+    if [[ -z "$venv" ]]; then
+        venv=".venv"
+    fi
+    if [[ ! -e "$venv" ]]; then
+        echo >&2 "error: venv doesn't exist: $venv"
+        return 1
+    fi
+    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
+    [[ "$?" -ne 0 ]] && return 1
+
+    if [[ "$VIRTUAL_ENV" -ef "$venv" ]]; then
+        deactivate
+        [[ "$?" -ne 0 ]] && return 1
+    fi
+
+    rm -rf "$venv"
+}
+
+# Quickly jump into a repository
+REPOSITORIES="$HOME/Repositories"
+repo() {
+    cd "$REPOSITORIES/$1"
+}
+_repo() {
+	_files -/ -W "$REPOSITORIES"
+}
+compdef _repo repo
+
+# Quickly jump into a note
+note() {
+    cd "$NOTES/$1"
+}
+
+git-log-with-dates() {
+    # See:
+    # - https://devhints.io/git-log-format
+    # - https://www.git-scm.com/docs/git-config#Documentation/git-config.txt-color
+    # - https://www.git-scm.com/docs/git-log#_pretty_formats
+    git log --pretty='format:%aD %C(bold)%C(yellow)%h%Creset %s'
+}
+
+# NOTE: This function creates dangling commits.
+git-branch-squash-merged() {
+    local branches="$(git branch --format="%(refname:short)")"
+    local current_branch="$(git branch --show-current --format="%(refname:short)")"
+    local default_branch="main"
+
+    if [[ "$current_branch" != "$default_branch" ]]; then
+        echo 1>&2 "Error: You must be on the default branch ('$default_branch') to run this command."
+        return 1
+    fi
+
+    echo "$branches" | while read -r branch; do
+        if [[ "$branch" == "$default_branch" ]]; then
+            continue
+        fi
+
+        local ancestor_commit="$(git merge-base "$branch" "$default_branch")"
+        local branch_tree="$(git rev-parse "$branch^{tree}")"
+        local recreated_squash_commit="$(git commit-tree "$branch_tree" -p "$ancestor_commit" -m "Recreated squash commit for '$branch'")"
+
+        if [[ -z "$recreated_squash_commit" ]]; then
+            echo >&2 "Error: Failed to recreate squash commit for '$branch'. Skipping."
+            continue
+        fi
+
+        if [[ $(git cherry "$default_branch" "$recreated_squash_commit") != "-"* ]]; then
+            continue
+        fi
+
+        echo "$branch"
+    done
+}
+
+# Compile completion cache from scratch
+recompinit() {
+    rm "$ZCOMPDUMP"
+    compinit -d "$ZCOMPDUMP"
+}
+
+# Pipe to browser
+bcat() {
+    local tempdir="$(mktemp -d)"
+    cat > "$tempdir/document.html"
+    open "$tempdir/document.html"
+    sleep 0.2
+    rm -rf -- "$tempdir"
+}
+
+# Display the current date in UTC and ISO 8601 format
+now() {
+    date -u "+%Y-%m-%dT%H:%M:%SZ"
+}
+
+# Get website's title
+titleof() {
+    curl -sSL -o - -- "$1" | perl -l -0777 -n -e 'print $1 if /<title.*?>\s*(.*?)\s*<\/title/si'
+}
+
+printcolors() {
+    printf "%s %s%s%s %s%s%s %s%s%s\n" \
+        " " ""                "NORMAL " ""             "$(tput bold)"                "BOLD NORMAL " "$(tput sgr0)" ""                "BACKGROUND NORMAL " ""             \
+        "0" "$(tput setaf 0)" "BLACK  " "$(tput sgr0)" "$(tput bold)$(tput setaf 0)" "BOLD BLACK  " "$(tput sgr0)" "$(tput setab 0)" "BACKGROUND BLACK  " "$(tput sgr0)" \
+        "1" "$(tput setaf 1)" "RED    " "$(tput sgr0)" "$(tput bold)$(tput setaf 1)" "BOLD RED    " "$(tput sgr0)" "$(tput setab 1)" "BACKGROUND RED    " "$(tput sgr0)" \
+        "2" "$(tput setaf 2)" "GREEN  " "$(tput sgr0)" "$(tput bold)$(tput setaf 2)" "BOLD GREEN  " "$(tput sgr0)" "$(tput setab 2)" "BACKGROUND GREEN  " "$(tput sgr0)" \
+        "3" "$(tput setaf 3)" "YELLOW " "$(tput sgr0)" "$(tput bold)$(tput setaf 3)" "BOLD YELLOW " "$(tput sgr0)" "$(tput setab 3)" "BACKGROUND YELLOW " "$(tput sgr0)" \
+        "4" "$(tput setaf 4)" "BLUE   " "$(tput sgr0)" "$(tput bold)$(tput setaf 4)" "BOLD BLUE   " "$(tput sgr0)" "$(tput setab 4)" "BACKGROUND BLUE   " "$(tput sgr0)" \
+        "5" "$(tput setaf 5)" "MAGENTA" "$(tput sgr0)" "$(tput bold)$(tput setaf 5)" "BOLD MAGENTA" "$(tput sgr0)" "$(tput setab 5)" "BACKGROUND MAGENTA" "$(tput sgr0)" \
+        "6" "$(tput setaf 6)" "CYAN   " "$(tput sgr0)" "$(tput bold)$(tput setaf 6)" "BOLD CYAN   " "$(tput sgr0)" "$(tput setab 6)" "BACKGROUND CYAN   " "$(tput sgr0)" \
+        "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
+}
+
+lspypi() {
+    curl -fsSL -H "Accept: application/vnd.pypi.simple.v1+json" "https://pypi.org/simple/$1/" | jq --raw-output ".versions[]" | sort --version-sort
+}
+
+#
+# From older zshrc
+#
+
+# Zsh
+
+# FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
+# PROMPT_EOL_MARK=""
+# PS2="%B…%b "
+# HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
+# HISTSIZE=10000
+# SAVEHIST=10000
+# KEYTIMEOUT=1
+
+# ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"  # User-defined
+# PROMPT_STYLE="regular"                      # User-defined
+
+# My utils
+
+# export WORKSPACES="$HOME/Workspaces"
+# export NOTES="$HOME/Notes"
+# export DOTFILES_ENVIRONMENT_LOADED=1
+
+# # Improve global completion
+#
+# zstyle ':completion:*' menu select
+# zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'
+# zstyle ':completion:*' use-cache on
+# # zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+# zstyle ':completion:*' insert-tab pending
+# zstyle ':completion:*' single-ignored show
+#
+# # Denoise completion for ssh, scp and rsync
+#
+# zstyle -e ':completion:*:hosts' hosts 'reply=(${=${=${=${${(f)"$(cat {/etc/ssh/ssh_,~/.ssh/}known_hosts(|2)(N) 2> /dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ } ${=${(f)"$(cat /etc/hosts(|)(N) <<(ypcat hosts 2> /dev/null))"}%%(\#${_etc_host_ignores:+|${(j:|:)~_etc_host_ignores}})*} ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2> /dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}})'
+# zstyle ':completion:*:users' ignored-patterns adm amanda apache avahi beaglidx bin cacti canna clamav daemon dbus distcache dovecot fax ftp games gdm gkrellmd gopher hacluster haldaemon halt hsqldb ident junkbust ldap lp mail mailman mailnull mldonkey mysql nagios named netdump news nfsnobody nobody nscd ntp nut nx openvpn operator pcap postfix postgres privoxy pulse pvm quagga radvd rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs '_*'
+# zstyle ':completion:*:(ssh|scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
+# zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
+# zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
+# zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
+
+# # Completion
+#
+# setopt ALWAYS_TO_END           # Move cursor to the end of a completed word
+# setopt COMPLETE_IN_WORD        # Allow completion from inside a word
+# setopt GLOB_COMPLETE           # Generate completions with globs
+# unsetopt LIST_BEEP             # Suppress beep on an ambiguous completion
+#
+# # History
+#
+# setopt EXTENDED_HISTORY        # Save each command's timestamp in history
+# unsetopt HIST_BEEP             # Suppress beep on non-existent history access
+# setopt HIST_EXPIRE_DUPS_FIRST  # Expire duplicate events from history first
+# setopt HIST_IGNORE_DUPS        # Do not record a just recorded event again
+# setopt HIST_IGNORE_SPACE       # Do not record an event starting with a space
+# setopt HIST_SAVE_NO_DUPS       # Do not save duplicate events in history
+# setopt SHARE_HISTORY           # Share history between all sessions
+#
+# # Input/output
+#
+# unsetopt FLOW_CONTROL          # Make '^S' and '^Q' key bindings available
+# setopt INTERACTIVE_COMMENTS    # Allow comments in interactive shells
