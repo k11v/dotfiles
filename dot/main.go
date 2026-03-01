@@ -2,18 +2,14 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
-)
-
-var (
-	errDestinationExist = errors.New("destination already exists")
-	errSourceNotFound   = errors.New("source not found")
-	errSourceNotValid   = errors.New("source not valid")
+	"strings"
+	"text/template"
 )
 
 func main() {
@@ -38,6 +34,8 @@ func run() error {
 			return errors.New("module dir does not exist")
 		}
 
+		dstDir := filepath.Join(homeDir(), ".config")
+
 		srcDir := filepath.Join(moduleDir, ".config.tmpl")
 		if exists, err := fileExists(srcDir); err != nil {
 			return err
@@ -51,9 +49,163 @@ func run() error {
 		}
 
 		for _, srcDirEntry := range srcDirEntries {
-			dstDirEntryString := filepath.Join(homeDir(), ".config.tmpl", srcDirEntry.Name())
-			srcDirEntryString := filepath.Join(srcDir, srcDirEntry.Name())
-			_, _ = dstDirEntryString, srcDirEntryString
+			dst := filepath.Join(dstDir, srcDirEntry.Name())
+			src := filepath.Join(srcDir, srcDirEntry.Name())
+
+			if exists, err := fileExists(dst); err != nil {
+				return err
+			} else if exists {
+				continue
+			}
+
+			if err = createFromTemplate(dst, src); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func createFromTemplate(dst, src string) error {
+	var (
+		queue []struct {
+			dst, src string
+			tmpl     bool
+		}
+		item struct {
+			dst, src string
+			tmpl     bool
+		}
+		logger = slog.Default()
+	)
+
+	if dstWithoutTmpl, ok := strings.CutSuffix(src, ".tmpl"); ok {
+		queue = append(queue, struct {
+			dst, src string
+			tmpl     bool
+		}{dstWithoutTmpl, src, true})
+	} else {
+		queue = append(queue, struct {
+			dst, src string
+			tmpl     bool
+		}{dst, src, false})
+	}
+
+	for len(queue) > 0 {
+		item, queue = queue[0], queue[1:]
+
+		if is, err := isDir(item.src); err != nil {
+			return err
+		} else if is {
+			srcEntries, err := os.ReadDir(item.src)
+			if err != nil {
+				return err
+			}
+
+			for _, srcEntry := range srcEntries {
+				var (
+					dst  string
+					tmpl bool
+				)
+				if name, ok := strings.CutSuffix(srcEntry.Name(), ".tmpl"); ok {
+					dst = filepath.Join(item.dst, name)
+					tmpl = true
+				} else {
+					dst = filepath.Join(item.dst, srcEntry.Name())
+					tmpl = false
+				}
+				src := filepath.Join(item.src, srcEntry.Name())
+				queue = append(queue, struct {
+					dst, src string
+					tmpl     bool
+				}{dst, src, tmpl})
+			}
+
+			if err := os.MkdirAll(filepath.Dir(item.dst), 0o777); err != nil {
+				return err
+			}
+
+			if err := os.Mkdir(item.dst, 0o777); err != nil {
+				return err
+			}
+
+			logger.Info("create directory", "dst", item.dst, "src", item.src)
+		} else if item.tmpl {
+			err := func() error {
+				if err := os.MkdirAll(filepath.Dir(item.dst), 0o777); err != nil {
+					return err
+				}
+
+				dstFile, err := os.OpenFile(item.dst, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o666)
+				if err != nil {
+					return err
+				}
+				defer dstFile.Close()
+
+				srcFile, err := os.Open(item.src)
+				if err != nil {
+					return err
+				}
+				defer srcFile.Close()
+
+				srcData, err := io.ReadAll(srcFile)
+				if err != nil {
+					return err
+				}
+
+				srcFileTmpl, err := template.New("").
+					Funcs(template.FuncMap{
+						"homeDir": func() string {
+							return homeDir()
+						},
+					}).
+					Parse(string(srcData))
+				if err != nil {
+					return err
+				}
+
+				if err = srcFileTmpl.Execute(dstFile, nil); err != nil {
+					return err
+				}
+
+				return nil
+			}()
+			if err != nil {
+				return err
+			}
+
+			logger.Info("create file from template", "dst", item.dst, "src", item.src)
+		} else {
+			err := func() error {
+				if err := os.MkdirAll(filepath.Dir(item.dst), 0o777); err != nil {
+					return err
+				}
+
+				dstFile, err := os.OpenFile(item.dst, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o666)
+				if err != nil {
+					return err
+				}
+				defer dstFile.Close()
+
+				srcFile, err := os.Open(item.src)
+				if err != nil {
+					return err
+				}
+				defer srcFile.Close()
+
+				_, err = io.Copy(dstFile, srcFile)
+				if err != nil {
+					return err
+				}
+
+				return nil
+			}()
+			if err != nil {
+				return err
+			}
+
+			logger.Info("create file from copy", "dst", item.dst, "src", item.src)
 		}
 	}
 
@@ -90,122 +242,4 @@ func isDir(file string) (bool, error) {
 	}
 
 	return fileInfo.IsDir(), nil
-}
-
-type TemplateInfo struct {
-	Dst       string `json:"dst"`
-	Src       string `json:"src"`
-	DstSHA256 string `json:"dst_sha256"`
-}
-
-type Store struct {
-	logger        *slog.Logger
-	templateInfos []TemplateInfo
-}
-
-func MustNewStore(logger *slog.Logger) *Store {
-	store, err := NewStore(logger)
-	if err != nil {
-		panic(err)
-	}
-
-	return store
-}
-
-func NewStore(logger *slog.Logger) (*Store, error) {
-	store := &Store{
-		logger:        logger,
-		templateInfos: nil, // computed
-	}
-
-	f, err := os.Open(store.templateInfosFile())
-	if errors.Is(err, os.ErrNotExist) {
-		return store, nil
-	} else if err != nil {
-		return nil, fmt.Errorf("new store: %w", err)
-	}
-	defer f.Close()
-
-	if err = json.NewDecoder(f).Decode(&store.templateInfos); err != nil {
-		return nil, fmt.Errorf("new store: %w", err)
-	}
-
-	return store, nil
-}
-
-func (s *Store) Close() error {
-	f, err := os.CreateTemp("", "")
-	if err != nil {
-		return fmt.Errorf("store close: %w", err)
-	}
-	defer f.Close()
-
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "\t")
-	if err = json.NewEncoder(f).Encode(s.templateInfos); err != nil {
-		return fmt.Errorf("store close: %w", err)
-	}
-
-	if err = f.Close(); err != nil {
-		return fmt.Errorf("store close: %w", err)
-	}
-
-	templateInfosDir := filepath.Dir(s.templateInfosFile())
-	if err = os.MkdirAll(templateInfosDir, 0x777); err != nil {
-		return fmt.Errorf("store close: %w", err)
-	}
-
-	if err = os.Rename(f.Name(), s.templateInfosFile()); err != nil {
-		return fmt.Errorf("store close: %w", err)
-	}
-
-	s.templateInfos = nil
-
-	return nil
-}
-
-func (s *Store) TemplateInfo(dst string) *TemplateInfo {
-	var templateInfo *TemplateInfo
-
-	for _, ti := range s.templateInfos {
-		if ti.Dst == dst {
-			templateInfo = &ti
-		}
-	}
-
-	return templateInfo
-}
-
-func (s *Store) SetTemplateInfo(dst string, info *TemplateInfo) {
-	index := -1
-
-	for i := range len(s.templateInfos) {
-		if s.templateInfos[i].Dst == dst {
-			index = i
-		}
-	}
-
-	switch {
-	case info == nil && index == -1:
-		// No-op.
-	case info == nil && index != -1:
-		s.templateInfos = append(s.templateInfos[:index], s.templateInfos[index+1:]...)
-	case info != nil && index == -1:
-		s.templateInfos = append(s.templateInfos, *info)
-	case info != nil && index != -1:
-		s.templateInfos[index] = *info
-	default:
-		panic("unreachable")
-	}
-}
-
-func (s *Store) templateInfosFile() string {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		panic(fmt.Errorf("data dir: %w", err))
-	}
-
-	dataDir := filepath.Join(homeDir, ".local", "share", "dot")
-
-	return filepath.Join(dataDir, "template_infos.json")
 }
