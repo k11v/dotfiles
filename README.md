@@ -20,6 +20,6 @@ git clone git@github.com:k11v/dotfiles.git "$HOME/Repositories/dotfiles"
 ```
 
 ```sh
-dotfiles="$HOME/Repositories/dotfiles/dotfiles/.bin/dotfiles"
+dotfiles="$HOME/Repositories/dotfiles/dot/.bin/dot"
 caffeinate -d "$dotfiles" "$HOME"/Repositories/dotfiles/*
 ```
