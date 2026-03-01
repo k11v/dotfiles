@@ -25,6 +25,7 @@ function do_module() {
 	do_module_unintegration_tldr "$module_dir" || echo "error" >&2
 	do_module_integration_tldr "$module_dir" || echo "error" >&2
 	do_module_brewfile "$module_dir" || echo "error" >&2
+	do_module_v2 "$module_dir" || echo "error" >&2
 }
 
 function do_module_home() (
@@ -165,6 +166,19 @@ function do_module_brewfile() (
 
 	brewfile "$local_file"
 )
+
+dot_bin=""
+function do_module_v2() {
+	local module_dir="$1"
+
+	if [[ "$dot_bin" == "" ]]; then
+		local new_dot_bin="$HOME/.local/bin/dot-v2"
+		( cd ~/Repositories/dotfiles/dot && go build -o "$new_dot_bin" . ) || return 1
+		dot_bin="$new_dot_bin"
+	fi
+
+	"$dot_bin" "$module_dir" || return 1
+}
 
 function get_home_dir() {
 	printf "%s" "$HOME"
