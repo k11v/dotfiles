@@ -115,10 +115,10 @@ vim.api.nvim_create_augroup("internal", {})
 
 for name, type in vim.fs.dir(vim.fn.stdpath('config') .. '/lua/internal') do
 	if type == 'file' and name:match('%.lua$') then
-		local modname = name:gsub('%.lua$', '')
-		local mod = "internal." .. modname
-		package.loaded[mod] = nil
-		require(mod)
+		local mod = name:gsub('%.lua$', '')
+		local modpath = "internal." .. mod
+		package.loaded[modpath] = nil
+		require(modpath)
 	end
 end
 
