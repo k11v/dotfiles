@@ -70,46 +70,6 @@ vim.cmd([[autocmd g FileType * lua vim.b.opt = {}]])
 -- Lspconfig.
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 
--- Go gopls.
-local gopls_cmd = {
-	vim.fn.expand("~/.local/share/mise/installs/go-golang-org-x-tools-gopls/latest/bin/gopls"),
-	unpack(vim.lsp.config["gopls"].cmd, 2),
-}
-
-local gopls_on_attach
-do
-	local on_attach = vim.lsp.config["gopls"].on_attach or function() end
-	gopls_on_attach = function(client, bufnr)
-		on_attach(client, bufnr)
-		vim.lsp.completion.enable(true, client.id, bufnr)
-	end
-end
-
-vim.lsp.config("gopls", {
-	cmd = gopls_cmd,
-	on_attach = gopls_on_attach,
-	settings = {
-		gopls = {
-			buildFlags = { "-tags=dev,integration" }, -- temporary
-			directoryFilters = { "-.git" },
-			gofumpt = true,
-			renameMovesSubpackages = true, -- requires gopls >= 0.21.0
-			semanticTokens = true,
-			staticcheck = true,
-			usePlaceholders = true,
-			analyses = {
-				S1011 = false, -- Use a single append to concatenate two slices
-				ST1000 = false, -- Incorrect or missing package comment
-				ST1003 = false, -- Poorly chosen identifier
-				ST1022 = false, -- The documentation of an exported variable or constant should start with variable's name
-				infertypeargs = false, -- check for unnecessary type arguments in call expressions -- temporary
-				slicescontains = false, -- replace loops with slices.Contains or slices.ContainsFunc -- temporary
-			},
-		},
-	}
-})
-
-vim.lsp.enable("gopls")
 
 vim.api.nvim_create_augroup("internal", {})
 
