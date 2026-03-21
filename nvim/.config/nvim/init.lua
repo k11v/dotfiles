@@ -112,9 +112,15 @@ vim.lsp.config("gopls", {
 vim.lsp.enable("gopls")
 
 vim.api.nvim_create_augroup("internal", {})
-require("internal.go_gopls_lsp_import_organizing")
-require("internal.go_gopls_lsp_formatting")
-require("internal.capital_view")
+
+for name, type in vim.fs.dir(vim.fn.stdpath('config') .. '/lua/internal') do
+	if type == 'file' and name:match('%.lua$') then
+		local modname = name:gsub('%.lua$', '')
+		local mod = "internal." .. modname
+		package.loaded[mod] = nil
+		require(mod)
+	end
+end
 
 -- LSP progress.
 local lsp_progress_func
