@@ -1,6 +1,6 @@
-local mod = "capital_view"
+local mod = "luaview"
 
-local function view_impl(expr)
+local function luaview(expr)
   local v = _G
   for k in expr:gmatch("[^%.]+") do v = type(v) == "table" and v[k] or nil end
   if type(v) ~= "function" then return vim.notify("Not a function", vim.log.levels.ERROR) end
@@ -15,7 +15,7 @@ local function view_impl(expr)
   vim.api.nvim_win_set_cursor(0, { i.linedefined > 0 and i.linedefined or 1, 0 })
 end
 
-pcall(vim.api.nvim_del_user_command, "View")
-vim.api.nvim_create_user_command("View", function(o)
-  view_impl(o.args)
+pcall(vim.api.nvim_del_user_command, "Luaview")
+vim.api.nvim_create_user_command("Luaview", function(o)
+  luaview(o.args)
 end, { nargs = 1, complete = "lua" })
