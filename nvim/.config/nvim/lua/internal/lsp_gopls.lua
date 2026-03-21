@@ -1,4 +1,4 @@
-local mod = "gopls"
+local mod = "internal.lsp_gopls"
 
 local cmd = {
 	vim.fn.expand("~/.local/share/mise/installs/go-golang-org-x-tools-gopls/latest/bin/gopls"),
