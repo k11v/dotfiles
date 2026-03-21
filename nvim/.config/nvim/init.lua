@@ -60,16 +60,18 @@ vim.opt.virtualedit = "block"
 
 -- Other.
 
--- Augroup.
-vim.g.augroup = vim.api.nvim_create_augroup("g", {})
+-- Mod and group.
+local mod = "init"
+local group = vim.api.nvim_create_augroup(mod, {})
 
 -- Gopt and bopt.
 vim.g.opt = {}
-vim.cmd([[autocmd g FileType * lua vim.b.opt = {}]])
+vim.cmd([[autocmd init FileType * lua vim.b.opt = {}]])
 
 -- Lspconfig.
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 
+-- Load mods.
 for name, type in vim.fs.dir(vim.fn.stdpath('config') .. '/lua/internal') do
 	if type == 'file' and name:match('%.lua$') then
 		local mod = name:gsub('%.lua$', '')
@@ -79,19 +81,7 @@ for name, type in vim.fs.dir(vim.fn.stdpath('config') .. '/lua/internal') do
 	end
 end
 
--- Search
-vim.api.nvim_create_user_command("Search", function(opts)
-  local s = opts.args
-
-  -- Escape regex-special chars, then turn underscores into "." wildcards.
-  local escaped = vim.fn.escape(s, [[\.^$~[]*+?(){}|]])
-  local pattern = escaped:gsub("_", ".")
-
-  -- Set search register and jump to next match.
-  vim.fn.setreg("/", pattern)
-  vim.cmd("normal! n")
-end, { nargs = 1 })
-
+-- Test mods.
 if vim.g.did_test == nil then
 	for k, v in pairs(_G) do
 		if string.sub(k, 1, 5) == "test_" then
