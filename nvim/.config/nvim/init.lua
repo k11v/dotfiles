@@ -68,13 +68,25 @@ local group = vim.api.nvim_create_augroup(mod, {})
 vim.g.opt = {}
 vim.cmd([[autocmd init FileType * lua vim.b.opt = {}]])
 
+--
+-- Plugins
+--
+
 -- Lspconfig.
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 
+-- Conform.
+vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
+require("conform").setup()
+
+--
+-- Mods
+--
+
 -- Load mods.
-for name, type in vim.fs.dir(vim.fn.stdpath('config') .. '/lua/internal') do
-	if type == 'file' and name:match('%.lua$') then
-		local mod = name:gsub('%.lua$', '')
+for name, type in vim.fs.dir(vim.fn.stdpath("config") .. "/lua/internal") do
+	if type == "file" and name:match("%.lua$") then
+		local mod = name:gsub("%.lua$", "")
 		local modpath = "internal." .. mod
 		package.loaded[modpath] = nil
 		require(modpath)
