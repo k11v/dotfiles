@@ -68,6 +68,10 @@ local group = vim.api.nvim_create_augroup(mod, {})
 vim.g.opt = {}
 vim.cmd([[autocmd init FileType * lua vim.b.opt = {}]])
 
+-- Gvar and bvar.
+vim.g.var = {}
+vim.cmd([[autocmd init FileType * lua vim.b.var = {}]])
+
 --
 -- Plugins
 --
