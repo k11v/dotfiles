@@ -8,6 +8,7 @@
 !.home
 !.hushlogin
 !.integration
+!.luarc.json
 !.zshenv
 !.zshrc
 !/.gitignore
