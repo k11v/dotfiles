@@ -51,7 +51,9 @@ _G.test_internal_lsp_pos_from_vim_pos = function()
 			vim.notify(
 				string.format(
 					"test_internal_lsp_pos_from_vim_pos/%s: got %s, want %s",
-					tt.name, vim.inspect(got), vim.inspect(tt.want)
+					tt.name,
+					vim.inspect(got),
+					vim.inspect(tt.want)
 				),
 				vim.log.levels.ERROR
 			)
@@ -61,7 +63,7 @@ end
 
 -- get_buf_cursor gets buf cursor position for any valid buffer, including hidden.
 --
--- FIXME: Either get_buf_cursor or lsp_pos_from_vim_pos should solve that 
+-- FIXME: Either get_buf_cursor or lsp_pos_from_vim_pos should solve that
 -- code_action runs on "virtual column" instead of "real column" and fails.
 -- Reproduce with "in Go file go to a line with a tab, go to the end of the line, run code_action".
 -- Maybe after the fix, reduce logging verbosity.
@@ -91,9 +93,9 @@ _G.get_buf_cursor = function(buf)
 end
 
 _G.code_action = function(client, buf, code_action_context)
-	vim.validate('client', client, 'table', true)
-	vim.validate('buf', buf, 'number')
-	vim.validate('code_action_context', code_action_context, 'table')
+	vim.validate("client", client, "table", true)
+	vim.validate("buf", buf, "number")
+	vim.validate("code_action_context", code_action_context, "table")
 
 	buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
 	if not vim.api.nvim_buf_is_valid(buf) then
@@ -123,21 +125,22 @@ _G.code_action = function(client, buf, code_action_context)
 	end
 
 	do
-		local ok, id = client:request(
-			"textDocument/codeAction",
-			code_action_params,
-			function(err, ok) code_action_result = { ok = ok, err = err } end,
-			buf
-		)
+		local ok, id = client:request("textDocument/codeAction", code_action_params, function(err, ok)
+			code_action_result = { ok = ok, err = err }
+		end, buf)
 		if ok then
-			code_action_cancel = function() client:cancel_request(id) end
+			code_action_cancel = function()
+				client:cancel_request(id)
+			end
 		else
 			code_action_result = { err = {} }
 		end
 	end
 
 	do
-		local ok, _ = vim.wait(1000, function() return code_action_result ~= nil end, 10)
+		local ok, _ = vim.wait(1000, function()
+			return code_action_result ~= nil
+		end, 10)
 		if not ok then
 			code_action_cancel()
 			vim.notify("code action timeout", vim.log.levels.INFO)
@@ -179,7 +182,7 @@ _G.code_action = function(client, buf, code_action_context)
 	-- LSP spec is not clear about when code action should be resolved.
 	-- We could interspect code action and resolve if edit or command
 	-- is missing but for now resolving every time is good enough.
-	if client:supports_method('codeAction/resolve') then
+	if client:supports_method("codeAction/resolve") then
 		local resolve_params = nil
 		local resolve_result = nil
 		local resolve_cancel = nil
@@ -189,21 +192,22 @@ _G.code_action = function(client, buf, code_action_context)
 		end
 
 		do
-			local ok, id = client:request(
-				"codeAction/resolve",
-				resolve_params,
-				function(err, ok) resolve_result = { ok = ok, err = err } end,
-				buf
-			)
+			local ok, id = client:request("codeAction/resolve", resolve_params, function(err, ok)
+				resolve_result = { ok = ok, err = err }
+			end, buf)
 			if ok then
-				resolve_cancel = function() client:cancel_request(id) end
+				resolve_cancel = function()
+					client:cancel_request(id)
+				end
 			else
 				resolve_result = { err = {} }
 			end
 		end
 
 		do
-			local ok, _ = vim.wait(1000, function() return resolve_result ~= nil end, 10)
+			local ok, _ = vim.wait(1000, function()
+				return resolve_result ~= nil
+			end, 10)
 			if not ok then
 				resolve_cancel()
 				vim.notify("code action resolve timeout", vim.log.levels.INFO)
@@ -217,8 +221,14 @@ _G.code_action = function(client, buf, code_action_context)
 			local err = resolve_result.err
 			if err ~= nil then
 				vim.notify(string.format("code action resolve error: %s", vim.inspect(err)), vim.log.levels.INFO)
-				vim.notify(string.format("code action resolve params: %s", vim.inspect(resolve_params)), vim.log.levels.DEBUG)
-				vim.notify(string.format("code action resolve result: %s", vim.inspect(resolve_result)), vim.log.levels.DEBUG)
+				vim.notify(
+					string.format("code action resolve params: %s", vim.inspect(resolve_params)),
+					vim.log.levels.DEBUG
+				)
+				vim.notify(
+					string.format("code action resolve result: %s", vim.inspect(resolve_result)),
+					vim.log.levels.DEBUG
+				)
 				return
 			end
 			resolve_ok_result = resolve_result.ok
@@ -258,11 +268,12 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	group = vim.api.nvim_create_augroup(mod, {}),
 	pattern = "*.go",
 	callback = function(args)
-		client = client or vim.lsp.get_clients({
-			bufnr = buf,
-			name = "gopls",
-			method = "textDocument/codeAction",
-		})[1]
+		client = client
+			or vim.lsp.get_clients({
+				bufnr = buf,
+				name = "gopls",
+				method = "textDocument/codeAction",
+			})[1]
 		if client == nil then
 			return
 		end
