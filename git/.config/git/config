@@ -6,6 +6,8 @@
 [alias]
 	untrack = update-index --assume-unchanged
 	track = update-index --no-assume-unchanged
+[init]
+	defaultBranch = main
 [color]
 	ui = auto
 [color "branch"]
