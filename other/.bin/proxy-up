@@ -1,0 +1,15 @@
+#!/bin/sh
+
+networksetup -setwebproxy "Wi-Fi" 127.0.0.1 1081
+networksetup -setwebproxystate "Wi-Fi" on
+networksetup -setsecurewebproxy "Wi-Fi" 127.0.0.1 1081
+networksetup -setsecurewebproxystate "Wi-Fi" on
+# networksetup -setsocksfirewallproxy "Wi-Fi" 127.0.0.1 1080
+# networksetup -setsocksfirewallproxystate "Wi-Fi" on
+
+networksetup -setwebproxy "iPhone USB" 127.0.0.1 1081
+networksetup -setwebproxystate "iPhone USB" on
+networksetup -setsecurewebproxy "iPhone USB" 127.0.0.1 1081
+networksetup -setsecurewebproxystate "iPhone USB" on
+# networksetup -setsocksfirewallproxy "iPhone USB" 127.0.0.1 1080
+# networksetup -setsocksfirewallproxystate "iPhone USB" on
