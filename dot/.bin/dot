@@ -30,7 +30,6 @@ function do_module() {
 	do_module_unintegration_gitconfigopt "$module_dir" || echo "error" >&2
 	do_module_unintegration_tldr "$module_dir" || echo "error" >&2
 	do_module_integration_tldr "$module_dir" || echo "error" >&2
-	do_module_brewfile "$module_dir" || echo "error" >&2
 	do_module_v2 "$module_dir" || echo "error" >&2
 }
 
@@ -258,15 +257,6 @@ function get_integration_gitconfigopt_dir() {
 	printf "%s" "$HOME/.local/share/git/integration-gitconfigopt"
 }
 
-function do_module_brewfile() (
-	local module_dir="$1"
-	local local_file="$module_dir/.brewfile"
-
-	[[ ! -e "$local_file" ]] && return 0
-
-	brewfile "$local_file"
-)
-
 dot_bin=""
 function do_module_v2() {
 	local module_dir="$1"
@@ -344,13 +334,6 @@ function unsymlink() {
 
 	echo "unsymlink" "$@"
 	rm "$dst"
-}
-
-function brewfile() {
-	echo "brewfile" "$@"
-	local src="$1"
-	brew bundle check --no-upgrade --file "$src" > /dev/null && return 0 # stop if src is already installed
-	brew bundle install --quiet --file "$src"
 }
 
 main "$@"

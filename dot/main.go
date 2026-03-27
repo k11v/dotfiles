@@ -16,81 +16,112 @@ import (
 var errModuleDirNotExist = errors.New("module dir does not exist")
 
 func main() {
-	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
-	os.Exit(0)
+	os.Exit(run())
 }
 
-func run() error {
+func run() int {
 	var (
-		ctx        = context.Background()
-		moduleDirs = os.Args[1:]
+		ctx             = context.Background()
+		moduleDirs      = os.Args[1:]
+		moduleDirsExist = true
 	)
 
 	for _, moduleDir := range moduleDirs {
 		if !fileExists(moduleDir) {
-			return errModuleDirNotExist
+			slog.Error("module dir does not exist", "dir", moduleDir)
+			moduleDirsExist = false
 		}
 	}
+	if !moduleDirsExist {
+		return 1
+	}
 
-	return errors.Join(
-		doDefaults(ctx, moduleDirs),
-		doTemplates(ctx, moduleDirs),
-	)
+	doConfigTmpl(ctx, moduleDirs)
+	doDefaults(ctx, moduleDirs)
+	doBrewfile(ctx, moduleDirs)
+
+	return 0
 }
 
-func doDefaults(ctx context.Context, moduleDirs []string) error {
+func doDefaults(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
 		srcFile := filepath.Join(moduleDir, ".defaults")
 		if !fileExists(srcFile) {
 			continue
 		}
 
-		slog.Info("defaults", "src", srcFile)
+		slog.Info("do", "src", srcFile)
 
-		if err := exec.CommandContext(ctx, "/bin/sh", srcFile).Run(); err != nil {
-			return fmt.Errorf("defaults: %w", err)
-		}
-	}
-
-	return nil
-}
-
-func doTemplates(_ context.Context, moduleDirs []string) error {
-	for _, moduleDir := range moduleDirs {
-		if !fileExists(moduleDir) {
-			return errModuleDirNotExist
-		}
-
-		dstDir := filepath.Join(homeDir(), ".config")
-
-		srcDir := filepath.Join(moduleDir, ".config.tmpl")
-		if exists, err := fileExistsV0(srcDir); err != nil {
-			return err
-		} else if !exists {
+		output, err := exec.CommandContext(ctx, "/bin/sh", srcFile).CombinedOutput()
+		if err != nil {
+			slog.Error("didn't do", "src", srcFile, "output", string(output), "error", err)
 			continue
 		}
 
-		srcDirEntries, err := os.ReadDir(srcDir)
-		if err != nil {
-			return err
+		slog.Info("did do", "src", srcFile, "output", string(output))
+	}
+}
+
+func doBrewfile(ctx context.Context, moduleDirs []string) {
+	for _, moduleDir := range moduleDirs {
+		srcFile := filepath.Join(moduleDir, ".brewfile")
+		if !fileExists(srcFile) {
+			continue
 		}
 
-		for _, srcDirEntry := range srcDirEntries {
-			dst := filepath.Join(dstDir, srcDirEntry.Name())
-			src := filepath.Join(srcDir, srcDirEntry.Name())
+		slog.Info("do", "src", srcFile)
 
-			if exists, err := fileExistsV0(dst); err != nil {
-				return err
-			} else if exists {
-				continue
-			}
+		if err := exec.CommandContext(ctx, "/usr/bin/env", "brew", "bundle", "check", "--no-upgrade", "--file", srcFile).Run(); err == nil {
+			// Stop if srcFile is already installed.
+			slog.Info("did do", "src", srcFile)
+			continue
+		}
 
-			if err = createFromTemplate(dst, src); err != nil {
-				return err
-			}
+		output, err := exec.CommandContext(ctx, "/usr/bin/env", "brew", "install", "--quiet", "--file", srcFile).CombinedOutput()
+		if err != nil {
+			slog.Error("didn't do", "src", srcFile, "output", string(output), "error", err)
+			continue
+		}
+
+		slog.Info("did do", "src", srcFile, "output", string(output))
+	}
+}
+
+func doConfigTmpl(ctx context.Context, moduleDirs []string) {
+	for _, moduleDir := range moduleDirs {
+		dstDir := filepath.Join(homeDir(), ".config")
+		srcDir := filepath.Join(moduleDir, ".config.tmpl")
+		if !fileExists(srcDir) {
+			continue
+		}
+
+		slog.Info("do", "src", srcDir)
+
+		if err := doConfigTmplModule(ctx, dstDir, srcDir); err != nil {
+			slog.Error("do failed", "src", srcDir, "error", err)
+			continue
+		}
+	}
+}
+
+func doConfigTmplModule(_ context.Context, dstDir string, srcDir string) error {
+	srcDirEntries, err := os.ReadDir(srcDir)
+	if err != nil {
+		return err
+	}
+
+	for _, srcDirEntry := range srcDirEntries {
+		dst := filepath.Join(dstDir, srcDirEntry.Name())
+		src := filepath.Join(srcDir, srcDirEntry.Name())
+
+		if exists, err := fileExistsV0(dst); err != nil {
+			return err
+		} else if exists {
+			continue
+		}
+
+		if err = createFromTemplate(dst, src); err != nil {
+			return err
 		}
 	}
 
