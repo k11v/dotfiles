@@ -5,6 +5,7 @@
 !.brewfile
 !.config
 !.config.tmpl
+!.defaults
 !.home
 !.hushlogin
 !.integration
