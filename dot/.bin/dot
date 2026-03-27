@@ -260,7 +260,7 @@ function get_integration_gitconfigopt_dir() {
 
 function do_module_brewfile() (
 	local module_dir="$1"
-	local local_file="$module_path/.brewfile"
+	local local_file="$module_dir/.brewfile"
 
 	[[ ! -e "$local_file" ]] && return 0
 
