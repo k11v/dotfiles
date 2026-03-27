@@ -29,22 +29,25 @@ func run() error {
 		moduleDirs = os.Args[1:]
 	)
 
-	doDefaults(ctx, moduleDirs)
-	doTemplates(ctx, moduleDirs)
-
-	return nil
-}
-
-func doDefaults(ctx context.Context, moduleDirs []string) error {
 	for _, moduleDir := range moduleDirs {
 		if !fileExists(moduleDir) {
 			return errModuleDirNotExist
 		}
+	}
 
+	return errors.Join(
+		doDefaults(ctx, moduleDirs),
+		doTemplates(ctx, moduleDirs),
+	)
+}
+
+func doDefaults(ctx context.Context, moduleDirs []string) error {
+	for _, moduleDir := range moduleDirs {
 		srcFile := filepath.Join(moduleDir, ".defaults")
 		if !fileExists(srcFile) {
 			continue
 		}
+
 		slog.Info("defaults", "src", srcFile)
 
 		if err := exec.CommandContext(ctx, "/bin/sh", srcFile).Run(); err != nil {
