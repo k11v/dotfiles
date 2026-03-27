@@ -7,10 +7,13 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
 )
+
+var errModuleDirNotExist = errors.New("module dir does not exist")
 
 func main() {
 	if err := run(); err != nil {
@@ -23,21 +26,45 @@ func main() {
 func run() error {
 	var (
 		ctx        = context.Background()
-		_          = ctx
 		moduleDirs = os.Args[1:]
 	)
 
+	doDefaults(ctx, moduleDirs)
+	doTemplates(ctx, moduleDirs)
+
+	return nil
+}
+
+func doDefaults(ctx context.Context, moduleDirs []string) error {
 	for _, moduleDir := range moduleDirs {
-		if exists, err := fileExists(moduleDir); err != nil {
-			return err
-		} else if !exists {
-			return errors.New("module dir does not exist")
+		if !fileExists(moduleDir) {
+			return errModuleDirNotExist
+		}
+
+		srcFile := filepath.Join(moduleDir, ".defaults")
+		if !fileExists(srcFile) {
+			continue
+		}
+		slog.Info("defaults", "src", srcFile)
+
+		if err := exec.CommandContext(ctx, "/bin/sh", srcFile).Run(); err != nil {
+			return fmt.Errorf("defaults: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func doTemplates(_ context.Context, moduleDirs []string) error {
+	for _, moduleDir := range moduleDirs {
+		if !fileExists(moduleDir) {
+			return errModuleDirNotExist
 		}
 
 		dstDir := filepath.Join(homeDir(), ".config")
 
 		srcDir := filepath.Join(moduleDir, ".config.tmpl")
-		if exists, err := fileExists(srcDir); err != nil {
+		if exists, err := fileExistsV0(srcDir); err != nil {
 			return err
 		} else if !exists {
 			continue
@@ -52,7 +79,7 @@ func run() error {
 			dst := filepath.Join(dstDir, srcDirEntry.Name())
 			src := filepath.Join(srcDir, srcDirEntry.Name())
 
-			if exists, err := fileExists(dst); err != nil {
+			if exists, err := fileExistsV0(dst); err != nil {
 				return err
 			} else if exists {
 				continue
@@ -65,6 +92,15 @@ func run() error {
 	}
 
 	return nil
+}
+
+func fileExists(file string) bool {
+	exists, err := fileExistsV0(file)
+	if err != nil {
+		slog.Error("file exists failed", "error", err)
+		// Don't return.
+	}
+	return exists
 }
 
 func createFromTemplate(dst, src string) error {
@@ -221,7 +257,7 @@ func homeDir() string {
 	return homeDir
 }
 
-func fileExists(file string) (bool, error) {
+func fileExistsV0(file string) (bool, error) {
 	_, err := os.Stat(file)
 
 	if errors.Is(err, os.ErrNotExist) {
