@@ -13,8 +13,6 @@ import (
 	"text/template"
 )
 
-var errModuleDirNotExist = errors.New("module dir does not exist")
-
 func main() {
 	os.Exit(run())
 }
@@ -36,11 +34,41 @@ func run() int {
 		return 1
 	}
 
+	doXLinks(ctx, moduleDirs, "", ".home")
+	doXLinks(ctx, moduleDirs, ".config", ".config")
+	doXLinks(ctx, moduleDirs, ".local/bin", ".bin")
+	doXLinks(ctx, moduleDirs, ".local/share/zsh/integration", ".integration/zsh")
+	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitignore", ".integration/gitignore")
+	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitconfig", ".integration/gitconfig")
+	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
+	doXLinks(ctx, moduleDirs, ".local/share/tldr/pages", ".integration/tldr")
 	doConfigTmpl(ctx, moduleDirs)
 	doDefaults(ctx, moduleDirs)
 	doBrewfile(ctx, moduleDirs)
 
 	return 0
+}
+
+func doXLinks(_ context.Context, moduleDirs []string, relDstDir, relSrcDir string) {
+	dstDir := filepath.Join(homeDir(), relDstDir)
+	mkdirAll(dstDir)
+
+	for _, moduleDir := range moduleDirs {
+		srcDir := filepath.Join(moduleDir, relSrcDir)
+		if !fileExists(srcDir) {
+			continue
+		}
+
+		for _, srcDirEntry := range readDir(srcDir) {
+			dst := filepath.Join(dstDir, srcDirEntry.Name())
+			src := filepath.Join(srcDir, srcDirEntry.Name())
+			slog.Info("do", "src", src)
+			src = abs(src)
+			if readlink(dst) != src {
+				symlink(src, dst)
+			}
+		}
+	}
 }
 
 func doDefaults(ctx context.Context, moduleDirs []string) {
@@ -135,6 +163,46 @@ func fileExists(file string) bool {
 		// Don't return.
 	}
 	return exists
+}
+
+func readlink(name string) string {
+	result, err := os.Readlink(name)
+	if err != nil {
+		slog.Error("readlink failed", "error", err)
+		// Don't return.
+	}
+	return result
+}
+
+func abs(name string) string {
+	result, err := filepath.Abs(name)
+	if err != nil {
+		panic(fmt.Errorf("abs failed: %w", err))
+	}
+	return result
+}
+
+func symlink(oldname, newname string) {
+	if err := os.Symlink(oldname, newname); err != nil {
+		slog.Error("link failed", "error", err)
+		// Don't return.
+	}
+}
+
+func mkdirAll(name string) {
+	if err := os.MkdirAll(name, 0o777); err != nil {
+		slog.Error("mkdir all failed", "error", err)
+		// Don't return.
+	}
+}
+
+func readDir(name string) []os.DirEntry {
+	entries, err := os.ReadDir(name)
+	if err != nil {
+		slog.Error("read dir failed", "error", err)
+		// Don't return.
+	}
+	return entries
 }
 
 func createFromTemplate(dst, src string) error {

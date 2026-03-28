@@ -14,154 +14,10 @@ function do_module() {
 
 	[[ ! -d "$module_dir" ]] && return 0
 
-	do_module_unhome "$module_dir" || echo "error" >&2
-	do_module_home "$module_dir" || echo "error" >&2
-	do_module_unbin "$module_dir" || echo "error" >&2
-	do_module_bin "$module_dir" || echo "error" >&2
-	do_module_unconfig "$module_dir" || echo "error" >&2
-	do_module_config "$module_dir" || echo "error" >&2
-	do_module_unintegration_zsh "$module_dir" || echo "error" >&2
-	do_module_integration_zsh "$module_dir" || echo "error" >&2
-	do_module_integration_gitignore "$module_dir" || echo "error" >&2
-	do_module_unintegration_gitignore "$module_dir" || echo "error" >&2
-	do_module_integration_gitconfig "$module_dir" || echo "error" >&2
-	do_module_unintegration_gitconfig "$module_dir" || echo "error" >&2
-	do_module_integration_gitconfigopt "$module_dir" || echo "error" >&2
-	do_module_unintegration_gitconfigopt "$module_dir" || echo "error" >&2
-	do_module_unintegration_tldr "$module_dir" || echo "error" >&2
-	do_module_integration_tldr "$module_dir" || echo "error" >&2
 	do_module_v2 "$module_dir" || echo "error" >&2
+	do_module_integration_gitignore "$module_dir" || echo "error" >&2
+	do_module_integration_gitconfig "$module_dir" || echo "error" >&2
 }
-
-function do_module_home() (
-	local module_dir="$1"
-	local remote_dir="$(get_home_dir)"
-	local local_dir="$module_dir/.home"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-)
-
-function do_module_unhome() (
-	local module_dir="$1"
-	local remote_dir="$(get_home_dir)"
-	local local_dir="$module_dir/.home"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
-)
-
-function do_module_bin() (
-	local module_dir="$1"
-	local remote_dir="$(get_bin_dir)"
-	local local_dir="$module_dir/.bin"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-)
-
-function do_module_unbin() (
-	local module_dir="$1"
-	local remote_dir="$(get_bin_dir)"
-	local local_dir="$module_dir/.bin"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
-)
-
-function do_module_config() (
-	local module_dir="$1"
-	local remote_dir="$(get_config_dir)"
-	local local_dir="$module_dir/.config"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-)
-
-function do_module_unconfig() (
-	local module_dir="$1"
-	local remote_dir="$(get_config_dir)"
-	local local_dir="$module_dir/.config"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
-)
-
-function do_module_integration_zsh() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_zsh_dir)"
-	local local_dir="$module_dir/.integration/zsh"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-)
-
-function do_module_unintegration_zsh() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_zsh_dir)"
-	local local_dir="$module_dir/.integration/zsh"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
-)
-
-function do_module_integration_tldr() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_tldr_dir)"
-	local local_dir="$module_dir/.integration/tldr"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-)
-
-function do_module_unintegration_tldr() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_tldr_dir)"
-	local local_dir="$module_dir/.integration/tldr"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
-)
 
 function do_module_integration_gitignore() (
 	local module_dir="$1"
@@ -170,24 +26,8 @@ function do_module_integration_gitignore() (
 
 	[[ ! -e "$local_dir" ]] && return 0
 
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-
+	echo "[v1] do $(get_integration_gitignore_dir) to $(get_integration_gitignore_file)"
 	find "$(get_integration_gitignore_dir)" -mindepth 1 -maxdepth 1 | sort | xargs cat > "$(get_integration_gitignore_file)"
-)
-function do_module_unintegration_gitignore() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_gitignore_dir)"
-	local local_dir="$module_dir/.integration/gitignore"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
 )
 function get_integration_gitignore_dir() {
 	printf "%s" "$HOME/.local/share/git/integration-gitignore"
@@ -203,58 +43,14 @@ function do_module_integration_gitconfig() (
 
 	[[ ! -e "$local_dir" ]] && return 0
 
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-
+	echo "[v1] do $(get_integration_gitconfig_dir) to $(get_integration_gitconfig_file)"
 	find "$(get_integration_gitconfig_dir)" -mindepth 1 -maxdepth 1 | while IFS= read -r line; do printf '[include]\n\tpath = %s\n' "$line"; done > "$(get_integration_gitconfig_file)"
-)
-function do_module_unintegration_gitconfig() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_gitconfig_dir)"
-	local local_dir="$module_dir/.integration/gitconfig"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
 )
 function get_integration_gitconfig_dir() {
 	printf "%s" "$HOME/.local/share/git/integration-gitconfig"
 }
 function get_integration_gitconfig_file() {
 	printf "%s" "$HOME/.local/share/git/config"
-}
-
-function do_module_integration_gitconfigopt() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_gitconfigopt_dir)"
-	local local_dir="$module_dir/.integration/gitconfigopt"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	local f
-	for f in "$local_dir/"*(D); do
-		file "$remote_dir/$(basename "$f")" "$f"
-	done
-)
-function do_module_unintegration_gitconfigopt() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_gitconfigopt_dir)"
-	local local_dir="$module_dir/.integration/gitconfigopt"
-
-	[[ ! -e "$remote_dir" ]] && return 0
-
-	local f
-	for f in "$remote_dir/"*(D); do
-		unsymlink "$f" "$module_dir"
-	done
-)
-function get_integration_gitconfigopt_dir() {
-	printf "%s" "$HOME/.local/share/git/integration-gitconfigopt"
 }
 
 dot_bin=""
@@ -268,72 +64,6 @@ function do_module_v2() {
 	fi
 
 	"$dot_bin" "$module_dir" || return 1
-}
-
-function get_home_dir() {
-	printf "%s" "$HOME"
-}
-
-function get_bin_dir() {
-	printf "%s" "$HOME/.local/bin"
-}
-
-function get_config_dir() {
-	printf "%s" "$HOME/.config"
-}
-
-function get_integration_zsh_dir() {
-	printf "%s" "$HOME/.local/share/zsh/integration"
-}
-
-function get_integration_tldr_dir() {
-	printf "%s" "$HOME/.local/share/tldr/pages"
-}
-
-function file() {
-	local dst="$1" src="$2"
-	[[ "$(basename "$src")" = "." ]] && return 0 # stop if src is "."
-	[[ "$(basename "$src")" = ".." ]] && return 0 # stop if src is ".."
-	[[ "$(basename "$src")" = ".DS_Store" ]] && return 0 # stop if src is ".DS_Store"
-
-	if [[ "$src" == *.tmpl ]]; then
-		template "$dst" "$src"
-	else
-		symlink "$dst" "$src"
-	fi
-}
-
-function symlink() {
-	local dst="$1" src="$2"
-
-	echo "symlink" "$@"
-	src="$(readlink -f "$src")"
-	[[ -L "$dst" && "$(readlink "$dst")" = "$src" ]] && return 0 # stop if dst is already a symlink to src
-	[[ -L "$dst" && ! -e "$dst" ]] && rm "$dst" # continue if dst is a broken symlink
-	[[ -e "$dst" ]] && { echo "error: dst exists" >&2; return 1 } # stop if dst exists
-	mkdir -p "$(dirname "$dst")"
-	ln -s "$src" "$dst"
-}
-
-function template() {
-	local dst="$1" src="$2"
-
-	echo "template" "$@"
-	dst="${dst%.tmpl}"
-}
-
-function unsymlink() {
-	local dst="$1" dir="$2"
-	dir="$(readlink -f "$dir")"
-	[[ "$(basename "$dst")" = "." ]] && return 0 # stop if src is "."
-	[[ "$(basename "$dst")" = ".." ]] && return 0 # stop if src is ".."
-	[[ "$(basename "$dst")" = ".DS_Store" ]] && return 0 # stop if src is ".DS_Store"
-	[[ ! -L "$dst" ]] && return 0 # stop if dst is not a symlink
-	[[ "$(readlink "$dst")" != "$dir/"* ]] && return 0 # stop if dst source is not in dir
-	[[ -e "$dst" ]] && return 0 # stop if dst exists, meaning it is not broken
-
-	echo "unsymlink" "$@"
-	rm "$dst"
 }
 
 main "$@"
