@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+git --no-pager log --oneline --color=always "$@" | fzf --no-sort --ansi --preview 'commit=$(echo {} | awk "{print \$1}"); git show --color=always "$commit"' --preview-window=right:75%
