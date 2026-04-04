@@ -64,7 +64,7 @@ func doXLinks(_ context.Context, moduleDirs []string, relDstDir, relSrcDir strin
 			src := filepath.Join(srcDir, srcDirEntry.Name())
 			slog.Info("do", "src", src)
 			src = abs(src)
-			if readlink(dst) != src {
+			if !fileExists(dst) || readlink(dst) != src {
 				symlink(src, dst)
 			}
 		}
