@@ -1,3 +1,4 @@
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH" # brew install libpq
 export PATH="$PATH:/opt/homebrew/opt/git/bin" # use newer Git from Homebrew
 export PATH="$PATH:$HOME/.local/dist/nvim/bin"
 
