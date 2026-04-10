@@ -1,0 +1,70 @@
+exit 0
+
+# Set Mission Control preferences
+
+defaults write com.apple.dock mru-spaces -bool false             # Don't automatically rearrange Spaces
+defaults write com.apple.dock minimize-to-application -bool true # Minimize windows into application icon in Dock
+defaults write com.apple.dock autohide -bool true                # Automatically hide and show the Dock
+defaults write com.apple.dock show-process-indicators -bool true # Show indicators for open applications in Dock
+defaults write com.apple.dock show-recents -bool false           # Don't show recent applications in Dock
+defaults write com.apple.dock persistent-apps -array             # Remove all (default) icons from Dock
+defaults write com.apple.dock autohide-delay -float 0.2          # Speed up the Dock's auto-hiding
+defaults write com.apple.dock autohide-time-modifier -float 0.7  # Speed up the Dock's hiding/showing animation
+defaults write com.apple.dock wvous-br-corner -int 1             # Turn off quick note feature
+
+# Set language and region preferences
+
+defaults write NSGlobalDomain AppleLocale -string "en_US"           # Region: US
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "ru-RU" # Preferred languages: English (US), Russian
+defaults write NSGlobalDomain AppleICUForce12HourTime -bool true    # 12-hour time
+defaults write NSGlobalDomain AppleICUNumberSymbols -dict \         # US number separators
+    0 -string "." \
+    1 -string "," \
+    10 -string "." \
+    17 -string ","
+defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters" # Metric measurement units
+defaults write NSGlobalDomain AppleMetricUnits -bool true                 # Metric measurement units
+defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"      # Temperature: Celsius
+
+# Set keyboard preferences
+
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false             # Disable press-and-hold for keys in favor of key repeat
+defaults write NSGlobalDomain KeyRepeat -int 2                                 # Make key repeat faster
+defaults write NSGlobalDomain InitialKeyRepeat -int 15                         # Make delay until key repeat shorter
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false # Disable auto-correct
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false     # Disable automatic capitalization
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false # Disable automatic period substitution
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false  # Disable smart quotes
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false   # Disable smart dashes
+defaults write com.apple.HIToolbox AppleDictationAutoEnable -bool false        # Disable "Enable dictation" prompt when Fn key is pressed multiple times
+
+# Set trackpad preferences
+
+defaults write com.apple.AppleMultitouchTrackpad FirstClickThreshold -int 0  # Make trackpad click feel light (also set SecondClickThreshold)
+defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 0 # Make trackpad click feel light (also set FirstClickThreshold)
+defaults write NSGlobalDomain com.apple.trackpad.scaling -int 1              # Make tracking speed faster
+defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0    # Enable silent clicking
+
+# Set software update preferences
+
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true # Automatically check for updates
+defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true     # Automatically download new updates
+defaults write com.apple.commerce AutoUpdate -bool true                  # Automatically install app updates
+
+# Set iCloud preferences
+
+defaults write com.apple.bird optimize-storage -bool false # Keep iCloud files downloaded
+
+# Set Finder preferences
+
+defaults write NSGlobalDomain AppleShowAllFiles -bool true                   # Show hidden files (in open/save dialogs too)
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true              # Show all filename extensions (in open/save dialogs too)
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true   # Show external disks on the desktop
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true       # Show removable media on the desktop
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false          # Don't show hard drives on the desktop
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool false      # Don't show connected servers on the desktop
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false   # Don't show warning before changing an extension
+
+# Set Safari preferences
+
+defaults write com.apple.Safari IncludeDevelopMenu -bool true # Show the Develop menu in Safari

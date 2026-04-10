@@ -1,0 +1,1 @@
+defaults write ru.keepcoder.Telegram kArchiveIsHidden -bool true # Hide archived chats from All Chats

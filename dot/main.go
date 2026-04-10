@@ -43,6 +43,7 @@ func run() int {
 	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
 	doXLinks(ctx, moduleDirs, ".local/share/tldr/pages", ".integration/tldr")
 	doConfigTmpl(ctx, moduleDirs)
+	doInstallation(ctx, moduleDirs)
 	doDefaults(ctx, moduleDirs)
 	doBrewfile(ctx, moduleDirs)
 
@@ -87,6 +88,32 @@ func doDefaults(ctx context.Context, moduleDirs []string) {
 		}
 
 		slog.Info("did do", "src", srcFile, "output", string(output))
+	}
+}
+
+func doInstallation(ctx context.Context, moduleDirs []string) {
+	for _, moduleDir := range moduleDirs {
+		srcDir := filepath.Join(moduleDir, ".installation")
+		if !fileExists(srcDir) {
+			continue
+		}
+
+		for _, srcDirEntry := range readDir(srcDir) {
+			src := filepath.Join(srcDir, srcDirEntry.Name())
+			slog.Info("do", "src", src)
+			src = abs(src)
+			if !executableExists(srcDirEntry.Name()) {
+				cmd := exec.CommandContext(ctx, src)
+				cmd.Stdin = os.Stdin
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
+				if err := cmd.Run(); err != nil {
+					slog.ErrorContext(ctx, "didn't do", "src", src, "error", err)
+					continue
+				}
+				slog.ErrorContext(ctx, "did do", "src", src)
+			}
+		}
 	}
 }
 
@@ -172,6 +199,16 @@ func readlink(name string) string {
 		// Don't return.
 	}
 	return result
+}
+
+func executableExists(name string) bool {
+	if _, err := exec.LookPath(name); err != nil {
+		if errors.Is(err, exec.ErrNotFound) {
+			return false
+		}
+		panic(err)
+	}
+	return true
 }
 
 func abs(name string) string {

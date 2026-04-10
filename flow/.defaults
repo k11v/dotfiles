@@ -1,0 +1,1 @@
+defaults write design.yugen.Flow showWelcomeWindow -bool false # Don't show welcome window
