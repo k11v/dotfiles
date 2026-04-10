@@ -6,6 +6,7 @@
 !.config
 !.config.tmpl
 !.defaults
+!.duti
 !.home
 !.hushlogin
 !.integration

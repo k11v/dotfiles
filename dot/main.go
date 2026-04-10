@@ -44,6 +44,7 @@ func run() int {
 	doXLinks(ctx, moduleDirs, ".local/share/tldr/pages", ".integration/tldr")
 	doConfigTmpl(ctx, moduleDirs)
 	doInstallation(ctx, moduleDirs)
+	doDuti(ctx, moduleDirs)
 	doDefaults(ctx, moduleDirs)
 	doBrewfile(ctx, moduleDirs)
 
@@ -69,6 +70,25 @@ func doXLinks(_ context.Context, moduleDirs []string, relDstDir, relSrcDir strin
 				symlink(src, dst)
 			}
 		}
+	}
+}
+
+func doDuti(ctx context.Context, moduleDirs []string) {
+	for _, moduleDir := range moduleDirs {
+		srcFile := filepath.Join(moduleDir, ".duti")
+		if !fileExists(srcFile) {
+			continue
+		}
+
+		slog.Info("do", "src", srcFile)
+
+		output, err := exec.CommandContext(ctx, "/bin/sh", srcFile).CombinedOutput()
+		if err != nil {
+			slog.Error("didn't do", "src", srcFile, "output", string(output), "error", err)
+			continue
+		}
+
+		slog.Info("did do", "src", srcFile, "output", string(output))
 	}
 }
 
