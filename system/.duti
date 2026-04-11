@@ -23,7 +23,6 @@ duti -s com.microsoft.VSCode public.fortran-77-source all
 duti -s com.microsoft.VSCode public.fortran-90-source all
 duti -s com.microsoft.VSCode public.fortran-95-source all
 duti -s com.microsoft.VSCode public.fortran-source all
-duti -s com.microsoft.VSCode public.html all
 duti -s com.microsoft.VSCode public.json all
 duti -s com.microsoft.VSCode public.ksh-script all
 duti -s com.microsoft.VSCode public.lex-source all
