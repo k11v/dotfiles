@@ -36,14 +36,18 @@ func run() int {
 		return 1
 	}
 
-	doXLinks(ctx, moduleDirs, "", ".home")
-	doXLinks(ctx, moduleDirs, ".config", ".config")
-	doXLinks(ctx, moduleDirs, ".local/bin", ".bin")
-	doXLinks(ctx, moduleDirs, ".local/share/zsh/integration", ".integration/zsh")
-	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitignore", ".integration/gitignore")
-	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitconfig", ".integration/gitconfig")
-	doXLinks(ctx, moduleDirs, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
-	doXLinks(ctx, moduleDirs, ".local/share/tldr/pages", ".integration/tldr")
+	excludeNames := map[string]struct{}{
+		".gitignore": {},
+	}
+
+	doXLinks(ctx, moduleDirs, excludeNames, "", ".home")
+	doXLinks(ctx, moduleDirs, excludeNames, ".config", ".config")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/bin", ".bin")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/zsh/integration", ".integration/zsh")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitignore", ".integration/gitignore")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfig", ".integration/gitconfig")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/tldr/pages", ".integration/tldr")
 	doConfigTmpl(ctx, moduleDirs)
 	doInstallation(ctx, moduleDirs)
 	doDuti(ctx, moduleDirs)
@@ -54,7 +58,7 @@ func run() int {
 	return 0
 }
 
-func doXLinks(_ context.Context, moduleDirs []string, relDstDir, relSrcDir string) {
+func doXLinks(_ context.Context, moduleDirs []string, excludeNames map[string]struct{}, relDstDir, relSrcDir string) {
 	dstDir := filepath.Join(homeDir(), relDstDir)
 	mkdirAll(dstDir)
 
@@ -65,6 +69,9 @@ func doXLinks(_ context.Context, moduleDirs []string, relDstDir, relSrcDir strin
 		}
 
 		for _, srcDirEntry := range readDir(srcDir) {
+			if _, found := excludeNames[srcDirEntry.Name()]; found {
+				continue
+			}
 			dst := filepath.Join(dstDir, srcDirEntry.Name())
 			src := filepath.Join(srcDir, srcDirEntry.Name())
 			slog.Info("do", "src", src)
