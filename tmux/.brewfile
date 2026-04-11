@@ -1,1 +1,2 @@
+# Terminal multiplexer
 brew "tmux"

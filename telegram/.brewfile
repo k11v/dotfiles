@@ -1,0 +1,2 @@
+# Messaging app with a focus on speed and security
+cask "telegram"
