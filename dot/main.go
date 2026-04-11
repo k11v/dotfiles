@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -47,6 +49,7 @@ func run() int {
 	doDuti(ctx, moduleDirs)
 	doDefaults(ctx, moduleDirs)
 	doBrewfile(ctx, moduleDirs)
+	doMas(ctx, moduleDirs)
 
 	return 0
 }
@@ -131,7 +134,7 @@ func doInstallation(ctx context.Context, moduleDirs []string) {
 					slog.ErrorContext(ctx, "didn't do", "src", src, "error", err)
 					continue
 				}
-				slog.ErrorContext(ctx, "did do", "src", src)
+				slog.InfoContext(ctx, "did do", "src", src)
 			}
 		}
 	}
@@ -146,19 +149,68 @@ func doBrewfile(ctx context.Context, moduleDirs []string) {
 
 		slog.Info("do", "src", srcFile)
 
-		if err := exec.CommandContext(ctx, "/usr/bin/env", "brew", "bundle", "check", "--no-upgrade", "--file", srcFile).Run(); err == nil {
-			// Stop if srcFile is already installed.
-			slog.Info("did do", "src", srcFile)
+		if err := exec.CommandContext(ctx, "/usr/bin/env", "brew", "bundle", "check", "--no-upgrade", "--file", srcFile).Run(); err != nil {
+			cmd := exec.CommandContext(ctx, "/usr/bin/env", "brew", "bundle", "install", "--no-upgrade", "--quiet", "--file", srcFile)
+			cmd.Stdin = os.Stdin
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			if err := cmd.Run(); err != nil {
+				slog.ErrorContext(ctx, "didn't do", "src", srcFile, "error", err)
+				continue
+			}
+			slog.InfoContext(ctx, "did do", "src", srcFile)
+		}
+	}
+}
+
+func doMas(ctx context.Context, moduleDirs []string) {
+	for _, moduleDir := range moduleDirs {
+		srcFile := filepath.Join(moduleDir, ".mas")
+		if !fileExists(srcFile) {
 			continue
 		}
 
-		output, err := exec.CommandContext(ctx, "/usr/bin/env", "brew", "install", "--quiet", "--file", srcFile).CombinedOutput()
+		slog.Info("do", "src", srcFile)
+
+		var (
+			ins []struct {
+				ID int `json:"id"`
+			}
+			insData []byte
+			err     error
+		)
+		if insData, err = os.ReadFile(srcFile); err == nil {
+			err = json.Unmarshal(insData, &ins)
+		}
 		if err != nil {
-			slog.Error("didn't do", "src", srcFile, "output", string(output), "error", err)
+			slog.ErrorContext(ctx, "didn't do", "src", srcFile, "error", err)
 			continue
 		}
 
-		slog.Info("did do", "src", srcFile, "output", string(output))
+		ids := make([]int, 0, len(ins))
+		for _, in := range ins {
+			id := in.ID
+			if id == 0 {
+				slog.WarnContext(ctx, "ID is empty", "src", srcFile)
+				continue
+			}
+			ids = append(ids, id)
+		}
+
+		for _, id := range ids {
+			idString := strconv.Itoa(id)
+			if err := exec.CommandContext(ctx, "/usr/bin/env", "mas", "list", idString).Run(); err != nil {
+				cmd := exec.CommandContext(ctx, "/usr/bin/env", "mas", "install", idString)
+				cmd.Stdin = os.Stdin
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
+				if err := cmd.Run(); err != nil {
+					slog.ErrorContext(ctx, "didn't do", "src", srcFile, "error", err)
+					continue
+				}
+				slog.InfoContext(ctx, "did do", "src", srcFile)
+			}
+		}
 	}
 }
 
