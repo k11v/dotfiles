@@ -170,7 +170,7 @@ func telegramSendMessage(token, chatID, text string) error {
 		url.Values{
 			"chat_id":    {chatID},
 			"text":       {text},
-			"parse_mode": {"Markdown"},
+			"parse_mode": {"HTML"},
 		},
 	)
 	if err != nil {
@@ -179,7 +179,8 @@ func telegramSendMessage(token, chatID, text string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("telegram responded with %d", resp.StatusCode)
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("telegram responded with %d: %s", resp.StatusCode, body)
 	}
 
 	return nil
