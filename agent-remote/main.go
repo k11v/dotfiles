@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -17,6 +18,7 @@ const (
 	programName = "agent-remote"
 
 	keychainTelegramBotToken = "telegram-bot-token"
+	configNotifyEnabled      = "notifyEnabled"
 	configTelegramChatID     = "telegramChatID"
 
 	commandNotify = "notify"
@@ -50,6 +52,15 @@ func run() int {
 }
 
 func runNotify(args []string) int {
+	enabled, err := configGet[bool](configNotifyEnabled)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		return 1
+	}
+	if !enabled {
+		return 0
+	}
+
 	token, err := keychainGet(keychainTelegramBotToken)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
@@ -151,14 +162,19 @@ func configGet[V any](key string) (V, error) {
 		return zero, fmt.Errorf("read config: %w", err)
 	}
 
-	var cfg map[string]V
+	var cfg map[string]any
 	if err := json.Unmarshal(data, &cfg); err != nil {
 		return zero, fmt.Errorf("parse config: %w", err)
 	}
 
-	v, ok := cfg[key]
+	vAny, ok := cfg[key]
 	if !ok {
 		return zero, fmt.Errorf("config key %q not found", key)
+	}
+
+	v, ok := vAny.(V)
+	if !ok {
+		return zero, fmt.Errorf("config key %q not %T", key, zero)
 	}
 
 	return v, nil
