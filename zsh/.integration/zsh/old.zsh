@@ -191,34 +191,6 @@ function gdf() {
 	git diff --name-only "$@" | fzf --preview "$preview"
 }
 
-function git-clone() {
-    local repository="$1"
-    if [[ -z "$repository" ]]; then
-        echo "error: empty repository (arg 1)" >&2
-        return 1
-    fi
-
-    local directory="$2"
-    if [[ -z "$directory" ]]; then
-        echo "error: empty directory (arg 2)" >&2
-        return 1
-    fi
-
-    (
-        set -e
-        mkdir -p -- "$directory"
-        cd -- "$directory"
-        git init --bare .git
-        git remote add origin -- "$repository"
-        git fetch origin
-
-        if git rev-parse --verify origin/main &> /dev/null; then
-            git worktree add -b main -- "$(basename -- "$(pwd)")@main" origin/main
-        elif git rev-parse --verify origin/master &> /dev/null; then
-            git worktree add -b master -- "$(basename -- "$(pwd)")@master" origin/master
-        fi
-    )
-}
 
 function gdfb() {
 	local branch="$1"
