@@ -77,6 +77,7 @@ func doXLinks(_ context.Context, moduleDirs []string, excludeNames map[string]st
 			slog.Info("do", "src", src)
 			src = abs(src)
 			if !fileExists(dst) || readlink(dst) != src {
+				removeIfBrokenSymlink(dst)
 				symlink(src, dst)
 			}
 		}
@@ -296,6 +297,19 @@ func abs(name string) string {
 		panic(fmt.Errorf("abs failed: %w", err))
 	}
 	return result
+}
+
+func removeIfBrokenSymlink(name string) {
+	fi, err := os.Lstat(name)
+	if err != nil || fi.Mode()&os.ModeSymlink == 0 {
+		return
+	}
+	if _, err := os.Stat(name); !errors.Is(err, os.ErrNotExist) {
+		return
+	}
+	if err := os.Remove(name); err != nil {
+		slog.Error("remove broken symlink failed", "error", err)
+	}
 }
 
 func symlink(oldname, newname string) {
