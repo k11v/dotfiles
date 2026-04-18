@@ -48,6 +48,8 @@ func run() int {
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfig", ".integration/gitconfig")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/tldr/pages", ".integration/tldr")
+	doIntegrationGitignore()
+	doIntegrationGitconfig()
 	doConfigTmpl(ctx, moduleDirs)
 	doInstallation(ctx, moduleDirs)
 	doDuti(ctx, moduleDirs)
@@ -81,6 +83,49 @@ func doXLinks(_ context.Context, moduleDirs []string, excludeNames map[string]st
 				symlink(src, dst)
 			}
 		}
+	}
+}
+
+func doIntegrationGitignore() {
+	srcDir := filepath.Join(homeDir(), ".local", "share", "git", "integration-gitignore")
+	dstFile := filepath.Join(homeDir(), ".local", "share", "git", "ignore")
+	if !fileExists(srcDir) {
+		return
+	}
+
+	slog.Info("do", "src", srcDir)
+
+	var data []byte
+	for _, entry := range readDir(srcDir) {
+		content, err := os.ReadFile(filepath.Join(srcDir, entry.Name()))
+		if err != nil {
+			slog.Error("read failed", "error", err)
+			continue
+		}
+		data = append(data, content...)
+	}
+
+	if err := os.WriteFile(dstFile, data, 0o666); err != nil {
+		slog.Error("write failed", "error", err)
+	}
+}
+
+func doIntegrationGitconfig() {
+	srcDir := filepath.Join(homeDir(), ".local", "share", "git", "integration-gitconfig")
+	dstFile := filepath.Join(homeDir(), ".local", "share", "git", "config")
+	if !fileExists(srcDir) {
+		return
+	}
+
+	slog.Info("do", "src", srcDir)
+
+	var b strings.Builder
+	for _, entry := range readDir(srcDir) {
+		fmt.Fprintf(&b, "[include]\n\tpath = %s\n", filepath.Join(srcDir, entry.Name()))
+	}
+
+	if err := os.WriteFile(dstFile, []byte(b.String()), 0o666); err != nil {
+		slog.Error("write failed", "error", err)
 	}
 }
 

@@ -3,67 +3,9 @@
 set -e -o pipefail -u
 
 function main() {
-	local module_dir
-	for module_dir in "$@"; do
-		do_module "$module_dir"
-	done
-}
-
-function do_module() {
-	local module_dir="$1"
-
-	[[ ! -d "$module_dir" ]] && return 0
-
-	do_module_v2 "$module_dir" || echo "error" >&2
-	do_module_integration_gitignore "$module_dir" || echo "error" >&2
-	do_module_integration_gitconfig "$module_dir" || echo "error" >&2
-}
-
-function do_module_integration_gitignore() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_gitignore_dir)"
-	local local_dir="$module_dir/.integration/gitignore"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	echo "[v1] do $(get_integration_gitignore_dir) to $(get_integration_gitignore_file)"
-	find "$(get_integration_gitignore_dir)" -mindepth 1 -maxdepth 1 | sort | xargs cat > "$(get_integration_gitignore_file)"
-)
-function get_integration_gitignore_dir() {
-	printf "%s" "$HOME/.local/share/git/integration-gitignore"
-}
-function get_integration_gitignore_file() {
-	printf "%s" "$HOME/.local/share/git/ignore"
-}
-
-function do_module_integration_gitconfig() (
-	local module_dir="$1"
-	local remote_dir="$(get_integration_gitconfig_dir)"
-	local local_dir="$module_dir/.integration/gitconfig"
-
-	[[ ! -e "$local_dir" ]] && return 0
-
-	echo "[v1] do $(get_integration_gitconfig_dir) to $(get_integration_gitconfig_file)"
-	find "$(get_integration_gitconfig_dir)" -mindepth 1 -maxdepth 1 | while IFS= read -r line; do printf '[include]\n\tpath = %s\n' "$line"; done > "$(get_integration_gitconfig_file)"
-)
-function get_integration_gitconfig_dir() {
-	printf "%s" "$HOME/.local/share/git/integration-gitconfig"
-}
-function get_integration_gitconfig_file() {
-	printf "%s" "$HOME/.local/share/git/config"
-}
-
-dot_bin=""
-function do_module_v2() {
-	local module_dir="$1"
-
-	if [[ "$dot_bin" == "" ]]; then
-		local new_dot_bin="$HOME/.local/bin/dot-v2"
-		( cd ~/Repositories/dotfiles/dot && go build -o "$new_dot_bin" . ) || return 1
-		dot_bin="$new_dot_bin"
-	fi
-
-	"$dot_bin" "$module_dir" || return 1
+	local dot_bin="$HOME/.local/bin/dot-v2"
+	( cd ~/Repositories/dotfiles/dot && go build -o "$dot_bin" . )
+	"$dot_bin" "$@"
 }
 
 main "$@"
