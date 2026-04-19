@@ -2,30 +2,14 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH" # brew install libpq
 export PATH="$PATH:/opt/homebrew/opt/git/bin" # use newer Git from Homebrew
 export PATH="$PATH:$HOME/.local/dist/nvim/bin"
 
-# Input
+# Cursor
 
-# Use Vim line editor.
-bindkey -v
-
-# Don't wait for more input when <Esc> is inputted.
-KEYTIMEOUT=1
-
-# Change default cursor.
+# Default cursor.
 function _cursor_precmd() {
    printf "\e[6 q" # beam
 }
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _cursor_precmd
-
-# Change cursor when Vim line editor mode changes.
-function zle-keymap-select() {
-    if [[ "$KEYMAP" == "main" ]]; then
-        printf "\e[6 q" # beam
-    elif [[ "$KEYMAP" == "vicmd" ]]; then
-        printf "\e[2 q" # block
-    fi
-}
-zle -N zle-keymap-select
 
 # History
 
@@ -52,9 +36,7 @@ function _search_history() {
     return "$ret"
 }
 zle -N _search_history
-bindkey -M emacs "^R" _search_history
-bindkey -M vicmd "^R" _search_history
-bindkey -M viins "^R" _search_history
+bindkey "^R" _search_history
 
 # Prompt
 
