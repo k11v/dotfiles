@@ -1,0 +1,99 @@
+#!/usr/bin/env zsh
+
+# Build tree-sitter parsers and fetch queries for nvim.
+#
+# Parsers compile to ~/.local/share/nvim/site/parser/<lang>.so
+# Queries land at    ~/.local/share/nvim/site/queries/<lang>/*.scm
+# Parser sources are cached in ~/.cache/nvim/treesitter/sources/<lang>
+#
+# Requires:
+#   tool="npm:tree-sitter-cli@latest"; mise install "$tool"; mise bin-paths "$tool"
+#   git, curl (system).
+
+set -e
+
+data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site"
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/nvim/treesitter/sources"
+queries_base="https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter"
+
+# Parsers: "lang repo_url parser_ref"
+parsers=(
+	"go     https://github.com/tree-sitter/tree-sitter-go       v0.23.4"
+	"gomod  https://github.com/camdencheek/tree-sitter-go-mod   main"
+	"gosum  https://github.com/amaanq/tree-sitter-go-sum        main"
+	"gotmpl https://github.com/ngalaiko/tree-sitter-go-template main"
+	"gowork https://github.com/omertuc/go-work                  main"
+)
+
+# Queries: "lang queries_ref files..."
+# queries_ref is an nvim-treesitter ref; nvim-treesitter is archived but queries still
+# track its main branch. Non-canonical parsers (gosum, gowork) upstream only highlights.
+queries=(
+	"go     main highlights.scm folds.scm injections.scm indents.scm locals.scm"
+	"gomod  main highlights.scm folds.scm injections.scm indents.scm locals.scm"
+	"gosum  main highlights.scm"
+	"gotmpl main highlights.scm folds.scm injections.scm indents.scm locals.scm"
+	"gowork main highlights.scm"
+)
+
+build_parser() {
+	local name="$1" url="$2" ref="$3"
+	local src="$cache_dir/$name"
+	local out="$data_dir/parser/$name.so"
+	local marker="$data_dir/parser/.$name.ref"
+
+	if [[ -f "$out" && -f "$marker" && "$(cat "$marker")" == "$ref" ]]; then
+		echo "treesitter: $name parser up-to-date ($ref)"
+		return
+	fi
+
+	echo "treesitter: building $name @ $ref"
+	if [[ ! -d "$src" ]]; then
+		mkdir -p "$(dirname "$src")"
+		git clone "$url" "$src"
+	else
+		git -C "$src" fetch --all --tags
+	fi
+	git -C "$src" checkout --detach "$ref"
+	mkdir -p "$data_dir/parser"
+	( cd "$src" && tree-sitter build --output "$out" )
+	echo "$ref" >| "$marker"
+}
+
+fetch_queries() {
+	local name="$1" ref="$2"
+	shift 2
+	local files=("$@")
+	local dir="$data_dir/queries/$name"
+	local marker="$dir/.ref"
+
+	if [[ -f "$marker" && "$(cat "$marker")" == "$ref" ]]; then
+		echo "treesitter: $name queries up-to-date ($ref)"
+		return
+	fi
+
+	echo "treesitter: fetching $name queries @ $ref"
+	mkdir -p "$dir"
+	local ok=1
+	for file in "${files[@]}"; do
+		local url="$queries_base/$ref/runtime/queries/$name/$file"
+		if ! curl -fsSL "$url" -o "$dir/$file"; then
+			echo "  WARN: $name/$file failed" >&2
+			ok=0
+		fi
+	done
+	if [[ $ok -eq 1 ]]; then
+		echo "$ref" >| "$marker"
+	fi
+}
+
+for line in "${parsers[@]}"; do
+	# shellcheck disable=SC2086
+	build_parser ${=line}
+done
+for line in "${queries[@]}"; do
+	# shellcheck disable=SC2086
+	fetch_queries ${=line}
+done
+
+echo "treesitter: done"
