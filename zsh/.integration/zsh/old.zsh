@@ -22,7 +22,7 @@ setopt EXTENDED_HISTORY # Save each command's timestamp in history
 function _search_history() {
     local selected num ret
     # '--no-clear-start' fixes https://github.com/lotabout/skim/issues/494
-    selected="$(fc -lr 1 | awk '{ cmd=$0; sub(/^[ \t]*[0-9]+\**[ \t]+/, "", cmd); if (!seen[cmd]++) print $0 }' | sk --no-clear-start --height 40% -n2..,.. --tiebreak=index --query "$BUFFER")"
+    selected="$(fc -lr 1 | awk '{ cmd=$0; sub(/^[ \t]*[0-9]+\**[ \t]+/, "", cmd); if (!seen[cmd]++) print $0 }' | sk --no-sort --no-clear-start --height 40% -n2.. --query "$BUFFER")"
     ret="$?"
     if [[ -n "$selected" ]]; then
         num="$(awk '{print $1}' <<< "$selected")"
