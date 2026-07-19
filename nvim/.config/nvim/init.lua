@@ -58,6 +58,9 @@ vim.opt.selection = "old"
 -- In Visual block mode, allow cursor to be positioned where there is no actual character.
 vim.opt.virtualedit = "block"
 
+-- Treat "@" is a part of file names.
+vim.opt.isfname:append("@-@")
+
 -- Other.
 
 -- Mod and group.
