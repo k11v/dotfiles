@@ -5,15 +5,7 @@ local group = vim.api.nvim_create_augroup(mod, {})
 -- buffer; without localdir the window falls back to the default window cwd.
 local function apply(win)
 	vim.api.nvim_win_call(win, function()
-		if vim.b.localdir == nil then
-			return
-		end
-
-		local dir = vim.b.localdir
-		if dir == "" then
-			dir = vim.fn.getcwd(-1, 0)
-		end
-
+		local dir = vim.b.localdir or vim.fn.getcwd(-1, 0)
 		if vim.fn.haslocaldir(0) == 0 or vim.fn.getcwd(0) ~= dir then
 			vim.cmd.lcd(vim.fn.fnameescape(dir))
 		end
@@ -44,7 +36,7 @@ vim.api.nvim_create_autocmd("DirChanged", {
 -- ":Lcd" clears it.
 pcall(vim.api.nvim_del_user_command, "Lcd")
 vim.api.nvim_create_user_command("Lcd", function(o)
-	local dir = ""
+	local dir
 	if o.args ~= "" then
 		dir = vim.fs.abspath(vim.fs.normalize(vim.fn.expandcmd(o.args)))
 		if vim.fn.isdirectory(dir) == 0 then
