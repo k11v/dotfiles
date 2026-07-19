@@ -1,5 +1,9 @@
 local mod = "internal.lsp_kotlin_lsp"
 
+if true then
+	return
+end
+
 local cmd = {
 	-- brew install JetBrains/utils/kotlin-lsp
 	vim.fn.expand("/opt/homebrew/bin/kotlin-lsp"),
