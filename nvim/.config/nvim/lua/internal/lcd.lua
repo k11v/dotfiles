@@ -20,6 +20,18 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
+-- When leaving a buffer, reset to the default window cwd so that code running
+-- before BufEnter (e.g. BufReadCmd) sees the incoming buffer's effective dir.
+vim.api.nvim_create_autocmd("BufLeave", {
+	group = group,
+	callback = function()
+		local dir = vim.fn.getcwd(-1, 0)
+		if vim.fn.haslocaldir(0) == 1 and vim.fn.getcwd(0) ~= dir then
+			vim.cmd.lcd(vim.fn.fnameescape(dir))
+		end
+	end,
+})
+
 -- When changing directories with ":cd" or ":tcd", re-apply
 -- because ":lcd" has been reset as a side effect.
 vim.api.nvim_create_autocmd("DirChanged", {
