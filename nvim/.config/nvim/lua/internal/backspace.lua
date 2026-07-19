@@ -2,6 +2,7 @@ local mod = "backspace"
 
 -- Shifted chars correspond to the Universal Layout.
 local t = {
+	-- Args
 	{ "1", "!", "<Cmd>1argument<CR>", "Arg 1" },
 	{ "2", "@", "<Cmd>2argument<CR>", "Arg 2" },
 	{ "3", "#", "<Cmd>3argument<CR>", "Arg 3" },
@@ -12,8 +13,29 @@ local t = {
 	{ "8", "*", "<Cmd>8argument<CR>", "Arg 8" },
 	{ "9", "(", "<Cmd>9argument<CR>", "Arg 9" },
 	{ "0", ")", "<Cmd>$argument<CR>", "Arg last" },
-	{ "t", nil, "<Cmd>edit x://term-adhoc<CR>", "Ad-hoc terminal" },
-	{ "a", nil, "<Cmd>edit x://term-agent<CR>", "Agent terminal" },
+
+	-- Terms
+	{ "q", nil, "<Cmd>edit x://term/q<CR>", "Term q" },
+	{ "w", nil, "<Cmd>edit x://term/w<CR>", "Term w" },
+	{ "e", nil, "<Cmd>edit x://term/e<CR>", "Term e" },
+	{ "r", nil, "<Cmd>edit x://term/r<CR>", "Term r" },
+	{ "t", nil, "<Cmd>edit x://term/t<CR>", "Term t" },
+	{ "y", nil, "<Cmd>edit x://term/y<CR>", "Term y" },
+	{ "u", nil, "<Cmd>edit x://term/u<CR>", "Term u" },
+	{ "i", nil, "<Cmd>edit x://term/i<CR>", "Term i" },
+	{ "o", nil, "<Cmd>edit x://term/o<CR>", "Term o" },
+	{ "p", nil, "<Cmd>edit x://term/p<CR>", "Term p" },
+
+	-- Agents
+	{ "a", nil, "<Cmd>edit x://agent/a<CR>", "Agent a" },
+	{ "s", nil, "<Cmd>edit x://agent/s<CR>", "Agent s" },
+	{ "d", nil, "<Cmd>edit x://agent/d<CR>", "Agent d" },
+	{ "f", nil, "<Cmd>edit x://agent/f<CR>", "Agent f" },
+	{ "g", nil, "<Cmd>edit x://agent/g<CR>", "Agent g" },
+	{ "h", nil, "<Cmd>edit x://agent/h<CR>", "Agent h" },
+	{ "j", nil, "<Cmd>edit x://agent/j<CR>", "Agent j" },
+	{ "k", nil, "<Cmd>edit x://agent/k<CR>", "Agent k" },
+	{ "l", nil, "<Cmd>edit x://agent/l<CR>", "Agent l" },
 }
 
 for _, i in ipairs(t) do
