@@ -6,7 +6,7 @@ local group = vim.api.nvim_create_augroup(mod, {})
 local function apply(win)
 	vim.api.nvim_win_call(win, function()
 		local dir = vim.b.localdir or vim.fn.getcwd(-1, 0)
-		if vim.fn.haslocaldir(0) == 0 or vim.fn.getcwd(0) ~= dir then
+		if vim.fn.isdirectory(dir) == 1 and (vim.fn.haslocaldir(0) == 0 or vim.fn.getcwd(0) ~= dir) then
 			vim.cmd.lcd(vim.fn.fnameescape(dir))
 		end
 	end)
@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
 	group = group,
 	callback = function()
 		local dir = vim.fn.getcwd(-1, 0)
-		if vim.fn.haslocaldir(0) == 1 and vim.fn.getcwd(0) ~= dir then
+		if vim.fn.isdirectory(dir) == 1 and vim.fn.haslocaldir(0) == 1 and vim.fn.getcwd(0) ~= dir then
 			vim.cmd.lcd(vim.fn.fnameescape(dir))
 		end
 	end,
