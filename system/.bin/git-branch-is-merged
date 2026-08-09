@@ -22,12 +22,12 @@ dst_commit() {
 
 # Checks commit identity (SHAs). Quickly detects merged and fast-forwarded.
 if git merge-base --is-ancestor "$src_branch" "$dst_branch"; then
-	merge_commit="$(git rev-list --merges --ancestry-path "$src_branch".."$dst_branch" | tail -1)"
-	if [[ -n "$merge_commit" ]]; then
-		echo "merged $merge_commit"
+	src_commit="$(git rev-parse "$src_branch")"
+	if [[ "$(git rev-list --first-parent "$dst_branch" --not "$src_commit^@" | tail -1)" == "$src_commit" ]]; then
+		echo "fast-forwarded $src_commit"
 		exit 0
 	fi
-	echo "fast-forwarded $(git rev-parse "$src_branch")"
+	echo "merged $(git rev-list --merges --ancestry-path "$src_branch".."$dst_branch" | tail -1)"
 	exit 0
 fi
 
