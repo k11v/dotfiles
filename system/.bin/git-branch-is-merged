@@ -9,15 +9,9 @@ src_branch="$2"
 merge_base="$(git merge-base "$dst_branch" "$src_branch")" || :
 [[ -z "$merge_base" ]] && { echo "error: empty merge base" >&2; exit 1; }
 
-# Prints "<patch-id> <commit>" per commit in a rev range.
-# Root commits need --root to be diffed against nothing instead of being skipped.
-patch_ids() {
-	git rev-list "$@" | git diff-tree --stdin -p --root | git patch-id --stable
-}
-
-# Prints the newest dst commit whose patch is among the given "<patch-id> <commit>" lines.
+# Prints the newest dst commit whose patch matches one in the given rev.
 dst_commit() {
-	awk 'NR==FNR { want[$1]; next } $1 in want { print $2; exit }' <(echo "$1") <(patch_ids "$dst_branch" --not "$src_branch")
+	git cherry "$1" "$dst_branch" | sed -n 's/^- //p' | tail -1
 }
 
 # Checks commit identity (SHAs). Quickly detects merged and fast-forwarded.
@@ -34,16 +28,16 @@ fi
 # Checks commit content (patch-ids). Detects merged, fast-forwarded, rebased and cherry-picked. False detects same patch merges.
 cherry="$(git cherry "$dst_branch" "$src_branch")"
 if [[ "$cherry" != *+* ]]; then
-	commit="$(dst_commit "$(patch_ids "$src_branch" --not "$dst_branch")")"
+	commit="$(dst_commit "$src_branch")"
 	echo "rebased or cherry-picked${commit:+ $commit}"
 	exit 0
 fi
 
 # Checks combined diff as one patch. Detects squashed. False detects same patch merges. Creates dangling commits.
 squash_commit="$(git commit-tree "$src_branch^{tree}" -p "$merge_base" -m squash)"
-commit="$(dst_commit "$(patch_ids -1 "$squash_commit")")"
-if [[ -n "$commit" ]]; then
-	echo "squashed $commit"
+if [[ "$(git cherry "$dst_branch" "$squash_commit")" != *+* ]]; then
+	commit="$(dst_commit "$squash_commit")"
+	echo "squashed${commit:+ $commit}"
 	exit 0
 fi
 
