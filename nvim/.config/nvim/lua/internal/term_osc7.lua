@@ -2,7 +2,7 @@ local mod = "term_osc7"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 -- Shells announce their cwd via OSC 7 (see the zsh osc7 integration);
--- treat it as ":Lcd" for the terminal buffer. The path is ignored when it
+-- treat it as ":bcd" for the terminal buffer. The path is ignored when it
 -- doesn't exist locally (e.g. an ssh session announcing a remote cwd).
 vim.api.nvim_create_autocmd("TermRequest", {
 	group = group,
@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("TermRequest", {
 			return
 		end
 		vim.api.nvim_buf_call(args.buf, function()
-			vim.cmd.Lcd(vim.fn.fnameescape(path))
+			vim.cmd.bcd(vim.fn.fnameescape(path))
 		end)
 	end,
 })
