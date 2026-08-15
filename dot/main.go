@@ -48,6 +48,7 @@ func run() int {
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfig", ".integration/gitconfig")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/tldr/pages", ".integration/tldr")
+	doXLinks(ctx, moduleDirs, excludeNames, ".claude/skills", ".integration/claude-skills")
 	doIntegrationGitignore()
 	doIntegrationGitconfig()
 	doConfigTmpl(ctx, moduleDirs)
