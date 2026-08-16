@@ -1,5 +1,4 @@
 local mod = "internal.go_gopls_lsp_formatting"
-
 local group = vim.api.nvim_create_augroup(mod, {})
 
 vim.api.nvim_create_autocmd("BufWritePre", {
