@@ -1,3 +1,6 @@
+local mod = "init"
+local group = vim.api.nvim_create_augroup(mod, {})
+
 -- Variables.
 
 -- Set leaders.
@@ -63,10 +66,6 @@ vim.opt.isfname:append("@-@")
 
 -- Other.
 
--- Mod and group.
-local mod = "init"
-local group = vim.api.nvim_create_augroup(mod, {})
-
 -- Gopt and bopt.
 vim.g.opt = {}
 vim.cmd([[autocmd init FileType * lua vim.b.opt = {}]])
@@ -93,10 +92,10 @@ require("conform").setup()
 -- Load mods.
 for name, type in vim.fs.dir(vim.fn.stdpath("config") .. "/lua/internal") do
 	if type == "file" and name:match("%.lua$") then
-		local mod = name:gsub("%.lua$", "")
-		local modpath = "internal." .. mod
-		package.loaded[modpath] = nil
-		require(modpath)
+		local internalmod = name:gsub("%.lua$", "")
+		local internalmodpath = "internal." .. internalmod
+		package.loaded[internalmodpath] = nil
+		require(internalmodpath)
 	end
 end
 
