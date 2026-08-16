@@ -1,5 +1,6 @@
 local mod = "internal.lsp_gri"
 
+-- See /system/doc/mock.md.
 local function is_mock(filename)
 	local basename = vim.fn.fnamemodify(filename, ":t")
 	if basename:match("^mock_.*%.go$") or basename:match("_mock%.go$") then
