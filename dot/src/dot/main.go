@@ -195,6 +195,10 @@ func doInstallation(ctx context.Context, moduleDirs []string) {
 }
 
 func doBrewfile(ctx context.Context, moduleDirs []string) {
+	if true {
+		return
+	}
+
 	for _, moduleDir := range moduleDirs {
 		srcFile := filepath.Join(moduleDir, "brewfile")
 		if !fileExists(srcFile) {
@@ -218,6 +222,10 @@ func doBrewfile(ctx context.Context, moduleDirs []string) {
 }
 
 func doMas(ctx context.Context, moduleDirs []string) {
+	if true {
+		return
+	}
+
 	for _, moduleDir := range moduleDirs {
 		srcFile := filepath.Join(moduleDir, "mas")
 		if !fileExists(srcFile) {
