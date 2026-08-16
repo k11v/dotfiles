@@ -21,11 +21,11 @@ local function coalesce(a)
 	return nil
 end
 
-local function do_treesitter(args, treesitter)
+local function do_treesitter(buf, treesitter)
 	if treesitter ~= "" then
-		pcall(vim.treesitter.start, args.buf, treesitter)
+		pcall(vim.treesitter.start, buf, treesitter)
 		return function()
-			pcall(vim.treesitter.stop, args.buf)
+			pcall(vim.treesitter.stop, buf)
 		end
 	end
 end
@@ -38,6 +38,6 @@ vim.api.nvim_create_autocmd("FileType", {
 			vim.g.opt.treesitter,
 			"",
 		})
-		do_treesitter(args, treesitter)
+		do_treesitter(args.buf, treesitter)
 	end,
 })
