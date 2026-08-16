@@ -4,7 +4,7 @@ set -e -o pipefail -u
 
 function main() {
 	local dot_bin="$HOME/.local/bin/dot-v2"
-	( cd ~/git/dotfiles/dot && go build -o "$dot_bin" . )
+	( cd ~/git/dotfiles/dot/src/dot && go build -o "$dot_bin" . )
 	"$dot_bin" "$@"
 }
 
