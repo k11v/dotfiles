@@ -15,6 +15,7 @@ do
 	end
 end
 
+-- Updated at: https://go.dev/gopls/release/v0.23.0.
 vim.lsp.config("gopls", {
 	cmd = cmd,
 	on_attach = on_attach,
@@ -23,7 +24,7 @@ vim.lsp.config("gopls", {
 			buildFlags = { "-tags=dev,integration" },
 			directoryFilters = { "-.git" },
 			gofumpt = true,
-			renameMovesSubpackages = true, -- requires gopls >= 0.21.0
+			renameMovesSubpackages = true,
 			semanticTokens = true,
 			staticcheck = true,
 			usePlaceholders = true,
