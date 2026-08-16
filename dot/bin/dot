@@ -3,8 +3,10 @@
 set -e -o pipefail -u
 
 function main() {
-	local dot_bin="$HOME/.local/bin/dot-v2"
-	( cd ~/git/dotfiles/dot/src/dot && go build -o "$dot_bin" . )
+	local dot_dir="$HOME/git/dotfiles/dot"
+	local dot_bin="$dot_dir/tmp/dot"
+	mkdir -p "$dot_dir/tmp"
+	( cd "$dot_dir/src/dot" && go build -o "$dot_bin" . )
 	"$dot_bin" "$@"
 }
 
