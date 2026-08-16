@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+import re
+import sys
+
+LAT_FROM_CYR = {
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "e", "ж": "zh", "з": "z", "и": "i", "й": "i", 
+    "к": "k", "л": "l", "м": "m", "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u", "ф": "f", 
+    "х": "h", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch", "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "yu", "я": "ya", 
+}
+
+text = " ".join(sys.argv[1:]) or sys.stdin.read()
+text = "".join(LAT_FROM_CYR.get(c.lower(), c) for c in text)
+text = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+print(text)

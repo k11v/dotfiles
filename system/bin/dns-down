@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for x in "Wi-Fi" "iPhone USB"; do
+	networksetup -setdnsservers "$x" empty
+done

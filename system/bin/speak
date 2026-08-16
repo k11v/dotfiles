@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+LANGUAGE="${1:-auto}"
+
+# curl -L -o ~/whisper-models/ggml-large-v3.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin
+MODEL="$HOME/whisper-models/ggml-large-v3.bin"
+
+tmp="$(mktemp /tmp/speak.XXXXXX).wav"
+
+cleanup() {
+    rm -f "$tmp"
+}
+trap cleanup EXIT
+
+echo "Recording... Press Ctrl+C when done." >&2
+
+# brew install sox
+rec -q -c 1 "$tmp" >/dev/null 2>&1 &
+rec_pid=$!
+
+stop_recording() {
+    kill -TERM "$rec_pid" 2>/dev/null || true
+}
+trap stop_recording INT
+
+wait "$rec_pid" 2>/dev/null || true
+
+trap - INT
+
+[[ -s "$tmp" ]] || exit 1
+
+echo "Transcribing..." >&2
+
+# brew install whisper-cpp
+whisper-cli \
+    -m "$MODEL" \
+    -f "$tmp" \
+    --language "$LANGUAGE" \
+    -otxt \
+    -of - \
+    --no-timestamps \
+    --threads 8 \
+    2>/dev/null

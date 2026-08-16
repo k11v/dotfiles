@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for x in "Wi-Fi" "iPhone USB"; do
+	networksetup -setwebproxy "$x" 127.0.0.1 2081
+	networksetup -setwebproxystate "$x" off
+	networksetup -setsecurewebproxy "$x" 127.0.0.1 2081
+	networksetup -setsecurewebproxystate "$x" off
+	networksetup -setsocksfirewallproxy "$x" 127.0.0.1 2080
+	networksetup -setsocksfirewallproxystate "$x" off
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# fsmonitor probably leaks a process.
+# Kill it with `git fsmonitor--daemon stop`.
+
+git config core.untrackedCache true
+git config core.fsmonitor true
+
