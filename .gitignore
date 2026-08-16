@@ -1,18 +1,8 @@
 .*
 *~
 
-!.bin
-!.brewfile
-!.config
-!.config.tmpl
-!.defaults
-!.duti
-!.home
 !.hushlogin
-!.installation
-!.integration
 !.luarc.json
-!.mas
 !.zshenv
 !.zshrc
 !/.gitignore

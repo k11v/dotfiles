@@ -40,15 +40,15 @@ func run() int {
 		".gitignore": {},
 	}
 
-	doXLinks(ctx, moduleDirs, excludeNames, "", ".home")
-	doXLinks(ctx, moduleDirs, excludeNames, ".config", ".config")
-	doXLinks(ctx, moduleDirs, excludeNames, ".local/bin", ".bin")
-	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/zsh/integration", ".integration/zsh")
-	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitignore", ".integration/gitignore")
-	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfig", ".integration/gitconfig")
-	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfigopt", ".integration/gitconfigopt")
-	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/tldr/pages", ".integration/tldr")
-	doXLinks(ctx, moduleDirs, excludeNames, ".claude/skills", ".integration/claude-skills")
+	doXLinks(ctx, moduleDirs, excludeNames, "", "home")
+	doXLinks(ctx, moduleDirs, excludeNames, ".config", "config")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/bin", "bin")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/zsh/integration", "zsh")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitignore", "gitignore")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfig", "gitconfig")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfigopt", "gitconfigopt")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/tldr/pages", "tldr")
+	doXLinks(ctx, moduleDirs, excludeNames, ".claude/skills", "claude-skills")
 	doIntegrationGitignore()
 	doIntegrationGitconfig()
 	doConfigTmpl(ctx, moduleDirs)
@@ -132,7 +132,7 @@ func doIntegrationGitconfig() {
 
 func doDuti(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
-		srcFile := filepath.Join(moduleDir, ".duti")
+		srcFile := filepath.Join(moduleDir, "duti")
 		if !fileExists(srcFile) {
 			continue
 		}
@@ -151,7 +151,7 @@ func doDuti(ctx context.Context, moduleDirs []string) {
 
 func doDefaults(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
-		srcFile := filepath.Join(moduleDir, ".defaults")
+		srcFile := filepath.Join(moduleDir, "defaults")
 		if !fileExists(srcFile) {
 			continue
 		}
@@ -170,7 +170,7 @@ func doDefaults(ctx context.Context, moduleDirs []string) {
 
 func doInstallation(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
-		srcDir := filepath.Join(moduleDir, ".installation")
+		srcDir := filepath.Join(moduleDir, "installation")
 		if !fileExists(srcDir) {
 			continue
 		}
@@ -196,7 +196,7 @@ func doInstallation(ctx context.Context, moduleDirs []string) {
 
 func doBrewfile(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
-		srcFile := filepath.Join(moduleDir, ".brewfile")
+		srcFile := filepath.Join(moduleDir, "brewfile")
 		if !fileExists(srcFile) {
 			continue
 		}
@@ -219,7 +219,7 @@ func doBrewfile(ctx context.Context, moduleDirs []string) {
 
 func doMas(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
-		srcFile := filepath.Join(moduleDir, ".mas")
+		srcFile := filepath.Join(moduleDir, "mas")
 		if !fileExists(srcFile) {
 			continue
 		}
@@ -271,7 +271,7 @@ func doMas(ctx context.Context, moduleDirs []string) {
 func doConfigTmpl(ctx context.Context, moduleDirs []string) {
 	for _, moduleDir := range moduleDirs {
 		dstDir := filepath.Join(homeDir(), ".config")
-		srcDir := filepath.Join(moduleDir, ".config.tmpl")
+		srcDir := filepath.Join(moduleDir, "config-tmpl")
 		if !fileExists(srcDir) {
 			continue
 		}
