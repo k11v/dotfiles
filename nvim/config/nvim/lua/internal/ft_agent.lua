@@ -1,4 +1,4 @@
-local mod = "ft_agent"
+local mod = "internal.ft_agent"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 vim.api.nvim_create_autocmd("BufReadCmd", {

@@ -1,4 +1,4 @@
-local mod = "lua_fmt"
+local mod = "internal.lua_fmt"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 require("conform").formatters["stylua"] = {

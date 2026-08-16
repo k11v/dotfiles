@@ -1,4 +1,4 @@
-local mod = "python_fmt"
+local mod = "internal.python_fmt"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 require("conform").formatters["ruff_format"] = {

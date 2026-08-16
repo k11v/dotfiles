@@ -1,4 +1,4 @@
-local mod = "md_fmt"
+local mod = "internal.md_fmt"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 require("conform").formatters["internal_dprint"] = {

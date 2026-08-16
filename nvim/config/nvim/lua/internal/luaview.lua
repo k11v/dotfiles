@@ -1,4 +1,4 @@
-local mod = "luaview"
+local mod = "internal.luaview"
 
 local function luaview(expr)
 	local v = _G

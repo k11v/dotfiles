@@ -1,4 +1,4 @@
-local mod = "ft_term"
+local mod = "internal.ft_term"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 vim.api.nvim_create_autocmd("BufReadCmd", {

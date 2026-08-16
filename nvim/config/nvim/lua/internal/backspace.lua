@@ -1,4 +1,4 @@
-local mod = "backspace"
+local mod = "internal.backspace"
 
 -- Shifted chars correspond to the Universal Layout.
 local t = {

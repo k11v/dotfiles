@@ -1,4 +1,4 @@
-local mod = "restart"
+local mod = "internal.restart"
 
 local function restart(expr)
 	vim.cmd([[source $MYVIMRC]])

@@ -1,4 +1,4 @@
-local mod = "go_gopls_lsp_import_organizing"
+local mod = "internal.go_gopls_lsp_import_organizing"
 
 -- As of 2026-02-01 note that Client:request flushes didChange notifications only for the provided buf.
 -- It doesn't flush changes for other buffers, it looks like it could lead to codeAction faults.

@@ -1,4 +1,4 @@
-local mod = "term_osc7"
+local mod = "internal.term_osc7"
 local group = vim.api.nvim_create_augroup(mod, {})
 
 -- Shells announce their cwd via OSC 7 (see the zsh osc7 integration);
