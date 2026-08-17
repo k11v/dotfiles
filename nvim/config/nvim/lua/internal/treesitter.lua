@@ -38,6 +38,7 @@ vim.api.nvim_create_autocmd("FileType", {
 			vim.g.opt.treesitter,
 			"",
 		})
+		vim.validate("treesitter", treesitter, "string")
 		do_treesitter(args.buf, treesitter)
 	end,
 })
