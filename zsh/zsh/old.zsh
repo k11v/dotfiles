@@ -2,15 +2,6 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH" # brew install libpq
 export PATH="$PATH:/opt/homebrew/opt/git/bin" # use newer Git from Homebrew
 export PATH="$PATH:$HOME/.local/dist/nvim/bin"
 
-# Cursor
-
-# Default cursor.
-function _cursor_precmd() {
-   printf "\e[6 q" # beam
-}
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _cursor_precmd
-
 # Prompt
 
 PROMPT_EOL_MARK=""
@@ -143,7 +134,6 @@ function ls() { command ls --color=auto "$@" }
 
 # Zsh
 
-# KEYTIMEOUT=1
 # PROMPT_STYLE="regular"                      # User-defined
 
 # My utils
@@ -151,8 +141,3 @@ function ls() { command ls --color=auto "$@" }
 # export WORKSPACES="$HOME/Workspaces"
 # export NOTES="$HOME/Notes"
 # export DOTFILES_ENVIRONMENT_LOADED=1
-
-# # Input/output
-#
-# unsetopt FLOW_CONTROL          # Make '^S' and '^Q' key bindings available
-# setopt INTERACTIVE_COMMENTS    # Allow comments in interactive shells
