@@ -226,10 +226,6 @@ function git_commit() {
     fi
 }
 
-function uuid4() {
-    python3 -c "import uuid; print(uuid.uuid4())"
-}
-
 function printcolors() {
     printf "%s %s%s%s %s%s%s %s%s%s\n" \
         " " ""                "NORMAL " ""             "$(tput bold)"                "BOLD NORMAL " "$(tput sgr0)" ""                "BACKGROUND NORMAL " ""             \
