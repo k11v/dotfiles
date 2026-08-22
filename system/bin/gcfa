@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+git commit --fixup "$1"
+git rebase --autosquash "$1"^

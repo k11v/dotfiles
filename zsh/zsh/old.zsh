@@ -181,11 +181,6 @@ function git-quiet() {
 	) "$@"
 }
 
-function gcfa() {
-	git commit --fixup "$1"
-	git rebase --autosquash "$1"^
-}
-
 function git_commit() {
     local args=()
     local message_option_key=""
