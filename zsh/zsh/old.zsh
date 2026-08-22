@@ -156,16 +156,13 @@ alias ll="ls -lhFA"
 alias v="nvim"
 alias vi="nvim"
 alias vim="nvim"
+alias cdf='cd "$(finder-pwd)"'  # finder-pwd is user-defined
 
 # Functions
 
 function bat() { command bat --paging=never "$@" }
 function grep() { command grep --color=auto "$@" }
 function ls() { command ls --color=auto "$@" }
-
-function cdf() {
-	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
-}
 
 function gdf() {
 	local preview="git diff $@ -- {} | delta"
