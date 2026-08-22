@@ -119,7 +119,7 @@ alias dcud="docker compose up -d"
 alias ga="git add"
 alias gap="git add --patch"
 alias gb="git branch"
-alias gc="git_commit"  # git_commit is user-defined
+alias gc="git-commit--issue"  # git-commit--issue is user-defined
 alias gcf="git commit --fixup"
 alias gca="git commit --amend"
 alias gci='git commit --allow-empty -m "Initial commit"'
@@ -179,51 +179,6 @@ function git-quiet() {
 			'**/*_mock.go diff=quiet' \
 			'**/mock_*.go diff=quiet'
 	) "$@"
-}
-
-function git_commit() {
-    local args=()
-    local message_option_key=""
-    local message_option_value=""
-
-    while [[ "$#" -gt 0 ]]; do
-        case "$1" in
-            -m)
-                message_option_key="$1"
-                message_option_value="$2"
-                shift 2
-                ;;
-            *)
-                args+=("$1")
-                shift
-                ;;
-        esac
-    done
-
-    local ticket=""
-    local branch="$(git rev-parse --abbrev-ref HEAD)"
-    local matches=""
-
-    if [[ "$branch" =~ ^(main|master|(feature/[A-Za-z0-9-]+)|(fix/[A-Za-z0-9-]+))$ ]]; then
-	    ticket=""
-    elif [[ "$branch" =~ ^([A-Z]+-[0-9]+)[A-Za-z0-9-]*$ ]]; then
-	    ticket="${match[1]}"
-    else
-	    echo "error: unknown branch pattern" >&2
-	    return 1
-    fi
-
-    if [[ -z "$ticket" ]]; then
-        message_option_value="$message_option_value"
-    else
-        message_option_value="$ticket $message_option_value"
-    fi
-
-    if [[ -z "$message_option_key" ]]; then
-        git commit "${args[@]}"
-    else
-        git commit "$message_option_key" "$message_option_value" "${args[@]}"
-    fi
 }
 
 function printcolors() {
