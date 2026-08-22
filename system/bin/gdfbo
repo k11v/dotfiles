@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+local branch="$1"
+if [[ -z "$branch" ]]; then
+	echo "error: empty branch" >&2
+	exit 1
+fi
+gdf $(git merge-base "$branch" origin/master) "$branch"

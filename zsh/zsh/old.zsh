@@ -181,15 +181,6 @@ function git-quiet() {
 	) "$@"
 }
 
-function gdfbo() {
-	local branch="$1"
-	if [[ -z "$branch" ]]; then
-		echo "error: empty branch" >&2
-		return 1
-	fi
-	gdf $(git merge-base "$branch" origin/master) "$branch"
-}
-
 function gcfa() {
 	git commit --fixup "$1"
 	git rebase --autosquash "$1"^
