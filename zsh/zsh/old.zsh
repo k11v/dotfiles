@@ -164,12 +164,6 @@ function bat() { command bat --paging=never "$@" }
 function grep() { command grep --color=auto "$@" }
 function ls() { command ls --color=auto "$@" }
 
-# Compile completion cache from scratch
-recompinit() {
-    rm "$ZCOMPDUMP"
-    compinit -d "$ZCOMPDUMP"
-}
-
 #
 # From older zshrc
 #
