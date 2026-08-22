@@ -173,22 +173,6 @@ dotenv() {
     done
 }
 
-# venv [<path>] activates a Python venv.
-venv() {
-    local venv="$1"
-    if [[ -z "$venv" ]]; then
-        venv=".venv"
-    fi
-    if [[ ! -e "$venv" ]]; then
-        echo >&2 "error: venv doesn't exist: $venv"
-        return 1
-    fi
-    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
-    [[ "$?" -ne 0 ]] && return 1
-
-    source "$venv/bin/activate"
-}
-
 # mkvenv <version> [<path>] creates a Python venv.
 mkvenv() {
     local version="$1"
@@ -212,27 +196,6 @@ mkvenv() {
     [[ "$?" -ne 0 ]] && return 1
 
     source "$venv/bin/activate"
-}
-
-# rmvenv [<path>] deactivates and removes a Python venv.
-rmvenv() {
-    local venv="$1"
-    if [[ -z "$venv" ]]; then
-        venv=".venv"
-    fi
-    if [[ ! -e "$venv" ]]; then
-        echo >&2 "error: venv doesn't exist: $venv"
-        return 1
-    fi
-    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
-    [[ "$?" -ne 0 ]] && return 1
-
-    if [[ "$VIRTUAL_ENV" -ef "$venv" ]]; then
-        deactivate
-        [[ "$?" -ne 0 ]] && return 1
-    fi
-
-    rm -rf "$venv"
 }
 
 # Compile completion cache from scratch
