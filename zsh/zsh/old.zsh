@@ -331,11 +331,6 @@ recompinit() {
     compinit -d "$ZCOMPDUMP"
 }
 
-# Display the current date in UTC and ISO 8601 format
-now() {
-    date -u "+%Y-%m-%dT%H:%M:%SZ"
-}
-
 # Get website's title
 titleof() {
     curl -sSL -o - -- "$1" | perl -l -0777 -n -e 'print $1 if /<title.*?>\s*(.*?)\s*<\/title/si'
