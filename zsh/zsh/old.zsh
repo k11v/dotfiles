@@ -187,6 +187,7 @@ function git-quiet() {
 		printf '%s\n' \
 			'**/mock/**/*.go diff=quiet' \
 			'**/mocks/**/*.go diff=quiet' \
+			'**/generated/**/*.go diff=quiet' \
 			'**/*_mock.go diff=quiet' \
 			'**/mock_*.go diff=quiet'
 	) "$@"
