@@ -239,10 +239,6 @@ function printcolors() {
         "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
 }
 
-myexternalip() {
-    dig +short myip.opendns.com @resolver1.opendns.com
-}
-
 # FIXME: If file doesn't end with a newline, the last variable is not exported.
 # Load a .env file (formatted according to the Compose spec)
 dotenv() {
