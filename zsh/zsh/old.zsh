@@ -164,15 +164,6 @@ function bat() { command bat --paging=never "$@" }
 function grep() { command grep --color=auto "$@" }
 function ls() { command ls --color=auto "$@" }
 
-# FIXME: If file doesn't end with a newline, the last variable is not exported.
-# Load a .env file (formatted according to the Compose spec)
-dotenv() {
-    local kv
-    cat "${1-.env}" | sed '/^#.*$/d' | sed '/^$/d' | sed -n '/^.*=.*$/p' | while read -r kv; do
-        export "$kv"
-    done
-}
-
 # Compile completion cache from scratch
 recompinit() {
     rm "$ZCOMPDUMP"

@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+# Prints Zsh exports for an .env file (formatted according to the Compose spec).
+# Example (Zsh): 'eval "$(dotenv example.env)"'.
+# FIXME: If file doesn't end with a newline, the last variable is not exported.
+
+local kv
+cat "${1-.env}" | sed '/^#.*$/d' | sed '/^$/d' | sed -n '/^.*=.*$/p' | while read -r kv; do
+	printf 'export %s\n' "${(qqq)kv}"
+done
