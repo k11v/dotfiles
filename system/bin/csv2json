@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec python3 -c 'import csv, json, sys; sys.stdout.write(json.dumps(list(csv.DictReader(sys.stdin)), indent="\t"))'

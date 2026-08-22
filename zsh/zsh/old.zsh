@@ -167,10 +167,6 @@ function cdf() {
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
-function jsonfromcsv() {
-	python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'
-}
-
 function gdf() {
 	local preview="git diff $@ -- {} | delta"
 	git diff --name-only "$@" | fzf --preview "$preview"

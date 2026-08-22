@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec python3 -c 'import csv, json, sys; rows = json.load(sys.stdin); w = csv.DictWriter(sys.stdout, list({k: None for r in rows for k in r}), lineterminator="\n"); w.writeheader() if rows else None; w.writerows(rows)'
