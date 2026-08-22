@@ -164,11 +164,6 @@ function bat() { command bat --paging=never "$@" }
 function grep() { command grep --color=auto "$@" }
 function ls() { command ls --color=auto "$@" }
 
-function gdf() {
-	local preview="git diff $@ -- {} | delta"
-	git diff --name-only "$@" | fzf --preview "$preview"
-}
-
 function git-quiet() {
 	() {
 		git \

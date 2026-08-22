@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+local preview="git diff $@ -- {} | delta"
+git diff --name-only "$@" | fzf --preview "$preview"
