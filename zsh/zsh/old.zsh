@@ -239,42 +239,6 @@ function printcolors() {
         "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
 }
 
-# httpdump dumps HTTP traffic on the loopback interface with given TCP port.
-# You can use it by starting an HTTP server locally and httpcapture with its port,
-# then making HTTP requests to it using cURL, web browser or other tool.
-# It outputs in a format simular to Wireshark's "follow TCP stream" except it is live.
-# TODO: check for a case when HTTP messages are broken into multiple TCP datagrams.
-function httpdump() {
-    local server_port="8000"
-    if [[ -n "$1" ]]; then
-        server_port="$1"
-    fi
-
-    # tshark: captures packets on an interface
-    #   -i lo0: listens to the loopback interface, 127.0.0.1 is there
-    #   -Y "http && tcp.port == $server_port": filters HTTP messages, filters $server_port TCP port
-    #   -T ek: outputs in ElasticSearch format which produces two newline-delimited JSONs per message, one with meta, another with data
-    #   -e tcp.payload: includes just the hex-encoded tcp.payload in data
-    #   -q: don't output message count when piping tshark
-    #   -l: don't buffer tshark output when piping
-    # jq: transform HTTP messages from tshark format to their raw hex data
-    #   -r: output raw strings that we select later (i.e. without double quotes)
-    #  --unbuffered: don't buffer jq output when piping
-    #  'select(has("timestamp")) | .layers.tcp_payload[]': filter data JSONs (exclude meta JSONs), then select tcp_payloads (TODO: in the future we might need to join tcp_payload if output is malformed when multiple TCP datagrams are used per HTTP message)
-    # xxd -r -p: convert hex to plain text
-    tshark -i lo0 -Y "http && tcp.port == $server_port" -T ek -e tcp.payload -q -l \
-    | jq -r --unbuffered 'select(has("timestamp")) | .layers.tcp_payload[]' \
-    | while IFS= read -r line; do
-        if [[ "$line" == 48545450* ]]; then
-            # If line starts with 48545450 ("48545450" is hex for "HTTP"), output blue (responses start with "HTTP/1.1")
-            printf "%s%s%s\n\n" "$(tput setaf 4)" "$(echo "$line" | xxd -r -p)" "$(tput sgr0)"
-        else
-            # Otherwise, output red (requests start with method name)
-            printf "%s%s%s\n\n" "$(tput setaf 1)" "$(echo "$line" | xxd -r -p)" "$(tput sgr0)"
-        fi
-    done
-}
-
 function gbl() {
 	ls -1 .git/refs/heads | fzf -m --preview "git log --patch -n 10 {} | delta"
 }
