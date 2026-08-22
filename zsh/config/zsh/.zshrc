@@ -2,11 +2,6 @@ PATH="$HOME/.local/bin:$PATH"
 PATH="/opt/homebrew/bin:$PATH"
 PATH="/opt/homebrew/sbin:$PATH"
 
-HISTFILE="$HOME/.local/share/zsh/.zhistory"
-HISTSIZE=10000
-SAVEHIST=10000
-[[ ! -e "$HOME/.local/share/zsh" ]] && mkdir -p "$HOME/.local/share/zsh"
-
 FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
 ZCOMPCACHE="$HOME/.cache/zsh/.zcompcache" # user-defined
 ZCOMPDUMP="$HOME/.cache/zsh/.zcompdump" # user-defined

@@ -11,33 +11,6 @@ function _cursor_precmd() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _cursor_precmd
 
-# History
-
-# HISTFILE="$HOME/.local/share/zsh/.zhistory" # set in the main .zshrc
-HISTSIZE=10000
-SAVEHIST=10000
-setopt EXTENDED_HISTORY # Save each command's timestamp in history
-
-# https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
-function _search_history() {
-    local selected num ret
-    # '--no-clear-start' fixes https://github.com/lotabout/skim/issues/494
-    selected="$(fc -lr 1 | awk '{ cmd=$0; sub(/^[ \t]*[0-9]+\**[ \t]+/, "", cmd); if (!seen[cmd]++) print $0 }' | sk --exact --no-sort --no-clear-start --height 40% -n2.. --query "$BUFFER")"
-    ret="$?"
-    if [[ -n "$selected" ]]; then
-        num="$(awk '{print $1}' <<< "$selected")"
-        if [[ "$num" =~ '^[1-9][0-9]*\*?$' ]]; then
-            zle vi-fetch-history -n "${num%\*}"
-        else
-            BUFFER="$selected"
-        fi
-    fi
-    zle reset-prompt
-    return "$ret"
-}
-zle -N _search_history
-bindkey "^R" _search_history
-
 # Prompt
 
 PROMPT_EOL_MARK=""
@@ -171,11 +144,6 @@ function ls() { command ls --color=auto "$@" }
 # Zsh
 
 # FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
-# PROMPT_EOL_MARK=""
-# PS2="%B…%b "
-# HISTFILE="$XDG_DATA_HOME/zsh/.zhistory"
-# HISTSIZE=10000
-# SAVEHIST=10000
 # KEYTIMEOUT=1
 
 # ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"  # User-defined
@@ -213,16 +181,6 @@ function ls() { command ls --color=auto "$@" }
 # setopt GLOB_COMPLETE           # Generate completions with globs
 # unsetopt LIST_BEEP             # Suppress beep on an ambiguous completion
 #
-
-# History
-
-setopt EXTENDED_HISTORY        # Save each command's timestamp in history
-unsetopt HIST_BEEP             # Suppress beep on non-existent history access
-setopt HIST_EXPIRE_DUPS_FIRST  # Expire duplicate events from history first
-setopt HIST_IGNORE_DUPS        # Do not record a just recorded event again
-setopt HIST_IGNORE_SPACE       # Do not record an event starting with a space
-setopt HIST_SAVE_NO_DUPS       # Do not save duplicate events in history
-setopt SHARE_HISTORY           # Share history between all sessions
 
 # # Input/output
 #
