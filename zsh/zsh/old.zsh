@@ -331,11 +331,6 @@ recompinit() {
     compinit -d "$ZCOMPDUMP"
 }
 
-# Get website's title
-titleof() {
-    curl -sSL -o - -- "$1" | perl -l -0777 -n -e 'print $1 if /<title.*?>\s*(.*?)\s*<\/title/si'
-}
-
 printcolors() {
     printf "%s %s%s%s %s%s%s %s%s%s\n" \
         " " ""                "NORMAL " ""             "$(tput bold)"                "BOLD NORMAL " "$(tput sgr0)" ""                "BACKGROUND NORMAL " ""             \

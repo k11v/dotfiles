@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+# Get website's title
+curl -sSL -o - -- "$1" | perl -l -0777 -n -e 'print $1 if /<title.*?>\s*(.*?)\s*<\/title/si'
