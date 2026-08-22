@@ -226,16 +226,6 @@ function git_commit() {
     fi
 }
 
-function dataurl() {
-    if [ -z "$1" ]; then
-        echo "Usage: dataurl <file>" >&2
-        exit 2
-    fi
-    mimetype="$(file -bN --mime-type "$1")"
-    content="$(base64 < "$1")"
-    echo "data:$mimetype;base64,$content"
-}
-
 function uuid4() {
     python3 -c "import uuid; print(uuid.uuid4())"
 }
