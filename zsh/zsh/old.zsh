@@ -239,18 +239,6 @@ function printcolors() {
         "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
 }
 
-function grw() {
-	GIT_SEQUENCE_EDITOR="$(cat <<'EOF'
-/bin/sh -c '
-    temp="$(mktemp)"
-    sed "1s/^pick /reword /" < "$1" > "$temp"
-    cat < "$temp" > "$1"
-    rm -f -- "$temp"
-' /bin/sh
-EOF
-	)" git rebase -i "$1^"
-}
-
 function myip() {
     ifconfig | grep inet | grep -v inet6 | cut -d " " -f 2
 }

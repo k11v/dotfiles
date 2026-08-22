@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+GIT_SEQUENCE_EDITOR="$(cat <<'EOF'
+/bin/sh -c '
+    temp="$(mktemp)"
+    sed "1s/^pick /reword /" < "$1" > "$temp"
+    cat < "$temp" > "$1"
+    rm -f -- "$temp"
+' /bin/sh
+EOF
+)" git rebase -i "$1^"
