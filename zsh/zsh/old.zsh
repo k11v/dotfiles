@@ -344,10 +344,6 @@ printcolors() {
         "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
 }
 
-lspypi() {
-    curl -fsSL -H "Accept: application/vnd.pypi.simple.v1+json" "https://pypi.org/simple/$1/" | jq --raw-output ".versions[]" | sort --version-sort
-}
-
 #
 # From older zshrc
 #
