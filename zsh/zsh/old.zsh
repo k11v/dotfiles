@@ -248,61 +248,6 @@ dotenv() {
     done
 }
 
-dsa() {
-    local problem_name subproblem_name main_path repo_root current_dir module_path
-
-    problem_name="$(slugify "$1")"
-    subproblem_name="$(slugify "$2")"
-
-    if [[ -z "$problem_name" ]]; then
-        echo "error: missing problem name" >&2
-        return 1
-    fi
-    
-    if [[ -z "$subproblem_name" ]]; then
-        main_path="$problem_name"
-    else
-        main_path="$problem_name/$subproblem_name"
-    fi
-
-    repo_root="$(git rev-parse --show-toplevel)"
-    current_dir="$(pwd)"
-    if [[ "$current_dir" == "$repo_root" ]]; then
-        module_path="github.com/k11v/dsa/$problem_name"
-    else
-        module_path="github.com/k11v/dsa/${current_dir#$repo_root/}/$problem_name"
-    fi
-
-    mkdir -p "$problem_name"
-    cat <<EOF > "$problem_name/go.mod"
-module $module_path
-
-go 1.23.4
-EOF
-    cat <<EOF > "$problem_name/README.md"
-Time to solve:
-
-- read: 0s
-- think: 0s
-- implement: 0s
-- check and fix: 0s
-- run and fix: 0s
-- success: 0s
-- read: 0s
-- solve: 0s
-- success: 0s
-- _total: 0s_
-EOF
-
-    mkdir -p "$main_path"
-    cat <<EOF > "$main_path/main.go"
-package main
-
-func main() {
-}
-EOF
-}
-
 # awesomestars reads HTML from the standart input, extracts links,
 # retrieves stargazer count for each link to a GitHub repository,
 # and returns the links enriched with stargazer count.
