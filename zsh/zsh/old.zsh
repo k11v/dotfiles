@@ -239,10 +239,6 @@ function printcolors() {
         "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
 }
 
-function gbl() {
-	ls -1 .git/refs/heads | fzf -m --preview "git log --patch -n 10 {} | delta"
-}
-
 function grw() {
 	GIT_SEQUENCE_EDITOR="$(cat <<'EOF'
 /bin/sh -c '

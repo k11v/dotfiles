@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+ls -1 .git/refs/heads | fzf -m --preview "git log --patch -n 10 {} | delta"
