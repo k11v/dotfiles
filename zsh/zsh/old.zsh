@@ -173,31 +173,6 @@ dotenv() {
     done
 }
 
-# mkvenv <version> [<path>] creates a Python venv.
-mkvenv() {
-    local version="$1"
-    if [[ -z "$version" ]]; then
-        echo >&2 "error: version is not specified"
-        return 1
-    fi
-
-    local venv="$2"
-    if [[ -z "$venv" ]]; then
-        venv=".venv"
-    fi
-    if [[ -e "$venv" ]]; then
-        echo >&2 "error: venv already exists"
-        return 1
-    fi
-    venv="$(CDPATH= cd -- "$(dirname -- "$venv")" && pwd)/$(basename -- "$venv")"
-    [[ "$?" -ne 0 ]] && return 1
-
-    mise x "python@$version" -- python -m venv "$venv"
-    [[ "$?" -ne 0 ]] && return 1
-
-    source "$venv/bin/activate"
-}
-
 # Compile completion cache from scratch
 recompinit() {
     rm "$ZCOMPDUMP"

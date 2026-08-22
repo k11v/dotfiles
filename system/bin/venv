@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+# venv <path> <version> creates a Python venv.
+
+local path_="$1"
+if [[ -z "$path_" ]]; then
+    echo >&2 "error: path is not specified"
+    exit 1
+fi
+if [[ -e "$path_" ]]; then
+    echo >&2 "error: path already exists"
+    exit 1
+fi
+path_="$(CDPATH= cd -- "$(dirname -- "$path_")" && pwd)/$(basename -- "$path_")"
+[[ "$?" -ne 0 ]] && exit 1
+
+local version="$2"
+if [[ -z "$version" ]]; then
+    echo >&2 "error: version is not specified"
+    exit 1
+fi
+if [[ -z "$(mise latest --installed "python@$version")" ]]; then
+    echo >&2 "error: python version is not installed: $version"
+    exit 1
+fi
+
+mise x "python@$version" -- python -m venv "$path_"
+[[ "$?" -ne 0 ]] && exit 1
+
+echo "$path_"
