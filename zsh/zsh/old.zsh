@@ -128,14 +128,14 @@ alias gcp="git cherry-pick"
 alias gcu='git reset --soft HEAD~1'  # [U]ndo the last [c]ommit
 alias gcw='git commit -m "wip"'
 alias gd="git diff"
-alias gdq="git-quiet diff"
+alias gdq="git--quiet diff"  # git--quiet is user-defined
 alias gdfm='git fetch && gdf $(git merge-base HEAD origin/master) origin/master'
 alias gds="git diff --staged"
-alias gdsq="git-quiet diff --staged"
+alias gdsq="git--quiet diff --staged"  # git--quiet is user-defined
 alias gf="git fetch"
 alias gl="git --no-pager log --graph --oneline -n 20"
 alias glp="git log --patch -n 1"
-alias glpq="git-quiet log --patch -n 1"
+alias glpq="git--quiet log --patch -n 1"  # git--quiet is user-defined
 alias gls="git log -S"
 alias gp="git push"
 alias gr="git reset HEAD"
@@ -163,23 +163,6 @@ alias cdf='cd "$(finder-pwd)"'  # finder-pwd is user-defined
 function bat() { command bat --paging=never "$@" }
 function grep() { command grep --color=auto "$@" }
 function ls() { command ls --color=auto "$@" }
-
-function git-quiet() {
-	() {
-		git \
-			-c core.attributesFile="$1" \
-			-c diff.quiet.textconv='git hash-object' \
-			"${@:2}"
-	} =(
-		# See /system/doc/mock.md.
-		printf '%s\n' \
-			'**/mock/**/*.go diff=quiet' \
-			'**/mocks/**/*.go diff=quiet' \
-			'**/generated/**/*.go diff=quiet' \
-			'**/*_mock.go diff=quiet' \
-			'**/mock_*.go diff=quiet'
-	) "$@"
-}
 
 function printcolors() {
     printf "%s %s%s%s %s%s%s %s%s%s\n" \
