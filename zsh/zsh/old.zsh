@@ -164,19 +164,6 @@ function bat() { command bat --paging=never "$@" }
 function grep() { command grep --color=auto "$@" }
 function ls() { command ls --color=auto "$@" }
 
-function printcolors() {
-    printf "%s %s%s%s %s%s%s %s%s%s\n" \
-        " " ""                "NORMAL " ""             "$(tput bold)"                "BOLD NORMAL " "$(tput sgr0)" ""                "BACKGROUND NORMAL " ""             \
-        "0" "$(tput setaf 0)" "BLACK  " "$(tput sgr0)" "$(tput bold)$(tput setaf 0)" "BOLD BLACK  " "$(tput sgr0)" "$(tput setab 0)" "BACKGROUND BLACK  " "$(tput sgr0)" \
-        "1" "$(tput setaf 1)" "RED    " "$(tput sgr0)" "$(tput bold)$(tput setaf 1)" "BOLD RED    " "$(tput sgr0)" "$(tput setab 1)" "BACKGROUND RED    " "$(tput sgr0)" \
-        "2" "$(tput setaf 2)" "GREEN  " "$(tput sgr0)" "$(tput bold)$(tput setaf 2)" "BOLD GREEN  " "$(tput sgr0)" "$(tput setab 2)" "BACKGROUND GREEN  " "$(tput sgr0)" \
-        "3" "$(tput setaf 3)" "YELLOW " "$(tput sgr0)" "$(tput bold)$(tput setaf 3)" "BOLD YELLOW " "$(tput sgr0)" "$(tput setab 3)" "BACKGROUND YELLOW " "$(tput sgr0)" \
-        "4" "$(tput setaf 4)" "BLUE   " "$(tput sgr0)" "$(tput bold)$(tput setaf 4)" "BOLD BLUE   " "$(tput sgr0)" "$(tput setab 4)" "BACKGROUND BLUE   " "$(tput sgr0)" \
-        "5" "$(tput setaf 5)" "MAGENTA" "$(tput sgr0)" "$(tput bold)$(tput setaf 5)" "BOLD MAGENTA" "$(tput sgr0)" "$(tput setab 5)" "BACKGROUND MAGENTA" "$(tput sgr0)" \
-        "6" "$(tput setaf 6)" "CYAN   " "$(tput sgr0)" "$(tput bold)$(tput setaf 6)" "BOLD CYAN   " "$(tput sgr0)" "$(tput setab 6)" "BACKGROUND CYAN   " "$(tput sgr0)" \
-        "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
-}
-
 # FIXME: If file doesn't end with a newline, the last variable is not exported.
 # Load a .env file (formatted according to the Compose spec)
 dotenv() {
@@ -267,19 +254,6 @@ note() {
 recompinit() {
     rm "$ZCOMPDUMP"
     compinit -d "$ZCOMPDUMP"
-}
-
-printcolors() {
-    printf "%s %s%s%s %s%s%s %s%s%s\n" \
-        " " ""                "NORMAL " ""             "$(tput bold)"                "BOLD NORMAL " "$(tput sgr0)" ""                "BACKGROUND NORMAL " ""             \
-        "0" "$(tput setaf 0)" "BLACK  " "$(tput sgr0)" "$(tput bold)$(tput setaf 0)" "BOLD BLACK  " "$(tput sgr0)" "$(tput setab 0)" "BACKGROUND BLACK  " "$(tput sgr0)" \
-        "1" "$(tput setaf 1)" "RED    " "$(tput sgr0)" "$(tput bold)$(tput setaf 1)" "BOLD RED    " "$(tput sgr0)" "$(tput setab 1)" "BACKGROUND RED    " "$(tput sgr0)" \
-        "2" "$(tput setaf 2)" "GREEN  " "$(tput sgr0)" "$(tput bold)$(tput setaf 2)" "BOLD GREEN  " "$(tput sgr0)" "$(tput setab 2)" "BACKGROUND GREEN  " "$(tput sgr0)" \
-        "3" "$(tput setaf 3)" "YELLOW " "$(tput sgr0)" "$(tput bold)$(tput setaf 3)" "BOLD YELLOW " "$(tput sgr0)" "$(tput setab 3)" "BACKGROUND YELLOW " "$(tput sgr0)" \
-        "4" "$(tput setaf 4)" "BLUE   " "$(tput sgr0)" "$(tput bold)$(tput setaf 4)" "BOLD BLUE   " "$(tput sgr0)" "$(tput setab 4)" "BACKGROUND BLUE   " "$(tput sgr0)" \
-        "5" "$(tput setaf 5)" "MAGENTA" "$(tput sgr0)" "$(tput bold)$(tput setaf 5)" "BOLD MAGENTA" "$(tput sgr0)" "$(tput setab 5)" "BACKGROUND MAGENTA" "$(tput sgr0)" \
-        "6" "$(tput setaf 6)" "CYAN   " "$(tput sgr0)" "$(tput bold)$(tput setaf 6)" "BOLD CYAN   " "$(tput sgr0)" "$(tput setab 6)" "BACKGROUND CYAN   " "$(tput sgr0)" \
-        "7" "$(tput setaf 7)" "WHITE  " "$(tput sgr0)" "$(tput bold)$(tput setaf 7)" "BOLD WHITE  " "$(tput sgr0)" "$(tput setab 7)" "BACKGROUND WHITE  " "$(tput sgr0)"
 }
 
 #
