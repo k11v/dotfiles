@@ -576,15 +576,6 @@ recompinit() {
     compinit -d "$ZCOMPDUMP"
 }
 
-# Pipe to browser
-bcat() {
-    local tempdir="$(mktemp -d)"
-    cat > "$tempdir/document.html"
-    open "$tempdir/document.html"
-    sleep 0.2
-    rm -rf -- "$tempdir"
-}
-
 # Display the current date in UTC and ISO 8601 format
 now() {
     date -u "+%Y-%m-%dT%H:%M:%SZ"

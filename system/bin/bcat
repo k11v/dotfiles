@@ -2,11 +2,11 @@
 
 # bcat pipes to browser.
 function main() {
-    local tempdir="$(mktemp -d)"
-    cat > "$tempdir/document.html"
-    open "$tempdir/document.html"
-    sleep 1
-    rm -rf -- "$tempdir"
+	local tempdir="$(mktemp -d)"
+	cat > "$tempdir/document.html"
+	open "$tempdir/document.html"
+	sleep 0.2
+	rm -rf -- "$tempdir"
 }
 
 main "$@"
