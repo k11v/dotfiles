@@ -235,21 +235,6 @@ rmvenv() {
     rm -rf "$venv"
 }
 
-# Quickly jump into a repository
-REPOSITORIES="$HOME/Repositories"
-repo() {
-    cd "$REPOSITORIES/$1"
-}
-_repo() {
-	_files -/ -W "$REPOSITORIES"
-}
-compdef _repo repo
-
-# Quickly jump into a note
-note() {
-    cd "$NOTES/$1"
-}
-
 # Compile completion cache from scratch
 recompinit() {
     rm "$ZCOMPDUMP"
