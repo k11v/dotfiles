@@ -181,15 +181,6 @@ function git-quiet() {
 	) "$@"
 }
 
-function gdfb() {
-	local branch="$1"
-	if [[ -z "$branch" ]]; then
-		echo "error: empty branch" >&2
-		return 1
-	fi
-	git fetch && gdf $(git merge-base "$branch" origin/master) "$branch"
-}
-
 function gdfbo() {
 	local branch="$1"
 	if [[ -z "$branch" ]]; then
