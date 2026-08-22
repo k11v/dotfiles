@@ -143,10 +143,7 @@ function ls() { command ls --color=auto "$@" }
 
 # Zsh
 
-# FPATH="$XDG_CONFIG_HOME/zsh/completions:$FPATH"
 # KEYTIMEOUT=1
-
-# ZCOMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"  # User-defined
 # PROMPT_STYLE="regular"                      # User-defined
 
 # My utils
@@ -154,33 +151,6 @@ function ls() { command ls --color=auto "$@" }
 # export WORKSPACES="$HOME/Workspaces"
 # export NOTES="$HOME/Notes"
 # export DOTFILES_ENVIRONMENT_LOADED=1
-
-# # Improve global completion
-#
-# zstyle ':completion:*' menu select
-# zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-# zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'
-# zstyle ':completion:*' use-cache on
-# # zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
-# zstyle ':completion:*' insert-tab pending
-# zstyle ':completion:*' single-ignored show
-#
-# # Denoise completion for ssh, scp and rsync
-#
-# zstyle -e ':completion:*:hosts' hosts 'reply=(${=${=${=${${(f)"$(cat {/etc/ssh/ssh_,~/.ssh/}known_hosts(|2)(N) 2> /dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ } ${=${(f)"$(cat /etc/hosts(|)(N) <<(ypcat hosts 2> /dev/null))"}%%(\#${_etc_host_ignores:+|${(j:|:)~_etc_host_ignores}})*} ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2> /dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}})'
-# zstyle ':completion:*:users' ignored-patterns adm amanda apache avahi beaglidx bin cacti canna clamav daemon dbus distcache dovecot fax ftp games gdm gkrellmd gopher hacluster haldaemon halt hsqldb ident junkbust ldap lp mail mailman mailnull mldonkey mysql nagios named netdump news nfsnobody nobody nscd ntp nut nx openvpn operator pcap postfix postgres privoxy pulse pvm quagga radvd rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs '_*'
-# zstyle ':completion:*:(ssh|scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
-# zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
-# zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
-# zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
-
-# # Completion
-#
-# setopt ALWAYS_TO_END           # Move cursor to the end of a completed word
-# setopt COMPLETE_IN_WORD        # Allow completion from inside a word
-# setopt GLOB_COMPLETE           # Generate completions with globs
-# unsetopt LIST_BEEP             # Suppress beep on an ambiguous completion
-#
 
 # # Input/output
 #
