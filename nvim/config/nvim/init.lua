@@ -64,6 +64,9 @@ vim.opt.virtualedit = "block"
 -- Treat "@" is a part of file names.
 vim.opt.isfname:append("@-@")
 
+-- Don't fold anything by default.
+vim.go.foldlevelstart = 99
+
 -- Other.
 
 -- Gopt and bopt.

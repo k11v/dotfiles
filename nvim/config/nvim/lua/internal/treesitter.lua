@@ -1,13 +1,7 @@
 local mod = "internal.treesitter"
 local group = vim.api.nvim_create_augroup(mod, {})
 
--- TODO: Handle treesitter fold (need buffer-window-opt).
--- TODO: Handle treesitter config.
-
---- @class internal.treesitter.Opt
---- @field treesitter? string
---- @field treesitter_fold? boolean
---- @field treesitter_config? { [string]: table }
+-- TODO: Handle treesitter_config/treesitter_install opt.
 
 local function handle_treesitter(buf)
 	if vim.b[buf].var_treesitter_undo ~= nil then

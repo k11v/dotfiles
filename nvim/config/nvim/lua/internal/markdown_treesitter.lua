@@ -6,5 +6,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = "markdown",
 	callback = function(args)
 		vim.b[args.buf].opt_treesitter = "markdown"
+		vim.b[args.buf].wopt_foldmethod = "expr"
+		vim.b[args.buf].wopt_foldexpr = "v:lua.vim.treesitter.foldexpr()"
 	end,
 })
