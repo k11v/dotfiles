@@ -86,6 +86,25 @@ vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 require("conform").setup()
 
 --
+-- vimx
+--
+
+_G.vimx = {}
+
+--- @generic T
+--- @param a `T`[]
+--- @return T|nil
+vimx.coalesce = function(a)
+	for i = 1, #a do
+		local v = a[i]
+		if v ~= nil then
+			return v
+		end
+	end
+	return nil
+end
+
+--
 -- Mods
 --
 
