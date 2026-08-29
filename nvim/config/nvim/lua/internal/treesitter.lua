@@ -10,8 +10,8 @@ local function handle_treesitter(buf)
 	end
 
 	local treesitter = vimx.coalesce({
-		vim.b[buf].opt_treesitter,
-		vim.g.opt_treesitter,
+		vim.b[buf].fopt_treesitter,
+		vim.g.fopt_treesitter,
 		"",
 	})
 
@@ -20,23 +20,36 @@ local function handle_treesitter(buf)
 	if treesitter ~= "" then
 		(function()
 			local ok, err = pcall(function()
-				vim.treesitter.start(buf, treesitter)
+				local filetype = vim.bo[buf].filetype
+				vim.treesitter.language.register(treesitter, filetype)
 			end)
 			if not ok then
-				vim.notify(string.format("%s: start treesitter: %s", mod, vim.inspect(err)), vim.log.levels.ERROR)
+				vim.notify(string.format("%s: register treesitter: %s", mod, vim.inspect(err)), vim.log.levels.ERROR)
 				return
 			end
 		end)()
 
 		vim.b[buf].var_treesitter_undo = function()
 			local ok, err = pcall(function()
-				vim.treesitter.stop(buf)
+				local filetype = vim.bo[buf].filetype
+				vim.treesitter.language.register(filetype, filetype)
 			end)
 			if not ok then
-				vim.notify(string.format("%s: stop treesitter: %s", mod, vim.inspect(err)), vim.log.levels.ERROR)
+				vim.notify(string.format("%s: unregister treesitter: %s", mod, vim.inspect(err)), vim.log.levels.ERROR)
 				return
 			end
 		end
+	else
+		(function()
+			local ok, err = pcall(function()
+				local filetype = vim.bo[buf].filetype
+				vim.treesitter.language.register(filetype, filetype)
+			end)
+			if not ok then
+				vim.notify(string.format("%s: unregister treesitter: %s", mod, vim.inspect(err)), vim.log.levels.ERROR)
+				return
+			end
+		end)()
 	end
 end
 
