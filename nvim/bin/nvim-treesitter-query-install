@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# nvim-treesitter-query-install <language> <url> <branch> <path>
+
+set -eu
+
+# Process arguments.
+
+language="$1"
+if [ -z "$language" ]; then
+	echo "error: empty language" >&2
+	exit 1
+fi
+
+url="$2"
+if [ -z "$url" ]; then
+	echo "error: empty url" >&2
+	exit 1
+fi
+
+branch="$3"
+if [ -z "$branch" ]; then
+	echo "error: empty branch" >&2
+	exit 1
+fi
+
+path="$4"
+if [ -z "$path" ]; then
+	echo "error: empty path" >&2
+	exit 1
+fi
+
+# Prepare repository.
+
+cache_dir="$HOME/.cache/nvim-treesitter-query-install"
+repository_name="$(
+	printf '%s-%s' \
+		"$(printf '%s' "$url" | sed 's|/$||' | sed 's|^.*/||' | tr -c 'A-Za-z0-9._-' '-')" \
+		"$(printf '%s' "$url" | sha256sum | cut -c1-16)"
+)"
+repository_dir="$cache_dir/$repository_name"
+
+mkdir -p "$cache_dir"
+test ! -e "$repository_dir" && git clone "$url" "$repository_dir" || git -C "$repository_dir" fetch --all --tags --prune --prune-tags
+git -C "$repository_dir" checkout .
+git -C "$repository_dir" checkout "$branch"
+git -C "$repository_dir" symbolic-ref -q HEAD && git -C "$repository_dir" merge --ff-only @{u}
+printf "prepared repository: %s\n" "$repository_dir"
+
+# Prepare query.
+
+query_name="$(basename "$path")"
+query_file="$repository_dir/$path"
+
+test "$query_name" != "${query_name%.scm}"
+test -e "$query_file"
+printf "prepared query: %s\n" "$query_file"
+
+# Install query.
+
+nvim_queries_dir="$HOME/.local/share/nvim/site/queries/$language"
+nvim_query_file="$nvim_queries_dir/$query_name"
+
+mkdir -p "$nvim_queries_dir"
+rm -f "$nvim_query_file"
+ln -s "$query_file" "$nvim_query_file"
+printf "installed query: %s\n" "$nvim_query_file"
