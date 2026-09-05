@@ -12,5 +12,6 @@
 		'**/mocks/**/*.go diff=quiet' \
 		'**/generated/**/*.go diff=quiet' \
 		'**/*_mock.go diff=quiet' \
-		'**/mock_*.go diff=quiet'
+		'**/mock_*.go diff=quiet' \
+		'**/vendor/**/* diff=quiet'
 ) "$@"
