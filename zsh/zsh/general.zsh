@@ -8,3 +8,13 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+
+export http_proxy="http://127.0.0.1:1081"
+export https_proxy="http://127.0.0.1:1081"
+export HTTP_PROXY="http://127.0.0.1:1081"
+export HTTPS_PROXY="http://127.0.0.1:1081"
+export ALL_PROXY="http://127.0.0.1:1081"
+export NO_PROXY="localhost,127.0.0.1,::1"
+
+export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+
