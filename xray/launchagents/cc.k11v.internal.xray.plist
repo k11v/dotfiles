@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>cc.k11v.internal.xray</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/sh</string>
+        <string>-c</string>
+        <string>mkdir -p "$HOME/.local/state/xray" &amp;&amp; exec /opt/homebrew/bin/xray run -c "$HOME/.config/xray/config.json" &gt;&gt;"$HOME/.local/state/xray/stdout.log" 2&gt;&gt;"$HOME/.local/state/xray/stderr.log"</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>XRAY_LOCATION_ASSET</key>
+        <string>/opt/homebrew/share/xray</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+</dict>
+</plist>

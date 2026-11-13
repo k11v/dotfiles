@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+set -e -o pipefail -u
+
+xray_dir="${0:A:h:h}"
+
+function main() {
+	local xray_bin="$xray_dir/tmp/make-xray-config"
+	mkdir -p "$xray_dir/tmp"
+	( cd "$xray_dir/src/make-xray-config" && go build -o "$xray_bin" . )
+	"$xray_bin" "$@"
+}
+
+main "$@"
