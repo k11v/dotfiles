@@ -17,8 +17,6 @@ vim.api.nvim_create_autocmd("TermRequest", {
 		if vim.fn.isdirectory(path) == 0 then
 			return
 		end
-		vim.api.nvim_buf_call(args.buf, function()
-			vim.cmd.bcd(vim.fn.fnameescape(path))
-		end)
+		vim.bo[args.buf].path = ".,," .. "," .. vim.fn.escape(path, [[ ,\]])
 	end,
 })
