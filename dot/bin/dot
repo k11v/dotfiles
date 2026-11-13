@@ -3,7 +3,7 @@
 set -e -o pipefail -u
 
 function main() {
-	local dot_dir="$HOME/git/dotfiles/dot"
+	local dot_dir="$HOME/personal/dotfiles/dot"
 	local dot_bin="$dot_dir/tmp/dot"
 	mkdir -p "$dot_dir/tmp"
 	( cd "$dot_dir/src/dot" && go build -o "$dot_bin" . )

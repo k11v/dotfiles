@@ -42,6 +42,7 @@ func run() int {
 
 	doXLinks(ctx, moduleDirs, excludeNames, "", "home")
 	doXLinks(ctx, moduleDirs, excludeNames, ".config", "config")
+	doXLinks(ctx, moduleDirs, excludeNames, "Library/LaunchAgents", "launchagents")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/bin", "bin")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/zsh/integration", "zsh")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitignore", "gitignore")
@@ -49,6 +50,7 @@ func run() int {
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/git/integration-gitconfigopt", "gitconfigopt")
 	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/tldr/pages", "tldr")
 	doXLinks(ctx, moduleDirs, excludeNames, ".claude/skills", "claude-skills")
+	doXLinks(ctx, moduleDirs, excludeNames, ".local/share/xray/integration", "xray")
 	doIntegrationGitignore()
 	doIntegrationGitconfig()
 	doConfigTmpl(ctx, moduleDirs)
