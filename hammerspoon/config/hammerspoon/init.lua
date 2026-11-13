@@ -1,11 +1,11 @@
 local hyper = { "cmd", "alt", "ctrl", "shift" }
 
 hs.hotkey.bind(hyper, "q", function()
-	hs.application.launchOrFocus("Alacritty")
+	hs.application.launchOrFocus("Ghostty")
 end)
 
 hs.hotkey.bind(hyper, "w", function()
-	hs.application.launchOrFocus("Google Chrome")
+	hs.application.launchOrFocus("Safari")
 end)
 
 hs.hotkey.bind(hyper, "e", function()
