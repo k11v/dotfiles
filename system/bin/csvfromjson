@@ -1,3 +1,22 @@
-#!/bin/sh
+#!/usr/bin/env python3
 
-exec python3 -c 'import csv, json, sys; rows = json.load(sys.stdin); w = csv.DictWriter(sys.stdout, list({k: None for r in rows for k in r}), lineterminator="\n"); w.writeheader() if rows else None; w.writerows(rows)'
+import csv
+import json
+import sys
+
+sys.stdout.reconfigure(line_buffering=True)
+writer = None
+for line_number, line in enumerate(sys.stdin, start=1):
+    try:
+        row = json.loads(line)
+    except json.JSONDecodeError as error:
+        sys.exit(f"line {line_number}: {error.msg}")
+    if not isinstance(row, dict):
+        sys.exit(f"line {line_number}: want a JSON object")
+    if writer is None:
+        writer = csv.DictWriter(sys.stdout, list(row), lineterminator="\n")
+        writer.writeheader()
+    try:
+        writer.writerow(row)
+    except ValueError as error:
+        sys.exit(f"line {line_number}: {error}")

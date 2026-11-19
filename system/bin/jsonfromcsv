@@ -1,3 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env python3
 
-exec python3 -c 'import csv, json, sys; sys.stdout.write(json.dumps(list(csv.DictReader(sys.stdin))))'
+import csv
+import json
+import sys
+
+# CSV headers become JSON string keys, and all cell values become strings.
+reader = csv.reader(sys.stdin, strict=True)
+try:
+    header = next(reader, [])
+    for row in reader:
+        if len(row) != len(header):
+            sys.exit(f"line {reader.line_num}: got {len(row)} fields, want {len(header)}")
+        print(json.dumps(dict(zip(header, row))), flush=True)
+except csv.Error as error:
+    sys.exit(f"line {reader.line_num}: {error}")
